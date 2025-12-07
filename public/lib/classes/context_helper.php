@@ -57,12 +57,10 @@ abstract class context_helper extends context {
         if (isset(self::$alllevels)) {
             return;
         }
+        // NEXO: coursecat, course, module contexts removed
         self::$alllevels = array(
             CONTEXT_SYSTEM => \core\context\system::class,
             CONTEXT_USER => \core\context\user::class,
-            CONTEXT_COURSECAT => \core\context\coursecat::class,
-            CONTEXT_COURSE => \core\context\course::class,
-            CONTEXT_MODULE => \core\context\module::class,
             CONTEXT_BLOCK => \core\context\block::class,
         );
 
