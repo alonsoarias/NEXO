@@ -455,47 +455,9 @@ $definitions = array(
         'simpledata' => false,
     ],
 
-    // The list of content items (activities, resources and their subtypes) that can be added to a course for a user.
-    'user_course_content_items' => [
-        'mode' => cache_store::MODE_REQUEST,
-        'simplekeys' => true,
-    ],
-
-    // The list of favourited content items (activities, resources and their subtypes) for a user.
-    'user_favourite_course_content_items' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-    ],
-
-    \core_course\local\service\content_item_service::RECOMMENDATION_CACHE => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-    ],
-
-    // Caches contentbank extensions management.
-    'contentbank_enabled_extensions' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'staticacceleration' => true,
-    ],
-    'contentbank_context_extensions' => [
-        'mode' => cache_store::MODE_REQUEST,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'staticacceleration' => true,
-    ],
-
-    // Language strings for H5P content-type libraries.
-    // Key "{$libraryname}/{$language}"" contains translations for a given library and language.
-    // Key "$libraryname" has a list of all of the available languages for the library.
-    'h5p_content_type_translations' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simpledata' => true,
-    ],
-
+    // Course content items caches removed - course modules not used
+    // Contentbank caches removed - contentbank not used
     // H5P caches removed - H5P not used
-    // Grade letters cache removed - grade system not used
 
     // Cache for licenses.
     'license' => [
@@ -528,18 +490,7 @@ $definitions = array(
         'staticaccelerationsize' => 100,
     ],
 
-    // Cache if a user has the capability to share to MoodleNet.
-    'moodlenet_usercanshare' => [
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'ttl' => 1800,
-        'invalidationevents' => [
-            'changesincoursecat',
-            'changesincategoryenrolment',
-            'changesincourse',
-        ],
-    ],
+    // MoodleNet cache removed - MoodleNet not used
 
     // A theme has been used in context to override the default theme.
     // Applies to user, cohort, category and course.
