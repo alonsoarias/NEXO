@@ -25,23 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
-    // Hooks related to deleted components (group, course, courseformat, completion, enrol) have been removed.
-    [
-        'hook' => \core_user\hook\before_user_updated::class,
-        'callback' => \core_communication\hook_listener::class . '::update_user_room_memberships',
-    ],
-    [
-        'hook' => \core_user\hook\before_user_deleted::class,
-        'callback' => \core_communication\hook_listener::class . '::delete_user_room_memberships',
-    ],
-    [
-        'hook' => \core\hook\access\after_role_assigned::class,
-        'callback' => \core_communication\hook_listener::class . '::update_user_membership_for_role_changes',
-    ],
-    [
-        'hook' => \core\hook\access\after_role_unassigned::class,
-        'callback' => \core_communication\hook_listener::class . '::update_user_membership_for_role_changes',
-    ],
+    // Hooks related to deleted components (group, course, courseformat, completion, enrol, communication, blog) have been removed.
     [
         'hook' => \core\hook\output\before_standard_footer_html_generation::class,
         'callback' => \core_userfeedback::class . '::before_standard_footer_html_generation',

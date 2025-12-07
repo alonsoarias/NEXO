@@ -74,57 +74,6 @@ $functions = array(
         'ajax'          => true,
         'loginrequired' => false,
     ),
-    ],
-    ),
-    ],
-    'core_blog_get_entries' => array(
-        'classname'   => 'core_blog\external',
-        'methodname'  => 'get_entries',
-        'description' => 'Returns blog entries.',
-        'type'        => 'read',
-        'services'    => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-        'ajax'          => true,
-        'loginrequired' => false,
-    ),
-    'core_blog_view_entries' => array(
-        'classname'   => 'core_blog\external',
-        'methodname'  => 'view_entries',
-        'description' => 'Trigger the blog_entries_viewed event.',
-        'type'        => 'read',
-        'services'    => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-        'ajax'          => true,
-        'loginrequired' => false,
-    ),
-    'core_blog_get_access_information' => [
-        'classname' => '\core_blog\external\get_access_information',
-        'description' => 'Retrieves permission information for the current user.',
-        'type' => 'read',
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
-    ],
-    'core_blog_add_entry' => [
-        'classname' => '\core_blog\external\add_entry',
-        'description' => 'Creates a new blog post entry.',
-        'type' => 'write',
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
-    ],
-    'core_blog_delete_entry' => [
-        'classname' => '\core_blog\external\delete_entry',
-        'description' => 'Deletes a blog post entry.',
-        'type' => 'write',
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
-    ],
-    'core_blog_prepare_entry_for_edition' => [
-        'classname' => '\core_blog\external\prepare_entry_for_edition',
-        'description' => 'Prepare a draft area for editing a blog entry..',
-        'type' => 'write',
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
-    ],
-    'core_blog_update_entry' => [
-        'classname' => '\core_blog\external\update_entry',
-        'description' => 'Updates a blog entry.',
-        'type' => 'write',
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
-    ],
     'core_calendar_get_calendar_monthly_view' => array(
         'classname' => 'core_calendar_external',
         'methodname' => 'get_calendar_monthly_view',
@@ -310,38 +259,6 @@ $functions = array(
         'ajax' => true,
         'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
-    ),
-    ),
-    ),
-        'ajax' => true,
-    ),
-    ),
-    ),
-    ),
-    ),
-    // Todo Remove this entry in Moodle 6.0 (MDL-83530).
-    ],
-    ],
-    // Todo Remove this entry in Moodle 6.0 (MDL-83530).
-    // Todo Remove this entry in Moodle 6.0 (MDL-83530).
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-        'readonlysession' => true,
-    ),
-    ),
-    ),
-    ],
-    ),
-    ),
-    ],
-    ),
     'core_fetch_notifications' => array(
         'classname' => 'core_external',
         'methodname' => 'fetch_notifications',
@@ -455,14 +372,6 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
     ),
-    ],
-    ],
-    ],
-    ],
-    ),
-    ],
-    ],
-    ],
     'core_grading_get_definitions' => array(
         'classname' => 'core_grading_external',
         'methodname' => 'get_definitions',
@@ -481,12 +390,6 @@ $functions = array(
         'description' => 'Save grading definitions',
         'type' => 'write',
     ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ],
     'core_message_mute_conversations' => array(
         'classname' => 'core_message_external',
         'methodname' => 'mute_conversations',
@@ -881,59 +784,6 @@ $functions = array(
         'type'          => 'write',
         'services'      => [MOODLE_OFFICIAL_MOBILE_SERVICE],
     ],
-    'core_notes_create_notes' => array(
-        'classname' => 'core_notes_external',
-        'methodname' => 'create_notes',
-        'classpath' => 'notes/externallib.php',
-        'description' => 'Create notes',
-        'type' => 'write',
-        'ajax' => true,
-        'capabilities' => 'moodle/notes:manage',
-        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-    ),
-    'core_notes_delete_notes' => array(
-        'classname' => 'core_notes_external',
-        'methodname' => 'delete_notes',
-        'classpath' => 'notes/externallib.php',
-        'description' => 'Delete notes',
-        'type' => 'write',
-        'capabilities' => 'moodle/notes:manage',
-        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-    ),
-    'core_notes_get_course_notes' => array(
-        'classname' => 'core_notes_external',
-        'methodname' => 'get_course_notes',
-        'classpath' => 'notes/externallib.php',
-        'description' => 'Returns all notes in specified course (or site), for the specified user.',
-        'type' => 'read',
-        'capabilities' => 'moodle/notes:view',
-        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-    ),
-    'core_notes_get_notes' => array(
-        'classname' => 'core_notes_external',
-        'methodname' => 'get_notes',
-        'classpath' => 'notes/externallib.php',
-        'description' => 'Get notes',
-        'type' => 'read',
-        'capabilities' => 'moodle/notes:view'
-    ),
-    'core_notes_update_notes' => array(
-        'classname' => 'core_notes_external',
-        'methodname' => 'update_notes',
-        'classpath' => 'notes/externallib.php',
-        'description' => 'Update notes',
-        'type' => 'write',
-        'capabilities' => 'moodle/notes:manage'
-    ),
-    'core_notes_view_notes' => array(
-        'classname' => 'core_notes_external',
-        'methodname' => 'view_notes',
-        'classpath' => 'notes/externallib.php',
-        'description' => 'Simulates the web interface view of notes/index.php: trigger events.',
-        'type' => 'write',
-        'capabilities' => 'moodle/notes:view',
-        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-    ),
     'core_output_load_template' => array(
         'classname' => 'core\output\external',
         'methodname' => 'load_template',
@@ -958,7 +808,6 @@ $functions = array(
         'ajax' => true,
         'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
     ),
-    // Question related functions.
     'core_question_update_flag' => array(
         'classname'     => 'core_question_external',
         'methodname'    => 'update_flag',
@@ -1281,18 +1130,6 @@ $functions = array(
         'capabilities'  => 'moodle/user:manageownfiles',
         'services'      => [MOODLE_OFFICIAL_MOBILE_SERVICE],
     ],
-
-    // Competencies functions.
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-    ),
-
     'core_webservice_get_site_info' => array(
         'classname' => 'core_webservice_external',
         'methodname' => 'get_site_info',
@@ -1301,8 +1138,6 @@ $functions = array(
         'type' => 'read',
         'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
-
-    // Blocks functions.
     'core_block_get_course_blocks' => array(
         'classname'     => 'core_block_external',
         'methodname'    => 'get_course_blocks',
@@ -1311,7 +1146,6 @@ $functions = array(
         'capabilities'  => '',
         'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
-
     'core_block_get_dashboard_blocks' => array(
         'classname'     => 'core_block_external',
         'methodname'    => 'get_dashboard_blocks',
@@ -1320,7 +1154,6 @@ $functions = array(
         'capabilities'  => '',
         'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
-
     'core_block_fetch_addable_blocks' => array(
         'classname'     => 'core_block\external\fetch_addable_blocks',
         'description'   => 'Returns all addable blocks in a given page.',
@@ -1329,8 +1162,6 @@ $functions = array(
         'ajax'          => true,
         'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
-
-    // Filters functions.
     'core_filters_get_available_in_context' => array(
         'classname'   => 'core_filters\external\get_available_in_context',
         'description' => 'Returns the filters available in the given contexts.',
@@ -1343,7 +1174,6 @@ $functions = array(
         'type'        => 'read',
         'services'    => [MOODLE_OFFICIAL_MOBILE_SERVICE],
     ],
-
     'core_customfield_delete_field' => array(
         'classname'   => 'core_customfield_external',
         'methodname'  => 'delete_field',
@@ -1376,7 +1206,7 @@ $functions = array(
         'type'        => 'write',
         'ajax'        => true,
     ),
-    'core_customfield_move_field'   => array(
+    'core_customfield_move_field' => array(
         'classname'   => 'core_customfield_external',
         'methodname'  => 'move_field',
         'classpath'   => 'customfield/externallib.php',
@@ -1398,7 +1228,6 @@ $functions = array(
         'description' => 'Toggle shared category state',
         'type'        => 'write',
         'ajax'        => true,
-    ],
     ],
     'core_table_get_dynamic_table_content' => [
         'classname' => 'core_table\external\dynamic\get',
@@ -1651,36 +1480,6 @@ $functions = array(
         'description' => 'Set the protection state for a block plugin',
         'type' => 'write',
         'ajax' => true,
-    ],
-    'core_moodlenet_send_activity' => [
-        'classname'   => 'core\external\moodlenet_send_activity',
-        'description' => 'Send activity to MoodleNet',
-        'type'        => 'read',
-        'ajax'        => true,
-    ],
-    'core_moodlenet_get_share_info_activity' => [
-        'classname'   => 'core\external\moodlenet_get_share_info_activity',
-        'description' => 'Get information about an activity being shared',
-        'type'        => 'read',
-        'ajax'        => true,
-    ],
-    'core_moodlenet_auth_check' => [
-        'classname'   => 'core\external\moodlenet_auth_check',
-        'description' => 'Check a user has authorized for a given MoodleNet site',
-        'type'        => 'write',
-        'ajax'        => true,
-    ],
-    'core_moodlenet_get_shared_course_info' => [
-        'classname'   => 'core\external\moodlenet_get_shared_course_info',
-        'description' => 'Get information about an course being shared',
-        'type'        => 'read',
-        'ajax'        => true,
-    ],
-    'core_moodlenet_send_course' => [
-        'classname'   => 'core\external\moodlenet_send_course',
-        'description' => 'Send course to MoodleNet',
-        'type'        => 'read',
-        'ajax'        => true,
     ],
     'core_output_poll_stored_progress' => [
         'classname'   => 'core\external\output\poll_stored_progress',

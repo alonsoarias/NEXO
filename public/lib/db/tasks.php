@@ -60,7 +60,6 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-    array(
         'classname' => 'core\task\tag_cron_task',
         'blocking' => 0,
         'minute' => 'R',
@@ -124,47 +123,7 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-    array(
-    array(
-    array(
-    array(
-        'classname' => 'core\task\portfolio_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\plagiarism_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'core\task\calendar_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\blog_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\question_preview_cleanup_task',
         'blocking' => 0,
         'minute' => '*',
         'hour' => '*',
@@ -199,9 +158,6 @@ $tasks = array(
         'dayofweek' => '*',
         'month' => '*'
     ),
-    array(
-    array(
-    array(
     array(
         'classname' => 'core\task\file_temp_cleanup_task',
         'blocking' => 0,
@@ -257,8 +213,6 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-    array(
-    array(
         'classname' => 'core_files\task\conversion_cleanup_task',
         'blocking' => 0,
         'minute' => 'R',
@@ -277,7 +231,6 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-    array(
         'classname' => 'core\task\task_log_cleanup_task',
         'blocking' => 0,
         'minute' => 'R',
@@ -286,8 +239,6 @@ $tasks = array(
         'dayofweek' => '*',
         'month' => '*'
     ),
-    array(
-    array(
     array(
         'classname' => 'core\task\antivirus_cleanup_task',
         'blocking' => 0,
@@ -324,18 +275,6 @@ $tasks = array(
         'dayofweek' => '*',
         'month' => '*'
     ],
-    [
-    [
-    [
-        'classname' => 'core_communication\task\synchronise_providers_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*',
-    ],
-    [
     [
         'classname' => 'core\task\update_geoip2file_task',
         'blocking' => 0,
