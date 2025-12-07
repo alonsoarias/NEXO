@@ -958,14 +958,13 @@ class global_navigation extends navigation_node {
      */
     protected function load_course_sections(stdClass $course, navigation_node $coursenode, $sectionnum = null, $cm = null) {
         global $CFG, $SITE;
-        require_once($CFG->dirroot . '/course/lib.php');
         if (isset($cm->sectionnum)) {
             $sectionnum = $cm->sectionnum;
         }
         if ($sectionnum !== null) {
             $this->includesectionnum = $sectionnum;
         }
-        course_get_format($course)->extend_course_navigation($this, $coursenode, $sectionnum, $cm);
+        // Course format navigation extension not available in NEXO.
         if (isset($cm->id)) {
             $activity = $coursenode->find($cm->id, self::TYPE_ACTIVITY);
             if (empty($activity)) {
@@ -983,18 +982,8 @@ class global_navigation extends navigation_node {
      * @return array Array($sections, $activities)
      */
     protected function generate_sections_and_activities(stdClass $course) {
-        global $CFG;
-        require_once($CFG->dirroot . '/course/lib.php');
-
         $modinfo = get_fast_modinfo($course);
         $sections = $modinfo->get_section_info_all();
-        $format = course_get_format($course);
-
-        // For course formats using 'numsections' trim the sections list.
-        $courseformatoptions = $format->get_format_options();
-        if (isset($courseformatoptions['numsections'])) {
-            $sections = array_slice($sections, 0, $courseformatoptions['numsections'] + 1, true);
-        }
 
         $activities = [];
 
@@ -1107,33 +1096,7 @@ class global_navigation extends navigation_node {
             return true;
         }
 
-        // If we are in a section page, we need to check for any child section.
-        $checkchildrenurls = false;
-        $format = null;
-        if ($sectionurl && $this->page->url->compare($sectionurl, URL_MATCH_BASE)) {
-            $checkchildrenurls = true;
-            $format = course_get_format($section->course);
-        }
-
-        // Activities can have delegated sections that acts as a child section.
-        foreach ($section->get_sequence_cm_infos() as $cm) {
-            $delegatedsection = $cm->get_delegated_section_info();
-            if (!$delegatedsection) {
-                continue;
-            }
-            // Check if the child node is requested via Ajax.
-            if ($this->includesectionnum == $delegatedsection->sectionnum) {
-                return true;
-            }
-
-            if ($checkchildrenurls) {
-                $childurl = $format->get_view_url($delegatedsection, ['navigation' => true]);
-                if ($childurl && $this->page->url->compare($childurl, URL_MATCH_EXACT)) {
-                    return true;
-                }
-            }
-        }
-
+        // Course format URL checks not available in NEXO.
         return false;
     }
 
@@ -1146,9 +1109,9 @@ class global_navigation extends navigation_node {
      * @return navigation_node the section navigaiton node
      */
     public function load_section_navigation($parentnode, $section, $activitiesdata): navigation_node {
-        $format = course_get_format($section->course);
-        $sectionname = $format->get_section_name($section);
-        $url = $format->get_view_url($section, ['navigation' => true]);
+        // Course format not available in NEXO - use default section name.
+        $sectionname = get_string('section') . ' ' . $section->sectionnum;
+        $url = null;
 
         $sectionnode = $parentnode->add(
             text: $sectionname,

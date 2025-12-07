@@ -84,14 +84,8 @@ class flat_navigation extends navigation_node_collection {
             $flat->key = 'coursehome';
             $flat->icon = new pix_icon('i/course', '');
 
-            $courseformat = course_get_format($course);
             $coursenode = $PAGE->navigation->find_active_node();
             $targettype = navigation_node::TYPE_COURSE;
-
-            // Single activity format has no course node - the course node is swapped for the activity node.
-            if (!$courseformat->has_view_page()) {
-                $targettype = navigation_node::TYPE_ACTIVITY;
-            }
 
             while (!empty($coursenode) && ($coursenode->type != $targettype)) {
                 $coursenode = $coursenode->parent;

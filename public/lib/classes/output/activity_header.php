@@ -189,14 +189,6 @@ class activity_header implements renderable, templatable {
         // Activity completion and dates not available in NEXO.
         $activityinfo = null;
 
-        $format = course_get_format($this->page->course);
-        if ($format->supports_components()) {
-            $this->page->requires->js_call_amd(
-                'core_courseformat/local/content/activity_header',
-                'init'
-            );
-        }
-
         $additionalitems = '';
         if (!$this->hideoverflow && !is_null($this->additionalnavitems)) {
             $additionalitems = $this->additionalnavitems->export_for_template($output);

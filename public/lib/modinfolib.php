@@ -275,8 +275,6 @@ function rebuild_course_cache(int $courseid = 0, bool $clearonly = false, bool $
     // Destroy navigation caches.
     navigation_cache::destroy_volatile_caches();
 
-    core_courseformat\base::reset_course_cache($courseid);
-
     $cachecoursemodinfo = cache::make('core', 'coursemodinfo');
     if (empty($courseid)) {
         // Clearing caches for all courses.
