@@ -29,6 +29,6 @@ $functions = [
         'classname' => \editor_tiny\external\get_configuration::class,
         'description' => 'Returns the TinyMCE configuration for a context.',
         'type' => 'read',
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
+        
     ],
 ];

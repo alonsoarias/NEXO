@@ -30,13 +30,13 @@ $functions = [
         'description' => 'Generate image for the HTML Text editor AI Placement',
         'type' => 'write',
         'ajax' => true,
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
+        
     ],
     'aiplacement_editor_generate_text' => [
         'classname' => \aiplacement_editor\external\generate_text::class,
         'description' => 'Generate text for the HTML Text editor AI Placement',
         'type' => 'write',
         'ajax' => true,
-        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
+        
     ],
 ];
