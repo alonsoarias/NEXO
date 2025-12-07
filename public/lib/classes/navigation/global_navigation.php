@@ -1530,36 +1530,6 @@ class global_navigation extends navigation_node {
                 }
             }
 
-            // Add blog nodes.
-            if (!empty($CFG->enableblogs)) {
-                if (!$this->cache->cached('userblogoptions' . $user->id)) {
-                    require_once($CFG->dirroot . '/blog/lib.php');
-                    // Get all options for the user.
-                    $options = blog_get_options_for_user($user);
-                    $this->cache->set('userblogoptions' . $user->id, $options);
-                } else {
-                    $options = $this->cache->{'userblogoptions' . $user->id};
-                }
-
-                if (count($options) > 0) {
-                    $blogs = $usernode->add(get_string('blogs', 'blog'), null, navigation_node::TYPE_CONTAINER);
-                    foreach ($options as $type => $option) {
-                        if ($type == "rss") {
-                            $blogs->add(
-                                $option['string'],
-                                $option['link'],
-                                settings_navigation::TYPE_SETTING,
-                                null,
-                                null,
-                                new pix_icon('i/rss', '')
-                            );
-                        } else {
-                            $blogs->add($option['string'], $option['link']);
-                        }
-                    }
-                }
-            }
-
             // Add the messages link.
             // It is context based so can appear in the user's profile and in course participants information.
             if (!empty($CFG->messaging)) {

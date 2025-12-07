@@ -24,7 +24,6 @@
 
 require_once('../config.php');
 require_once($CFG->dirroot . '/lib/weblib.php');
-require_once($CFG->dirroot . '/blog/lib.php');
 
 require_login();
 

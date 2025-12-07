@@ -5143,12 +5143,6 @@ function reset_course_userdata($data) {
         $status[] = array('component' => $componentstr, 'item' => get_string('deletenotes', 'notes'), 'error' => false);
     }
 
-    if (!empty($data->delete_blog_associations)) {
-        require_once($CFG->dirroot.'/blog/lib.php');
-        blog_remove_associations_for_course($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteblogassociations', 'blog'), 'error' => false);
-    }
-
     if (!empty($data->reset_completion)) {
         // Delete course and activity completion information.
         $course = $DB->get_record('course', array('id' => $data->courseid));

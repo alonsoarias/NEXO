@@ -29,7 +29,6 @@ use core\exception\coding_exception;
 use core\output\action_link;
 use core\output\pix_icon;
 use core\url;
-use core\moodlenet\utilities;
 use core_contentbank\contentbank;
 use core_plugin_manager;
 use dml_missing_record_exception;
@@ -423,46 +422,6 @@ class settings_navigation extends navigation_node {
         $coursenode = $this->add(get_string('courseadministration'), null, self::TYPE_COURSE, null, 'courseadmin');
         if ($forceopen) {
             $coursenode->force_open();
-        }
-
-        // MoodleNet links.
-        if ($this->page->user_is_editing()) {
-            $this->page->requires->js_call_amd('core/moodlenet/mutations', 'init');
-        }
-        $usercanshare = utilities::can_user_share($coursecontext, $USER->id, 'course');
-        $issuerid = get_config('moodlenet', 'oauthservice');
-        try {
-            $issuer = \core\oauth2\api::get_issuer($issuerid);
-            $isvalidinstance = utilities::is_valid_instance($issuer);
-            if ($usercanshare && $isvalidinstance) {
-                $this->page->requires->js_call_amd('core/moodlenet/send_resource', 'init');
-                $action = new action_link(new url(''), '', null, [
-                    'data-action' => 'sendtomoodlenet',
-                    'data-type' => 'course',
-                ]);
-                // Share course to MoodleNet link.
-                $coursenode->add(
-                    get_string('moodlenet:sharetomoodlenet', 'moodle'),
-                    $action,
-                    self::TYPE_SETTING,
-                    null,
-                    'exportcoursetomoodlenet'
-                )->set_force_into_more_menu(true);
-                // MoodleNet share progress link.
-                $url = new url('/moodlenet/shareprogress.php');
-                $coursenode->add(
-                    get_string('moodlenet:shareprogress'),
-                    $url,
-                    self::TYPE_SETTING,
-                    null,
-                    'moodlenetshareprogress'
-                )->set_force_into_more_menu(true);
-            }
-        } catch (dml_missing_record_exception $e) {
-            debugging(
-                "Invalid MoodleNet OAuth 2 service set in site administration: 'moodlenet | oauthservice'. " .
-                "This must be a valid issuer."
-            );
         }
 
         if ($adminoptions->update) {
@@ -878,31 +837,6 @@ class settings_navigation extends navigation_node {
             $function($this, $modulenode);
         }
 
-        // Send activity to MoodleNet.
-        $usercanshare = utilities::can_user_share($this->context->get_course_context(), $USER->id);
-        $issuerid = get_config('moodlenet', 'oauthservice');
-        try {
-            $issuer = \core\oauth2\api::get_issuer($issuerid);
-            $isvalidinstance = utilities::is_valid_instance($issuer);
-            if ($usercanshare && $isvalidinstance) {
-                $this->page->requires->js_call_amd('core/moodlenet/send_resource', 'init');
-                $action = new action_link(new url(''), '', null, [
-                    'data-action' => 'sendtomoodlenet',
-                    'data-type' => 'activity',
-                ]);
-                $modulenode->add(
-                    get_string('moodlenet:sharetomoodlenet', 'moodle'),
-                    $action,
-                    self::TYPE_SETTING,
-                    null,
-                    'exportmoodlenet'
-                )->set_force_into_more_menu(true);
-            }
-        } catch (dml_missing_record_exception $e) {
-            debugging("Invalid MoodleNet OAuth 2 service set in site administration: 'moodlenet | oauthservice'. " .
-                "This must be a valid issuer.");
-        }
-
         // Remove the module node if there are no children.
         if ($modulenode->children->count() <= 0) {
             $modulenode->remove();
@@ -1107,36 +1041,6 @@ class settings_navigation extends navigation_node {
                 '/user/profile.php',
                 ['id' => $user->id]
             ), self::TYPE_SETTING, null, 'myprofile');
-
-            // Add blog nodes.
-            if (!empty($CFG->enableblogs)) {
-                if (!$this->cache->cached('userblogoptions' . $user->id)) {
-                    require_once($CFG->dirroot . '/blog/lib.php');
-                    // Get all options for the user.
-                    $options = blog_get_options_for_user($user);
-                    $this->cache->set('userblogoptions' . $user->id, $options);
-                } else {
-                    $options = $this->cache->{'userblogoptions' . $user->id};
-                }
-
-                if (count($options) > 0) {
-                    $blogs = $profilenode->add(get_string('blogs', 'blog'), null, navigation_node::TYPE_CONTAINER);
-                    foreach ($options as $type => $option) {
-                        if ($type == "rss") {
-                            $blogs->add(
-                                $option['string'],
-                                $option['link'],
-                                self::TYPE_SETTING,
-                                null,
-                                null,
-                                new pix_icon('i/rss', '')
-                            );
-                        } else {
-                            $blogs->add($option['string'], $option['link'], self::TYPE_SETTING, null, 'blog' . $type);
-                        }
-                    }
-                }
-            }
 
             // Add the messages link.
             // It is context based so can appear in the user's profile and in course participants information.
