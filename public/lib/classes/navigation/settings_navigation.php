@@ -410,192 +410,8 @@ class settings_navigation extends navigation_node {
      * @return navigation_node|false
      */
     protected function load_course_settings($forceopen = false) {
-        global $CFG, $USER;
-        require_once($CFG->dirroot . '/course/lib.php');
-
-        $course = $this->page->course;
-        $coursecontext = context_course::instance($course->id);
-        $adminoptions = course_get_user_administration_options($course, $coursecontext);
-
-        // Note: Do not test if enrolled or viewing here because we need the enrol link in Course administration section.
-        $coursenode = $this->add(get_string('courseadministration'), null, self::TYPE_COURSE, null, 'courseadmin');
-        if ($forceopen) {
-            $coursenode->force_open();
-        }
-
-        if ($adminoptions->update) {
-            // Add the course settings link.
-            $url = new url('/course/edit.php', ['id' => $course->id]);
-            $coursenode->add(
-                get_string('settings'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'editsettings',
-                new pix_icon('i/settings', '')
-            );
-        }
-
-        if ($adminoptions->editcompletion) {
-            // Add the course completion settings link.
-            $url = new url('/course/completion.php', ['id' => $course->id]);
-            $coursenode->add(
-                get_string('coursecompletion', 'completion'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'coursecompletion',
-                new pix_icon('i/settings', '')
-            );
-        }
-
-        // Course tags admin removed - courses not available in NEXO.
-
-        // Add enrol nodes.
-        enrol_add_course_navigation($coursenode, $course);
-
-        // Manage filters.
-        if ($adminoptions->filters) {
-            $url = new url('/filter/manage.php', ['contextid' => $coursecontext->id]);
-            $coursenode->add(
-                get_string('filters', 'admin'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'filtermanagement',
-                new pix_icon('i/filter', '')
-            );
-        }
-
-        // View course reports.
-        if ($adminoptions->reports) {
-            $reportnav = $coursenode->add(
-                get_string('reports'),
-                new url('/report/view.php', ['courseid' => $coursecontext->instanceid]),
-                self::TYPE_CONTAINER,
-                null,
-                'coursereports',
-                new pix_icon('i/stats', '')
-            );
-            $coursereports = component::get_plugin_list('coursereport');
-            foreach ($coursereports as $report => $dir) {
-                $libfile = $CFG->dirroot . '/course/report/' . $report . '/lib.php';
-                if (file_exists($libfile)) {
-                    require_once($libfile);
-                    $reportfunction = $report . '_report_extend_navigation';
-                    if (function_exists($report . '_report_extend_navigation')) {
-                        $reportfunction($reportnav, $course, $coursecontext);
-                    }
-                }
-            }
-
-            $reports = get_plugin_list_with_function('report', 'extend_navigation_course', 'lib.php');
-            foreach ($reports as $reportfunction) {
-                $reportfunction($reportnav, $course, $coursecontext);
-            }
-
-            if (!$reportnav->has_children()) {
-                $reportnav->remove();
-            }
-        }
-
-        // Grade penalty navigation.
-        \core_grades\penalty_manager::extend_navigation_course($coursenode, $course, $coursecontext);
-
-        // Check if we can view the gradebook's setup page.
-        if ($adminoptions->gradebook) {
-            $url = new url('/grade/edit/tree/index.php', ['id' => $course->id]);
-            $coursenode->add(
-                get_string('gradebooksetup', 'grades'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'gradebooksetup',
-                new pix_icon('i/settings', '')
-            );
-        }
-
-        // Add the context locking node.
-        $this->add_context_locking_node($coursenode, $coursecontext);
-
-        // Add outcome if permitted.
-        if ($adminoptions->outcomes) {
-            $url = new url('/grade/edit/outcome/course.php', ['id' => $course->id]);
-            $coursenode->add(
-                get_string('outcomes', 'grades'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'outcomes',
-                new pix_icon('i/outcomes', ''),
-            );
-        }
-
-        // Add badges navigation.
-        if ($adminoptions->badges) {
-            require_once($CFG->libdir . '/badgeslib.php');
-            badges_add_course_navigation($coursenode, $course);
-        }
-
-        // Questions.
-        require_once($CFG->libdir . '/questionlib.php');
-        $baseurl = \core_question\local\bank\question_bank_helper::get_url_for_qbank_list($course->id);
-        question_extend_settings_navigation($coursenode, $coursecontext, $baseurl);
-
-        if ($adminoptions->update) {
-            // Repository Instances.
-            if (!$this->cache->cached('contexthasrepos' . $coursecontext->id)) {
-                require_once($CFG->dirroot . '/repository/lib.php');
-                $editabletypes = repository::get_editable_types($coursecontext);
-                $haseditabletypes = !empty($editabletypes);
-                unset($editabletypes);
-                $this->cache->set('contexthasrepos' . $coursecontext->id, $haseditabletypes);
-            } else {
-                $haseditabletypes = $this->cache->{'contexthasrepos' . $coursecontext->id};
-            }
-            if ($haseditabletypes) {
-                $url = new url('/repository/manage_instances.php', ['contextid' => $coursecontext->id]);
-                $coursenode->add(
-                    get_string('repositories'),
-                    $url,
-                    self::TYPE_SETTING,
-                    null,
-                    null,
-                    new pix_icon('i/repository', ''),
-                );
-            }
-        }
-
-        // Manage files.
-        if ($adminoptions->files) {
-            // Hidden in new courses and courses where legacy files were turned off.
-            $url = new url('/files/index.php', ['contextid' => $coursecontext->id]);
-            $coursenode->add(
-                get_string('courselegacyfiles'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'coursefiles',
-                new pix_icon('i/folder', ''),
-            );
-        }
-
-        // Let plugins hook into course navigation.
-        $pluginsfunction = get_plugins_with_function('extend_navigation_course', 'lib.php');
-        foreach ($pluginsfunction as $plugintype => $plugins) {
-            // Ignore the report and gradepenalty plugins as they were already loaded above.
-            if ($plugintype == 'report' || $plugintype == 'gradepenalty') {
-                continue;
-            }
-            foreach ($plugins as $pluginfunction) {
-                $pluginfunction($coursenode, $course, $coursecontext);
-            }
-        }
-
-        // Course content download removed - courses not available in NEXO.
-
-        // Return we are done.
-        return $coursenode;
+        // Courses not available in NEXO.
+        return false;
     }
 
     /**
@@ -1483,11 +1299,6 @@ class settings_navigation extends navigation_node {
      */
     protected function load_front_page_settings($forceopen = false) {
         global $SITE, $CFG;
-        require_once($CFG->dirroot . '/course/lib.php');
-
-        $course = clone($SITE);
-        $coursecontext = context_course::instance($course->id);   // Course context.
-        $adminoptions = course_get_user_administration_options($course, $coursecontext);
 
         $frontpage = $this->add(get_string('frontpagesettings'), null, self::TYPE_SETTING, null, 'frontpage');
         if ($forceopen) {
@@ -1495,21 +1306,8 @@ class settings_navigation extends navigation_node {
         }
         $frontpage->id = 'frontpagesettings';
 
-        if ($this->page->user_allowed_editing() && !$this->page->theme->haseditswitch) {
-            // Add the turn on/off settings.
-            $url = new url('/course/view.php', ['id' => $course->id, 'sesskey' => sesskey()]);
-            if ($this->page->user_is_editing()) {
-                $url->param('edit', 'off');
-                $editstring = get_string('turneditingoff');
-            } else {
-                $url->param('edit', 'on');
-                $editstring = get_string('turneditingon');
-            }
-            $frontpage->add($editstring, $url, self::TYPE_SETTING, null, null, new pix_icon('i/edit', ''));
-        }
-
-        if ($adminoptions->update) {
-            // Add the course settings link.
+        // Add the site settings link for admins.
+        if (has_capability('moodle/site:config', context_system::instance())) {
             $url = new url('/admin/settings.php', ['section' => 'frontpagesettings']);
             $frontpage->add(
                 get_string('settings'),
@@ -1521,74 +1319,11 @@ class settings_navigation extends navigation_node {
             );
         }
 
-        // Add enrol nodes.
-        enrol_add_course_navigation($frontpage, $course);
-
-        // Manage filters.
-        if ($adminoptions->filters) {
-            $url = new url('/filter/manage.php', ['contextid' => $coursecontext->id]);
-            $frontpage->add(
-                get_string('filters', 'admin'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'filtermanagement',
-                new pix_icon('i/filter', '')
-            );
-        }
-
-        // View course reports.
-        if ($adminoptions->reports) {
-            $frontpagenav = $frontpage->add(
-                get_string('reports'),
-                new url(
-                    '/report/view.php',
-                    ['courseid' => $coursecontext->instanceid]
-                ),
-                self::TYPE_CONTAINER,
-                null,
-                'coursereports',
-                new pix_icon('i/stats', '')
-            );
-            $coursereports = component::get_plugin_list('coursereport');
-            foreach ($coursereports as $report => $dir) {
-                $libfile = $CFG->dirroot . '/course/report/' . $report . '/lib.php';
-                if (file_exists($libfile)) {
-                    require_once($libfile);
-                    $reportfunction = $report . '_report_extend_navigation';
-                    if (function_exists($report . '_report_extend_navigation')) {
-                        $reportfunction($frontpagenav, $course, $coursecontext);
-                    }
-                }
-            }
-
-            $reports = get_plugin_list_with_function('report', 'extend_navigation_course', 'lib.php');
-            foreach ($reports as $reportfunction) {
-                $reportfunction($frontpagenav, $course, $coursecontext);
-            }
-
-            if (!$frontpagenav->has_children()) {
-                $frontpagenav->remove();
-            }
-        }
-
-        // Questions.
-        require_once($CFG->libdir . '/questionlib.php');
-        $baseurl = \core_question\local\bank\question_bank_helper::get_url_for_qbank_list($course->id);
-        question_extend_settings_navigation($frontpage, $coursecontext, $baseurl);
-
-        // Manage files.
-        if ($adminoptions->files) {
-            // Hide in new installs.
-            $url = new url('/files/index.php', ['contextid' => $coursecontext->id]);
-            $frontpage->add(get_string('sitelegacyfiles'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/folder', ''));
-        }
-
         // Let plugins hook into frontpage navigation.
         $pluginsfunction = get_plugins_with_function('extend_navigation_frontpage', 'lib.php');
         foreach ($pluginsfunction as $plugintype => $plugins) {
             foreach ($plugins as $pluginfunction) {
-                $pluginfunction($frontpage, $course, $coursecontext);
+                $pluginfunction($frontpage, $SITE, context_system::instance());
             }
         }
 

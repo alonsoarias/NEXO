@@ -1046,41 +1046,8 @@ class global_navigation extends navigation_node {
      * @return array An array of course section nodes
      */
     public function load_generic_course_sections(stdClass $course, navigation_node $coursenode) {
-        global $CFG, $DB, $USER, $SITE;
-        require_once($CFG->dirroot . '/course/lib.php');
-
-        [$sections, $activities] = $this->generate_sections_and_activities($course);
-
-        $navigationsections = [];
-        foreach ($sections as $sectionid => $section) {
-            if ($course->id == $SITE->id) {
-                $this->load_section_activities_navigation($coursenode, $section, $activities);
-                continue;
-            }
-
-            if (
-                !$section->uservisible
-                || (
-                    !$this->showemptysections
-                    && !$section->hasactivites
-                    && $this->includesectionnum !== $section->section
-                )
-            ) {
-                continue;
-            }
-
-            // Delegated sections are added from the activity node.
-            if ($section->get_component_instance()) {
-                continue;
-            }
-
-            $navigationsections[$sectionid] = $this->load_section_navigation(
-                parentnode: $coursenode,
-                section: $section,
-                activitiesdata: $activities,
-            );
-        }
-        return $navigationsections;
+        // Courses not available in NEXO.
+        return [];
     }
 
     /**
@@ -1360,8 +1327,6 @@ class global_navigation extends navigation_node {
     protected function load_for_user($user = null, $forceforcontext = false) {
         global $DB, $CFG, $USER, $SITE;
 
-        require_once($CFG->dirroot . '/course/lib.php');
-
         if ($user === null) {
             // We can't require login here but if the user isn't logged in we don't want to show anything.
             if (!isloggedin() || isguestuser()) {
@@ -1384,31 +1349,18 @@ class global_navigation extends navigation_node {
 
         $usercontext = context_user::instance($user->id);
 
-        // Get the course set against the page, by default this will be the site.
-        $course = $this->page->course;
+        // In NEXO we always use system context since courses are not available.
+        $coursecontext = context_system::instance();
+        $issitecourse = true;
         $baseargs = ['id' => $user->id];
-        if ($course->id != $SITE->id && (!$iscurrentuser || $forceforcontext)) {
-            $coursenode = $this->add_course($course, false, self::COURSE_CURRENT);
-            $baseargs['course'] = $course->id;
-            $coursecontext = context_course::instance($course->id);
-            $issitecourse = false;
-        } else {
-            // Load all categories and get the context for the system.
-            $coursecontext = context_system::instance();
-            $issitecourse = true;
-        }
 
         // Create a node to add user information under.
         $usersnode = null;
-        if (!$issitecourse) {
-            // Not the current user so add it to the participants node for the current course.
-            $usersnode = $coursenode->get('participants', navigation_node::TYPE_CONTAINER);
-            $userviewurl = new url('/user/view.php', $baseargs);
-        } else if ($USER->id != $user->id) {
+        if ($USER->id != $user->id) {
             // This is the site so add a users node to the root branch.
             $usersnode = $this->rootnodes['users'];
-            if (course_can_view_participants($coursecontext)) {
-                $usersnode->action = new url('/user/index.php', ['id' => $course->id]);
+            if (has_capability('moodle/user:viewdetails', $coursecontext)) {
+                $usersnode->action = new url('/user/index.php', ['id' => $SITE->id]);
             }
             $userviewurl = new url('/user/profile.php', $baseargs);
         }
@@ -1809,132 +1761,31 @@ class global_navigation extends navigation_node {
      */
     public function add_course_essentials($coursenode, stdClass $course) {
         global $CFG, $SITE;
-        require_once($CFG->dirroot . '/course/lib.php');
 
         if ($course->id == $SITE->id) {
             return $this->add_front_page_course_essentials($coursenode, $course);
         }
 
-        if (
-            $coursenode == false
-            || !($coursenode instanceof navigation_node)
-            || $coursenode->get('participants', navigation_node::TYPE_CONTAINER)
-        ) {
-            return true;
-        }
-
-        $navoptions = course_get_user_navigation_options($this->page->context, $course);
-
-        // Participants.
-        if ($navoptions->participants) {
-            $participants = $coursenode->add(
-                get_string('participants'),
-                new url('/user/index.php?id=' . $course->id),
-                self::TYPE_CONTAINER,
-                get_string('participants'),
-                'participants',
-                new pix_icon('i/users', '')
-            );
-
-            if ($navoptions->blogs) {
-                $blogsurls = new url('/blog/index.php');
-                if ($currentgroup = groups_get_course_group($course, true)) {
-                    $blogsurls->param('groupid', $currentgroup);
-                } else {
-                    $blogsurls->param('courseid', $course->id);
-                }
-                $participants->add(get_string('blogscourse', 'blog'), $blogsurls->out(), self::TYPE_SETTING, null, 'courseblogs');
-            }
-
-            if ($navoptions->notes) {
-                $participants->add(
-                    get_string('notes', 'notes'),
-                    new url('/notes/index.php', ['filtertype' => 'course', 'filterselect' => $course->id]),
-                    self::TYPE_SETTING,
-                    null,
-                    'currentcoursenotes',
-                );
-            }
-        } else if (count($this->extendforuser) > 0) {
-            $coursenode->add(get_string('participants'), null, self::TYPE_CONTAINER, get_string('participants'), 'participants');
-        } else if ($siteparticipantsnode = $this->rootnodes['site']->get('participants', self::TYPE_CUSTOM)) {
-            // The participants node was added for the site, but cannot be viewed inside the course itself, so remove.
-            $siteparticipantsnode->remove();
-        }
-
-        // Badges.
-        if ($navoptions->badges) {
-            $url = new url('/badges/index.php', ['type' => 2, 'id' => $course->id]);
-
-            $coursenode->add(
-                get_string('coursebadges', 'badges'),
-                $url,
-                navigation_node::TYPE_SETTING,
-                null,
-                'badgesview',
-                new pix_icon('i/badge', get_string('coursebadges', 'badges'))
-            );
-        }
-
-        // Check access to the course and competencies page.
-        if ($navoptions->competencies) {
-            // Just a link to course competency.
-            $title = get_string('competencies', 'core_competency');
-            $path = new url("/admin/tool/lp/coursecompetencies.php", ['courseid' => $course->id]);
-            $coursenode->add(
-                $title,
-                $path,
-                navigation_node::TYPE_SETTING,
-                null,
-                'competencies',
-                new pix_icon('i/competencies', '')
-            );
-        }
-        if ($navoptions->grades) {
-            $url = new url('/grade/report/index.php', ['id' => $course->id]);
-            $gradenode = $coursenode->add(
-                get_string('grades'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'grades',
-                new pix_icon('i/grades', '')
-            );
-            // If the page type matches the grade part, then make the nav drawer grade node (incl. all sub pages) active.
-            if ($this->page->context->contextlevel < CONTEXT_MODULE && strpos($this->page->pagetype, 'grade-') === 0) {
-                $gradenode->make_active();
-            }
-        }
-
-        // Add link for configuring communication.
-        if ($navoptions->communication) {
-            $url = new url('/communication/configure.php', [
-                'contextid' => \core\context\course::instance($course->id)->id,
-                'instanceid' => $course->id,
-                'instancetype' => 'coursecommunication',
-                'component' => 'core_course',
-            ]);
-            $coursenode->add(
-                get_string('communication', 'communication'),
-                $url,
-                navigation_node::TYPE_SETTING,
-                null,
-                'communication'
-            );
-        }
-
-        if ($navoptions->overview) {
-            $coursenode->add(
-                text: get_string('activities'),
-                action: new url('/course/overview.php', ['id' => $course->id]),
-                type: self::TYPE_CONTAINER,
-                key: 'courseoverview',
-                icon: new pix_icon('i/info', ''),
-            );
-        }
-
+        // Courses not available in NEXO.
         return true;
     }
+
+    /**
+     * Stub for removed course navigation options.
+     * @return stdClass
+     */
+    protected function get_default_navigation_options() {
+        $navoptions = new \stdClass();
+        $navoptions->blogs = !empty($CFG->enableblogs);
+        $navoptions->notes = false;
+        $navoptions->participants = has_capability('moodle/user:viewdetails', context_system::instance());
+        $navoptions->badges = false;
+        $navoptions->tags = has_capability('moodle/tag:flag', context_system::instance());
+        $navoptions->search = false;
+        $navoptions->calendar = true;
+        return $navoptions;
+    }
+
     /**
      * This generates the structure of the course that won't be generated when
      * the modules and sections are added.
@@ -1948,21 +1799,17 @@ class global_navigation extends navigation_node {
      */
     public function add_front_page_course_essentials(navigation_node $coursenode, stdClass $course) {
         global $CFG, $USER, $COURSE, $SITE;
-        require_once($CFG->dirroot . '/course/lib.php');
 
         if ($coursenode == false || $coursenode->get('frontpageloaded', navigation_node::TYPE_CUSTOM)) {
             return true;
         }
 
         $systemcontext = context_system::instance();
-        $navoptions = course_get_user_navigation_options($systemcontext, $course);
+        $navoptions = $this->get_default_navigation_options();
 
         // Hidden node that we use to determine if the front page navigation is loaded.
         // This required as there are not other guaranteed nodes that may be loaded.
         $coursenode->add('frontpageloaded', null, self::TYPE_CUSTOM, null, 'frontpageloaded')->display = false;
-
-        // Add My courses to the site pages within the navigation structure so the block can read it.
-        $coursenode->add(get_string('mycourses'), new url('/my/courses.php'), self::TYPE_CUSTOM, null, 'mycourses');
 
         // Participants.
         if ($navoptions->participants) {
@@ -1979,22 +1826,6 @@ class global_navigation extends navigation_node {
         if ($navoptions->blogs) {
             $blogsurls = new url('/blog/index.php');
             $coursenode->add(get_string('blogssite', 'blog'), $blogsurls->out(), self::TYPE_SYSTEM, null, 'siteblog');
-        }
-
-        $filterselect = 0;
-
-        // Badges.
-        if ($navoptions->badges) {
-            $url = new url($CFG->wwwroot . '/badges/index.php', ['type' => 1]);
-            $coursenode->add(get_string('sitebadges', 'badges'), $url, navigation_node::TYPE_CUSTOM);
-        }
-
-        // Notes.
-        if ($navoptions->notes) {
-            $coursenode->add(get_string('notes', 'notes'), new url(
-                '/notes/index.php',
-                ['filtertype' => 'course', 'filterselect' => $filterselect]
-            ), self::TYPE_SETTING, null, 'notes');
         }
 
         // Tags.
