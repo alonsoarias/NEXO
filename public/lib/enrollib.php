@@ -3610,7 +3610,6 @@ abstract class enrol_plugin {
         ?int $roleid = null,
     ): void {
         global $DB, $CFG;
-        require_once($CFG->dirroot . '/course/lib.php');
 
         $user = core_user::get_user($userid);
         $course = get_course($instance->courseid);

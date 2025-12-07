@@ -4723,7 +4723,6 @@ class admin_setting_courselist_frontpage extends admin_setting {
      */
     public function __construct($loggedin) {
         global $CFG;
-        require_once($CFG->dirroot.'/course/lib.php');
         $name        = 'frontpage'.($loggedin ? 'loggedin' : '');
         $visiblename = get_string('frontpage'.($loggedin ? 'loggedin' : ''),'admin');
         $description = get_string('configfrontpage'.($loggedin ? 'loggedin' : ''),'admin');

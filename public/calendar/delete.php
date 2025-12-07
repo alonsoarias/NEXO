@@ -27,7 +27,6 @@
 require_once('../config.php');
 require_once($CFG->dirroot.'/calendar/event_form.php');
 require_once($CFG->dirroot.'/calendar/lib.php');
-require_once($CFG->dirroot.'/course/lib.php');
 require_once($CFG->dirroot.'/calendar/renderer.php');
 
 $eventid = required_param('id', PARAM_INT);

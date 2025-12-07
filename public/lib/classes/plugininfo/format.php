@@ -103,7 +103,6 @@ class format extends base {
      */
     public static function get_plugins($type, $typerootdir, $typeclass, $pluginman) {
         global $CFG;
-        require_once($CFG->dirroot.'/course/lib.php');
 
         $formats = parent::get_plugins($type, $typerootdir, $typeclass, $pluginman);
         $order = get_sorted_course_formats();

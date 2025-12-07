@@ -25,7 +25,6 @@
 use core\report_helper;
 
 require('../../config.php');
-require_once($CFG->dirroot.'/course/lib.php');
 require_once($CFG->dirroot.'/report/log/locallib.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once($CFG->dirroot.'/lib/tablelib.php');

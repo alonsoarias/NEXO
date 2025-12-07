@@ -303,7 +303,6 @@ final class base_activity_test extends \advanced_testcase {
      */
     public function test_check_access(): void {
         global $CFG;
-        require_once($CFG->dirroot . '/course/lib.php');
 
         // Create a test user who can access courses 1 and 2 (everything except forum 4).
         $generator = $this->getDataGenerator();

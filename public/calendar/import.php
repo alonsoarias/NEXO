@@ -23,7 +23,6 @@
  */
 require_once('../config.php');
 require_once($CFG->libdir . '/bennu/bennu.inc.php');
-require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/calendar/lib.php');
 
 $courseid = optional_param('course', SITEID, PARAM_INT);

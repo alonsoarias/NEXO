@@ -23,7 +23,6 @@
  */
 
 require_once("../config.php");
-require_once($CFG->dirroot . '/course/lib.php');
 
 $formaction = required_param('formaction', PARAM_LOCALURL);
 $id = required_param('id', PARAM_INT);

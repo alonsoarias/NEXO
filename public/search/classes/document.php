@@ -630,7 +630,6 @@ class document implements \renderable, \templatable {
      */
     public function export_doc(\renderer_base $output): array {
         global $USER, $CFG;
-        require_once($CFG->dirroot . '/course/lib.php');
 
         list($componentname, $areaname) = \core_search\manager::extract_areaid_parts($this->get('areaid'));
         $context = context::instance_by_id($this->get('contextid'));

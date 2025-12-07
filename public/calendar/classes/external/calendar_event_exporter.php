@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 
 use \core_calendar\local\event\container;
 use \renderer_base;
-require_once($CFG->dirroot . '/course/lib.php');
 /**
  * Class for displaying a calendar event.
  *
