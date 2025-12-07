@@ -1406,14 +1406,6 @@ class global_navigation extends navigation_node {
             }
         }
 
-        // Allow the active advanced grading method plugin to append module navigation.
-        $featuresfunc = $cm->modname . '_supports';
-        if (function_exists($featuresfunc) && $featuresfunc(FEATURE_ADVANCED_GRADING)) {
-            require_once($CFG->dirroot . '/grade/grading/lib.php');
-            $gradingman = get_grading_manager($cm->context, 'mod_' . $cm->modname);
-            $gradingman->extend_navigation($this, $activity);
-        }
-
         return $activity->has_children();
     }
     /**
@@ -2104,44 +2096,6 @@ class global_navigation extends navigation_node {
                 $node->display = false;
                 $node->showinflatnavigation = true;
                 $node->mainnavonly = true;
-            }
-        }
-
-        if (isloggedin()) {
-            $context = $this->page->context;
-            switch ($context->contextlevel) {
-                case CONTEXT_COURSECAT:
-                    // OK, expected context level.
-                    break;
-                case CONTEXT_COURSE:
-                    // OK, expected context level if not on frontpage.
-                    if ($COURSE->id != $SITE->id) {
-                        break;
-                    }
-                    // Not the site. Fall through to default.
-                default:
-                    // If this context is part of a course (excluding frontpage), use the course context.
-                    // Otherwise, use the system context.
-                    $coursecontext = $context->get_course_context(false);
-                    if ($coursecontext && $coursecontext->instanceid !== $SITE->id) {
-                        $context = $coursecontext;
-                    } else {
-                        $context = $systemcontext;
-                    }
-            }
-
-            $params = ['contextid' => $context->id];
-            if (has_capability('moodle/contentbank:access', $context)) {
-                $url = new url('/contentbank/index.php', $params);
-                $node = $coursenode->add(
-                    get_string('contentbank'),
-                    $url,
-                    self::TYPE_CUSTOM,
-                    null,
-                    'contentbank',
-                    new pix_icon('i/contentbank', '')
-                );
-                $node->showinflatnavigation = true;
             }
         }
 

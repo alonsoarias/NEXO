@@ -31,9 +31,7 @@ require_once($CFG->libdir . '/tablelib.php');
 require_once($CFG->libdir . '/setuplib.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/phpunit/classes/util.php');
-require_once($CFG->dirroot . '/backup/util/xml/xml_writer.class.php');
-require_once($CFG->dirroot . '/backup/util/xml/output/xml_output.class.php');
-require_once($CFG->dirroot . '/backup/util/xml/output/file_xml_output.class.php');
+// Note: XML export classes removed - profiling export not available.
 
 // TODO: Change the implementation below to proper profiling class.
 
@@ -666,74 +664,8 @@ function profiling_import_runs($file, $commentprefix = '') {
  * @return boolean the mpr contents have been generated (true) or no (false).
  */
 function profiling_export_generate(array $runids, $tmpdir) {
-    global $CFG, $DB;
-
-    if (empty($CFG->release) || empty($CFG->version)) {
-        // Some scripts may not have included version.php.
-        include($CFG->dirroot.'/version.php');
-        $CFG->release = $release;
-        $CFG->version = $version;
-    }
-
-    // Calculate the header information to be sent to moodle_profiling_runs.xml.
-    $release = $CFG->release;
-    $version = $CFG->version;
-    $dbtype = $CFG->dbtype;
-    $githash = phpunit_util::get_git_hash();
-    $date = time();
-
-    // Create the xml output and writer for the main file.
-    $mainxo = new file_xml_output($tmpdir . '/moodle_profiling_runs.xml');
-    $mainxw = new xml_writer($mainxo);
-
-    // Output begins.
-    $mainxw->start();
-    $mainxw->begin_tag('moodle_profiling_runs');
-
-    // Send header information.
-    $mainxw->begin_tag('info');
-    $mainxw->full_tag('release', $release);
-    $mainxw->full_tag('version', $version);
-    $mainxw->full_tag('dbtype', $dbtype);
-    if ($githash) {
-        $mainxw->full_tag('githash', $githash);
-    }
-    $mainxw->full_tag('date', $date);
-    $mainxw->end_tag('info');
-
-    // Send information about runs.
-    $mainxw->begin_tag('runs');
-    foreach ($runids as $runid) {
-        // Get the run information from DB.
-        $run = $DB->get_record('profiling', array('runid' => $runid), '*', MUST_EXIST);
-        $attributes = array(
-                'id' => $run->id,
-                'ref' => $run->runid . '.xml');
-        $mainxw->full_tag('run', null, $attributes);
-        // Create the individual run file.
-        $runxo = new file_xml_output($tmpdir . '/' . $attributes['ref']);
-        $runxw = new xml_writer($runxo);
-        $runxw->start();
-        $runxw->begin_tag('moodle_profiling_run');
-        $runxw->full_tag('id', $run->id);
-        $runxw->full_tag('runid', $run->runid);
-        $runxw->full_tag('url', $run->url);
-        $runxw->full_tag('runreference', $run->runreference);
-        $runxw->full_tag('runcomment', $run->runcomment);
-        $runxw->full_tag('timecreated', $run->timecreated);
-        $runxw->full_tag('totalexecutiontime', $run->totalexecutiontime);
-        $runxw->full_tag('totalcputime', $run->totalcputime);
-        $runxw->full_tag('totalcalls', $run->totalcalls);
-        $runxw->full_tag('totalmemory', $run->totalmemory);
-        $runxw->full_tag('data', $run->data);
-        $runxw->end_tag('moodle_profiling_run');
-        $runxw->stop();
-    }
-    $mainxw->end_tag('runs');
-    $mainxw->end_tag('moodle_profiling_runs');
-    $mainxw->stop();
-
-    return true;
+    // Export functionality not available - backup XML classes removed.
+    return false;
 }
 
 /**

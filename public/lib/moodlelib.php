@@ -4896,13 +4896,6 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
         echo $OUTPUT->notification($strdeleted.get_string('type_mod_plural', 'plugin'), 'notifysuccess');
     }
 
-    // Delete content bank contents.
-    $cb = new \core_contentbank\contentbank();
-    $cbdeleted = $cb->delete_contents($coursecontext);
-    if ($showfeedback && $cbdeleted) {
-        echo $OUTPUT->notification($strdeleted.get_string('contentbank', 'contentbank'), 'notifysuccess');
-    }
-
     // Make sure there are no subcontexts left - all valid blocks and modules should be already gone.
     $childcontexts = $coursecontext->get_child_contexts(); // Returns all subcontexts since 2.2.
     foreach ($childcontexts as $childcontext) {
@@ -5055,7 +5048,6 @@ function reset_course_userdata($data) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
     require_once($CFG->libdir.'/completionlib.php');
-    require_once($CFG->dirroot.'/completion/criteria/completion_criteria_date.php');
     require_once($CFG->dirroot.'/group/lib.php');
 
     $data->courseid = $data->id;
@@ -5115,9 +5107,6 @@ function reset_course_userdata($data) {
             if ($changed) {
                 rebuild_course_cache($data->courseid, true);
             }
-
-            // Update course date completion criteria.
-            \completion_criteria_date::update_date($data->courseid, $data->timeshift);
         }
 
         $status[] = ['component' => $componentstr, 'item' => get_string('date'), 'error' => false];

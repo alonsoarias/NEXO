@@ -29,7 +29,6 @@ use core\exception\coding_exception;
 use core\output\action_link;
 use core\output\pix_icon;
 use core\url;
-use core_contentbank\contentbank;
 use core_plugin_manager;
 use dml_missing_record_exception;
 use moodle_page;
@@ -623,61 +622,6 @@ class settings_navigation extends navigation_node {
             $coursenode->get('download')->set_force_into_more_menu(true);
         }
 
-        // Course reuse options.
-        if (
-            $adminoptions->import
-                || $adminoptions->backup
-                || $adminoptions->restore
-                || $adminoptions->copy
-                || $adminoptions->reset
-        ) {
-            $coursereusenav = $coursenode->add(
-                get_string('coursereuse'),
-                new url('/backup/view.php', ['id' => $course->id]),
-                self::TYPE_CONTAINER,
-                null,
-                'coursereuse',
-                new pix_icon('t/edit', ''),
-            );
-
-            // Import data from other courses.
-            if ($adminoptions->import) {
-                $url = new url('/backup/import.php', ['id' => $course->id]);
-                $coursereusenav->add(get_string('import'), $url, self::TYPE_SETTING, null, 'import', new pix_icon('i/import', ''));
-            }
-
-            // Backup this course.
-            if ($adminoptions->backup) {
-                $url = new url('/backup/backup.php', ['id' => $course->id]);
-                $coursereusenav->add(get_string('backup'), $url, self::TYPE_SETTING, null, 'backup', new pix_icon('i/backup', ''));
-            }
-
-            // Restore to this course.
-            if ($adminoptions->restore) {
-                $url = new url('/backup/restorefile.php', ['contextid' => $coursecontext->id]);
-                $coursereusenav->add(
-                    get_string('restore'),
-                    $url,
-                    self::TYPE_SETTING,
-                    null,
-                    'restore',
-                    new pix_icon('i/restore', ''),
-                );
-            }
-
-            // Copy this course.
-            if ($adminoptions->copy) {
-                $url = new url('/backup/copy.php', ['id' => $course->id]);
-                $coursereusenav->add(get_string('copycourse'), $url, self::TYPE_SETTING, null, 'copy', new pix_icon('t/copy', ''));
-            }
-
-            // Reset this course.
-            if ($adminoptions->reset) {
-                $url = new url('/course/reset.php', ['id' => $course->id]);
-                $coursereusenav->add(get_string('reset'), $url, self::TYPE_SETTING, null, 'reset', new pix_icon('i/return', ''));
-            }
-        }
-
         // Return we are done.
         return $coursenode;
     }
@@ -797,39 +741,6 @@ class settings_navigation extends navigation_node {
         $reports = get_plugin_list_with_function('report', 'extend_navigation_module', 'lib.php');
         foreach ($reports as $reportfunction) {
             $reportfunction($modulenode, $this->page->cm);
-        }
-        // Add a backup link.
-        $featuresfunc = $this->page->activityname . '_supports';
-        if (
-            function_exists($featuresfunc)
-            && $featuresfunc(FEATURE_BACKUP_MOODLE2)
-            && has_capability('moodle/backup:backupactivity', $this->page->cm->context)
-        ) {
-            $url = new url('/backup/backup.php', ['id' => $this->page->cm->course, 'cm' => $this->page->cm->id]);
-            $modulenode->add(get_string('backup'), $url, self::TYPE_SETTING, null, 'backup', new pix_icon('i/backup', ''));
-        }
-
-        // Restore this activity.
-        $featuresfunc = $this->page->activityname . '_supports';
-        if (
-            function_exists($featuresfunc) &&
-            $featuresfunc(FEATURE_BACKUP_MOODLE2) &&
-            has_capability('moodle/restore:restoreactivity', $this->page->cm->context)
-        ) {
-            $url = new url('/backup/restorefile.php', ['contextid' => $this->page->cm->context->id]);
-            $modulenode->add(get_string('restore'), $url, self::TYPE_SETTING, null, 'restore', new pix_icon('i/restore', ''));
-        }
-
-        // Allow the active advanced grading method plugin to append its settings.
-        $featuresfunc = $this->page->activityname . '_supports';
-        if (
-            function_exists($featuresfunc)
-            && $featuresfunc(FEATURE_ADVANCED_GRADING)
-            && has_capability('moodle/grade:managegradingforms', $this->page->cm->context)
-        ) {
-            require_once($CFG->dirroot . '/grade/grading/lib.php');
-            $gradingman = get_grading_manager($this->page->cm->context, 'mod_' . $this->page->activityname);
-            $gradingman->extend_settings_navigation($this, $modulenode);
         }
 
         $function = $this->page->activityname . '_extend_settings_navigation';
@@ -1222,23 +1133,6 @@ class settings_navigation extends navigation_node {
             }
         }
 
-        // Add "Content bank preferences" link.
-        if (isloggedin() && !isguestuser($user)) {
-            if (
-                $currentuser && has_capability('moodle/user:editownprofile', $systemcontext) ||
-                has_capability('moodle/user:editprofile', $usercontext)
-            ) {
-                $url = new url('/user/contentbank.php', ['id' => $user->id]);
-                $useraccount->add(
-                    get_string('contentbankpreferences', 'core_contentbank'),
-                    $url,
-                    self::TYPE_SETTING,
-                    null,
-                    'contentbankpreferences'
-                );
-            }
-        }
-
         // View the roles settings.
         if (
             has_any_capability(
@@ -1573,41 +1467,12 @@ class settings_navigation extends navigation_node {
             );
         }
 
-        // Restore.
-        if (has_capability('moodle/restore:restorecourse', $catcontext)) {
-            $url = new url('/backup/restorefile.php', ['contextid' => $catcontext->id]);
-            $categorynode->add(
-                get_string('restorecourse', 'admin'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'restorecourse',
-                new pix_icon('i/restore', ''),
-            );
-        }
-
         // Let plugins hook into category settings navigation.
         $pluginsfunction = get_plugins_with_function('extend_navigation_category_settings', 'lib.php');
         foreach ($pluginsfunction as $plugintype => $plugins) {
             foreach ($plugins as $pluginfunction) {
                 $pluginfunction($categorynode, $catcontext);
             }
-        }
-
-        $cb = new contentbank();
-        if (
-            $cb->is_context_allowed($catcontext)
-            && has_capability('moodle/contentbank:access', $catcontext)
-        ) {
-            $url = new url('/contentbank/index.php', ['contextid' => $catcontext->id]);
-            $categorynode->add(
-                get_string('contentbank'),
-                $url,
-                self::TYPE_CUSTOM,
-                null,
-                'contentbank',
-                new pix_icon('i/contentbank', '')
-            );
         }
 
         return $categorynode;
@@ -1752,37 +1617,6 @@ class settings_navigation extends navigation_node {
         foreach ($pluginsfunction as $plugintype => $plugins) {
             foreach ($plugins as $pluginfunction) {
                 $pluginfunction($frontpage, $course, $coursecontext);
-            }
-        }
-
-        // Course reuse options.
-        if ($adminoptions->backup || $adminoptions->restore) {
-            $coursereusenav = $frontpage->add(
-                get_string('coursereuse'),
-                new url('/backup/view.php', ['id' => $course->id]),
-                self::TYPE_CONTAINER,
-                null,
-                'coursereuse',
-                new pix_icon('t/edit', ''),
-            );
-
-            // Backup this course.
-            if ($adminoptions->backup) {
-                $url = new url('/backup/backup.php', ['id' => $course->id]);
-                $coursereusenav->add(get_string('backup'), $url, self::TYPE_SETTING, null, 'backup', new pix_icon('i/backup', ''));
-            }
-
-            // Restore to this course.
-            if ($adminoptions->restore) {
-                $url = new url('/backup/restorefile.php', ['contextid' => $coursecontext->id]);
-                $coursereusenav->add(
-                    get_string('restore'),
-                    $url,
-                    self::TYPE_SETTING,
-                    null,
-                    'restore',
-                    new pix_icon('i/restore', ''),
-                );
             }
         }
 
