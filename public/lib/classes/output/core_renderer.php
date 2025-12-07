@@ -17,11 +17,9 @@
 namespace core\output;
 
 use breadcrumb_navigation_node;
-use cm_info;
 use core\hook\output\after_http_headers;
 use core_block\output\block_contents;
 use core_block\output\block_move_target;
-use core_completion\cm_completion_details;
 use core\context;
 use core_tag\output\taglist;
 use core_text;
@@ -475,91 +473,8 @@ class core_renderer extends renderer_base {
      * @return string the navigation HTML.
      */
     public function activity_navigation() {
-        // First we should check if we want to add navigation.
-        $context = $this->page->context;
-        if (
-            ($this->page->pagelayout !== 'incourse' && $this->page->pagelayout !== 'frametop')
-            || $context->contextlevel != CONTEXT_MODULE
-        ) {
-            return '';
-        }
-
-        // If the activity is in stealth mode, show no links.
-        if ($this->page->cm->is_stealth()) {
-            return '';
-        }
-
-        $course = $this->page->cm->get_course();
-        $courseformat = course_get_format($course);
-
-        // If the theme implements course index and the current course format uses course index and the current
-        // page layout is not 'frametop' (this layout does not support course index), show no links.
-        if (
-            $this->page->theme->usescourseindex && $courseformat->uses_course_index() &&
-                $this->page->pagelayout !== 'frametop'
-        ) {
-            return '';
-        }
-
-        // Get a list of all the activities in the course.
-        $modules = get_fast_modinfo($course->id)->get_cms();
-
-        // Put the modules into an array in order by the position they are shown in the course.
-        $mods = [];
-        $activitylist = [];
-        foreach ($modules as $module) {
-            // Only add activities the user can access, aren't in stealth mode, are of a type that is visible on the course,
-            // and have a url (eg. mod_label does not).
-            if (!$module->uservisible || $module->is_stealth() || empty($module->url) || !$module->is_of_type_that_can_display()) {
-                continue;
-            }
-            $mods[$module->id] = $module;
-
-            // No need to add the current module to the list for the activity dropdown menu.
-            if ($module->id == $this->page->cm->id) {
-                continue;
-            }
-            // Module name.
-            $modname = $module->get_formatted_name();
-            // Display the hidden text if necessary.
-            if (!$module->visible) {
-                $modname .= ' ' . get_string('hiddenwithbrackets');
-            }
-            // Module URL.
-            $linkurl = new moodle_url($module->url, ['forceview' => 1]);
-            // Add module URL (as key) and name (as value) to the activity list array.
-            $activitylist[$linkurl->out(false)] = $modname;
-        }
-
-        $nummods = count($mods);
-
-        // If there are only one or fewer mods then do nothing.
-        if ($nummods <= 1) {
-            return '';
-        }
-
-        // Get an array of just the course module ids used to get the cmid value based on their position in the course.
-        $modids = array_keys($mods);
-
-        // Get the position in the array of the course module we are viewing.
-        $position = array_search($this->page->cm->id, $modids);
-
-        $prevmod = null;
-        $nextmod = null;
-
-        // Check if we have a previous mod to show.
-        if ($position > 0) {
-            $prevmod = $mods[$modids[$position - 1]];
-        }
-
-        // Check if we have a next mod to show.
-        if ($position < ($nummods - 1)) {
-            $nextmod = $mods[$modids[$position + 1]];
-        }
-
-        $activitynav = new \core_course\output\activity_navigation($prevmod, $nextmod, $activitylist);
-        $renderer = $this->page->get_renderer('core', 'course');
-        return $renderer->render($activitynav);
+        // Course/activity navigation removed.
+        return '';
     }
 
     /**
@@ -1060,12 +975,12 @@ class core_renderer extends renderer_base {
      * @return string
      */
     public function course_content_header($onlyifnotcalledbefore = false) {
-        global $CFG;
         static $functioncalled = false;
         if ($functioncalled && $onlyifnotcalledbefore) {
             // we have already output the content header
             return '';
         }
+        $functioncalled = true;
 
         // Output any session notification.
         $notifications = \core\notification::fetch();
@@ -1078,20 +993,7 @@ class core_renderer extends renderer_base {
             );
         }
 
-        $output = html_writer::span($bodynotifications, 'notifications', ['id' => 'user-notifications']);
-
-        if ($this->page->course->id == SITEID) {
-            // return immediately and do not include /course/lib.php if not necessary
-            return $output;
-        }
-
-        require_once($CFG->dirroot . '/course/lib.php');
-        $functioncalled = true;
-        $courseformat = course_get_format($this->page->course);
-        if (($obj = $courseformat->course_content_header()) !== null) {
-            $output .= html_writer::div($courseformat->get_renderer($this->page)->render($obj), 'course-content-header');
-        }
-        return $output;
+        return html_writer::span($bodynotifications, 'notifications', ['id' => 'user-notifications']);
     }
 
     /**
@@ -1102,22 +1004,7 @@ class core_renderer extends renderer_base {
      * @return string
      */
     public function course_content_footer($onlyifnotcalledbefore = false) {
-        global $CFG;
-        if ($this->page->course->id == SITEID) {
-            // return immediately and do not include /course/lib.php if not necessary
-            return '';
-        }
-        static $functioncalled = false;
-        if ($functioncalled && $onlyifnotcalledbefore) {
-            // we have already output the content footer
-            return '';
-        }
-        $functioncalled = true;
-        require_once($CFG->dirroot . '/course/lib.php');
-        $courseformat = course_get_format($this->page->course);
-        if (($obj = $courseformat->course_content_footer()) !== null) {
-            return html_writer::div($courseformat->get_renderer($this->page)->render($obj), 'course-content-footer');
-        }
+        // Course functionality removed.
         return '';
     }
 
@@ -1128,16 +1015,7 @@ class core_renderer extends renderer_base {
      * @return string
      */
     public function course_header() {
-        global $CFG;
-        if ($this->page->course->id == SITEID) {
-            // return immediately and do not include /course/lib.php if not necessary
-            return '';
-        }
-        require_once($CFG->dirroot . '/course/lib.php');
-        $courseformat = course_get_format($this->page->course);
-        if (($obj = $courseformat->course_header()) !== null) {
-            return $courseformat->get_renderer($this->page)->render($obj);
-        }
+        // Course functionality removed.
         return '';
     }
 
@@ -1148,16 +1026,7 @@ class core_renderer extends renderer_base {
      * @return string
      */
     public function course_footer() {
-        global $CFG;
-        if ($this->page->course->id == SITEID) {
-            // return immediately and do not include /course/lib.php if not necessary
-            return '';
-        }
-        require_once($CFG->dirroot . '/course/lib.php');
-        $courseformat = course_get_format($this->page->course);
-        if (($obj = $courseformat->course_footer()) !== null) {
-            return $courseformat->get_renderer($this->page)->render($obj);
-        }
+        // Course functionality removed.
         return '';
     }
 
@@ -4328,38 +4197,6 @@ EOD;
         $showfrontpagemenu = false;
         $showusermenu = false;
 
-        // We are on the course home page.
-        if (
-            ($context->contextlevel == CONTEXT_COURSE) &&
-                !empty($currentnode) &&
-                ($currentnode->type == navigation_node::TYPE_COURSE || $currentnode->type == navigation_node::TYPE_SECTION)
-        ) {
-            $showcoursemenu = true;
-        }
-
-        $courseformat = course_get_format($this->page->course);
-        // This is a single activity course format, always show the course menu on the activity main page.
-        if (
-            $context->contextlevel == CONTEXT_MODULE &&
-                !$courseformat->has_view_page()
-        ) {
-            $this->page->navigation->initialise();
-            $activenode = $this->page->navigation->find_active_node();
-            // If the settings menu has been forced then show the menu.
-            if ($this->page->is_settings_menu_forced()) {
-                $showcoursemenu = true;
-            } else if (
-                !empty($activenode) && ($activenode->type == navigation_node::TYPE_ACTIVITY ||
-                            $activenode->type == navigation_node::TYPE_RESOURCE)
-            ) {
-                // We only want to show the menu on the first page of the activity. This means
-                // the breadcrumb has no additional nodes.
-                if ($currentnode && ($currentnode->key == $activenode->key && $currentnode->type == $activenode->type)) {
-                    $showcoursemenu = true;
-                }
-            }
-        }
-
         // This is the site front page.
         if (
             $context->contextlevel == CONTEXT_COURSE &&
@@ -4382,35 +4219,7 @@ EOD;
             $settingsnode = $this->page->settingsnav->find('frontpage', navigation_node::TYPE_SETTING);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $skipped = $this->build_action_menu_from_navigation($menu, $settingsnode, false, true);
-
-                // We only add a list to the full settings menu if we didn't include every node in the short menu.
-                if ($skipped) {
-                    $text = get_string('morenavigationlinks');
-                    $url = \core\router\util::get_path_for_callable(
-                        [\core_course\route\controller\course_management::class, 'administer_course'],
-                        ['course' => $this->page->course->id],
-                    );
-                    $link = new action_link($url, $text, null, null, new pix_icon('t/edit', $text));
-                    $menu->add_secondary_action($link);
-                }
-            }
-        } else if ($showcoursemenu) {
-            $settingsnode = $this->page->settingsnav->find('courseadmin', navigation_node::TYPE_COURSE);
-            if ($settingsnode) {
-                // Build an action menu based on the visible nodes from this navigation tree.
-                $skipped = $this->build_action_menu_from_navigation($menu, $settingsnode, false, true);
-
-                // We only add a list to the full settings menu if we didn't include every node in the short menu.
-                if ($skipped) {
-                    $text = get_string('morenavigationlinks');
-                    $url = \core\router\util::get_path_for_callable(
-                        [\core_course\route\controller\course_management::class, 'administer_course'],
-                        ['course' => $this->page->course->id],
-                    );
-                    $link = new action_link($url, $text, null, null, new pix_icon('t/edit', $text));
-                    $menu->add_secondary_action($link);
-                }
+                $this->build_action_menu_from_navigation($menu, $settingsnode, false, true);
             }
         } else if ($showusermenu) {
             // Get the course admin node from the settings navigation.
@@ -4822,9 +4631,8 @@ EOD;
      * @return string
      */
     public function render_participants_tertiary_nav(object $course, ?string $renderedbuttons = null) {
-        $actionbar = new participants_action_bar($course, $this->page, $renderedbuttons);
-        $content = $this->render_from_template('core_course/participants_actionbar', $actionbar->export_for_template($this));
-        return $content ?: "";
+        // Course functionality removed.
+        return $renderedbuttons ?? '';
     }
 
     /**

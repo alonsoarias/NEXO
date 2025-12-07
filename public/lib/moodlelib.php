@@ -2641,32 +2641,8 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         }
     }
 
-    // Check whether the activity has been scheduled for deletion. If so, then deny access, even for admins.
-    if ($cm && $cm->deletioninprogress) {
-        if ($preventredirect) {
-            throw new moodle_exception('activityisscheduledfordeletion');
-        }
-        require_once($CFG->dirroot . '/course/lib.php');
-        redirect(course_get_url($course), get_string('activityisscheduledfordeletion', 'error'));
-    }
-
-    // Check visibility of activity to current user; includes visible flag, conditional availability, etc.
-    if ($cm && !$cm->uservisible) {
-        if ($preventredirect) {
-            throw new require_login_exception('Activity is hidden');
-        }
-        // Get the error message that activity is not available and why (if explanation can be shown to the user).
-        $PAGE->set_course($course);
-        $renderer = $PAGE->get_renderer('course');
-        $message = $renderer->course_section_cm_unavailable_error_message($cm);
-        redirect(course_get_url($course), $message, null, \core\output\notification::NOTIFY_ERROR);
-    }
-
     // Set the global $COURSE.
-    if ($cm) {
-        $PAGE->set_cm($cm, $course);
-        $PAGE->set_pagelayout('incourse');
-    } else if (!empty($courseorid)) {
+    if (!empty($courseorid)) {
         $PAGE->set_course($course);
     }
 
@@ -3658,9 +3634,6 @@ function delete_user(stdClass $user) {
     // Unenrol from all roles in all contexts.
     // This might be slow but it is really needed - modules might do some extra cleanup!
     role_unassign_all(array('userid' => $user->id));
-
-    // Notify the competency subsystem.
-    \core_competency\api::hook_user_deleted($user->id);
 
     // Now do a brute force cleanup.
 
@@ -4873,8 +4846,6 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
                         // Delete all tag instances associated with the instance of this module.
                         core_tag_tag::delete_instances("mod_{$modname}", null, context_module::instance($cm->id)->id);
                         core_tag_tag::remove_all_item_tags('core', 'course_modules', $cm->id);
-                        // Notify the competency subsystem.
-                        \core_competency\api::hook_course_module_deleted($cm);
                         // Delete cm and its context - orphaned contexts are purged in cron in case of any race condition.
                         context_helper::delete_instance(CONTEXT_MODULE, $cm->id);
                         $DB->delete_records('course_modules_completion', ['coursemoduleid' => $cm->id]);
@@ -4975,13 +4946,6 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
 
     // Delete course tags.
     core_tag_tag::remove_all_item_tags('core', 'course', $course->id);
-
-    // Give the course format the opportunity to remove its obscure data.
-    $format = course_get_format($course);
-    $format->delete_format_data();
-
-    // Notify the competency subsystem.
-    \core_competency\api::hook_course_deleted($course);
 
     // Delete calendar events.
     $DB->delete_records('event', array('courseid' => $course->id));
@@ -5192,12 +5156,6 @@ function reset_course_userdata($data) {
         $cc->delete_all_completion_data();
         $status[] = array('component' => $componentstr,
                 'item' => get_string('deletecompletiondata', 'completion'), 'error' => false);
-    }
-
-    if (!empty($data->reset_competency_ratings)) {
-        \core_competency\api::hook_course_reset_competency_ratings($data->courseid);
-        $status[] = array('component' => $componentstr,
-            'item' => get_string('deletecompetencyratings', 'core_competency'), 'error' => false);
     }
 
     $componentstr = get_string('roles');
