@@ -309,8 +309,8 @@ class core_admin_renderer extends plugin_renderer_base {
         $output .= $this->overridetossl_warning($overridetossl);
         $output .= $this->cache_warnings($cachewarnings);
         $output .= $this->events_handlers($eventshandlers);
-        $output .= $this->registration_warning($registered);
-        $output .= $this->mobile_configuration_warning($mobileconfigured);
+        // Registration warning removed - Moodle.net registration not needed
+        // Mobile configuration warning removed - mobile app support removed
         $output .= $this->forgotten_password_url_warning($invalidforgottenpasswordurl);
         $output .= $this->mnet_deprecation_warning($xmlrpcwarning);
         $output .= $this->userfeedback_encouragement($showfeedbackencouragement);
@@ -835,24 +835,10 @@ class core_admin_renderer extends plugin_renderer_base {
      *
      * @param boolean $registered true if the site is registered on Moodle.org
      * @return string HTML to output.
+     * @deprecated Registration functionality has been removed.
      */
     protected function registration_warning($registered) {
-
-        if (!$registered && site_is_public()) {
-            if (has_capability('moodle/site:config', context_system::instance())) {
-                $registerbutton = $this->single_button(new moodle_url('/admin/registration/index.php'),
-                    get_string('register', 'admin'));
-                $str = 'registrationwarning';
-                $type = 'error alert alert-danger';
-            } else {
-                $registerbutton = '';
-                $str = 'registrationwarningcontactadmin';
-                $type = 'info';
-            }
-
-            return $this->warning( get_string($str, 'admin') . '&nbsp;' . $registerbutton , $type);
-        }
-
+        // Registration functionality removed.
         return '';
     }
 
@@ -860,9 +846,10 @@ class core_admin_renderer extends plugin_renderer_base {
      * Return an admin page warning if site is not registered with moodle.org
      *
      * @return string
+     * @deprecated Registration functionality has been removed.
      */
     public function warn_if_not_registered() {
-        return $this->registration_warning(\core\hub\registration::is_registered());
+        return '';
     }
 
     /**
@@ -2273,26 +2260,11 @@ class core_admin_renderer extends plugin_renderer_base {
      * Display message about the benefits of registering on Moodle.org
      *
      * @return string
+     * @deprecated Registration functionality has been removed.
      */
     public function moodleorg_registration_message() {
-        $a = new stdClass();
-        $a->moreinformation = '#id_sitestats'; // More information anchor.
-        $a->moodleapp = MOODLE_PRODUCTURL . '/solutions/moodle-app/';
-        $out = format_text(get_string('registerwithmoodleorginfo', 'core_hub', $a), FORMAT_MARKDOWN);
-
-        $out .= html_writer::link(
-            HUB_MOODLEORGHUBURL,
-            $this->output->pix_icon('i/stats', '').' '.get_string('registerwithmoodleorginfostats', 'core_hub'),
-            ['class' => 'btn btn-link', 'role' => 'opener', 'target' => '_href']
-        );
-
-        $out .= html_writer::link(
-            HUB_MOODLEORGHUBURL.'/sites',
-            $this->output->pix_icon('i/location', '').' '.get_string('registerwithmoodleorginfosites', 'core_hub'),
-            ['class' => 'btn btn-link', 'role' => 'opener', 'target' => '_href']
-        );
-
-        return $this->output->box($out);
+        // Registration functionality removed.
+        return '';
     }
 
     /**

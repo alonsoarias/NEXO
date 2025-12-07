@@ -131,15 +131,7 @@ $tasks = array(
         'dayofweek' => '*',
         'month' => '*'
     ),
-    array(
-        'classname' => 'core\task\registration_cron_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*'
-    ),
+    // Registration cron task removed - Moodle.net registration not needed
     array(
         'classname' => 'core\task\check_for_updates_task',
         'blocking' => 0,
