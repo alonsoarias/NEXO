@@ -47,7 +47,6 @@ require_once("{$CFG->libdir}/grouplib.php");        // Groups functions.
 require_once("{$CFG->libdir}/sessionlib.php");      // All session and cookie related stuff.
 require_once("{$CFG->libdir}/editorlib.php");       // All text editor related functions and classes.
 require_once("{$CFG->libdir}/messagelib.php");      // Messagelib functions.
-require_once("{$CFG->libdir}/modinfolib.php");      // Cached information on course-module instances.
 
 $router = \core\di::get(\core\router::class);
 $router->serve();

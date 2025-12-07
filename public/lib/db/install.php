@@ -62,59 +62,7 @@ function xmldb_main_install() {
         throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new system context id!');
     }
 
-
-    // Create site course
-    if ($DB->record_exists('course', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create frontpage course, courses already exist.');
-    }
-    $newsite = new stdClass();
-    $newsite->fullname     = '';
-    $newsite->shortname    = '';
-    $newsite->summary      = NULL;
-    $newsite->newsitems    = 3;
-    $newsite->numsections  = 1;
-    $newsite->category     = 0;
-    $newsite->format       = 'site';  // Only for this course
-    $newsite->timecreated  = time();
-    $newsite->timemodified = $newsite->timecreated;
-
-    if (defined('SITEID')) {
-        $newsite->id = SITEID;
-        $DB->import_record('course', $newsite);
-        $DB->get_manager()->reset_sequence('course');
-    } else {
-        $newsite->id = $DB->insert_record('course', $newsite);
-        define('SITEID', $newsite->id);
-    }
-    // set the field 'numsections'. We can not use format_site::update_format_options() because
-    // the file is not loaded
-    $DB->insert_record('course_format_options', array('courseid' => SITEID, 'format' => 'site',
-        'sectionid' => 0, 'name' => 'numsections', 'value' => $newsite->numsections));
-    $SITE = get_site();
-    if ($newsite->id != $SITE->id) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new site course id!');
-    }
-    // Make sure site course context exists
-    context_course::instance($SITE->id);
-    // Update the global frontpage cache
-    $SITE = $DB->get_record('course', array('id'=>$newsite->id), '*', MUST_EXIST);
-
-
-    // Create default course category
-    if ($DB->record_exists('course_categories', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default course category, categories already exist.');
-    }
-    $cat = new stdClass();
-    $cat->name         = get_string('defaultcategoryname');
-    $cat->descriptionformat = FORMAT_HTML;
-    $cat->depth        = 1;
-    $cat->sortorder    = get_max_courses_in_category();
-    $cat->timemodified = time();
-    $catid = $DB->insert_record('course_categories', $cat);
-    $DB->set_field('course_categories', 'path', '/'.$catid, array('id'=>$catid));
-    // Make sure category context exists
-    context_coursecat::instance($catid);
-
+    // NEXO: Courses and categories not used - skipped site course and category creation
 
     $defaults = array(
         'rolesactive'           => '0', // marks fully set up system
