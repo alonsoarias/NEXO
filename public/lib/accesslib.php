@@ -5055,9 +5055,7 @@ function role_change_permission($roleid, $context, $capname, $permission) {
 class_alias(core\context_helper::class, 'context_helper', true);
 class_alias(core\context::class, 'context', true);
 class_alias(core\context\block::class, 'context_block');
-class_alias(core\context\course::class, 'context_course', true);
-class_alias(core\context\coursecat::class, 'context_coursecat');
-class_alias(core\context\module::class, 'context_module', true);
+// NEXO: context_course, context_coursecat, context_module aliases removed
 class_alias(core\context\system::class, 'context_system', true);
 class_alias(core\context\user::class, 'context_user', true);
 
