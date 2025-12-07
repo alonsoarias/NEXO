@@ -4653,36 +4653,8 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             send_stored_file($file, 0, 0, true, $sendfileoptions);
 
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSECAT) {
-            if ($CFG->forcelogin) {
-                require_login();
-            }
-
-            // Get category, this will also validate access.
-            $category = core_course_category::get($context->instanceid);
-
-            // Get the event ID from the args array, load event.
-            $eventid = array_shift($args);
-            $event = $DB->get_record('event', [
-                'id' => (int) $eventid,
-                'eventtype' => 'category',
-                'categoryid' => $category->id,
-            ]);
-
-            if (!$event) {
-                send_file_not_found();
-            }
-
-            // Retrieve file from storage, and serve.
-            $filename = array_pop($args);
-            $filepath = $args ? '/' . implode('/', $args) .'/' : '/';
-            $file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename);
-            if (!$file || $file->is_directory()) {
-                send_file_not_found();
-            }
-
-            // Unlock session during file serving.
-            \core\session\manager::write_close();
-            send_stored_file($file, HOURSECS, 0, $forcedownload, $sendfileoptions);
+            // Categories not available in NEXO.
+            send_file_not_found();
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSE) {
 
             // Respect forcelogin and require login unless this is the site.... it probably
@@ -4898,28 +4870,8 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             send_file_not_found();
         }
 
-        if ($filearea === 'description') {
-            if ($CFG->forcelogin) {
-                // no login necessary - unless login forced everywhere
-                require_login();
-            }
-
-            // Check if user can view this category.
-            if (!core_course_category::get($context->instanceid, IGNORE_MISSING)) {
-                send_file_not_found();
-            }
-
-            $filename = array_pop($args);
-            $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, 'coursecat', 'description', 0, $filepath, $filename) or $file->is_directory()) {
-                send_file_not_found();
-            }
-
-            \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
-        } else {
-            send_file_not_found();
-        }
+        // Categories not available in NEXO.
+        send_file_not_found();
 
     // ========================================================================================================================
     } else if ($component === 'course') {

@@ -5501,7 +5501,8 @@ class admin_settings_coursecat_select extends admin_setting_configselect_autocom
         if (is_array($this->choices)) {
             return true;
         }
-        $this->choices = core_course_category::make_categories_list('', 0, ' / ');
+        // Categories not available in NEXO.
+        $this->choices = [];
         return true;
     }
 }

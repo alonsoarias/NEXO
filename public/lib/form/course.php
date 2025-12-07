@@ -153,10 +153,7 @@ class MoodleQuickForm_course extends MoodleQuickForm_autocomplete {
         foreach ($list as $course) {
             context_helper::preload_from_record($course);
             $context = context_course::instance($course->id);
-            // Make sure we can see the course.
-            if (!array_key_exists($course->id, $mycourses) && !core_course_category::can_view_course_info($course)) {
-                continue;
-            }
+            // Course visibility check not available in NEXO - include all courses.
             $label = format_string(get_course_display_name_for_list($course), true, ['context' => $context]);
             $this->addOption($label, $course->id);
             array_push($coursestoselect, $course->id);

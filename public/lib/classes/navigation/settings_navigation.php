@@ -449,21 +449,7 @@ class settings_navigation extends navigation_node {
             );
         }
 
-        if (!$adminoptions->update && $adminoptions->tags) {
-            $url = \core\router\util::get_path_for_callable([
-                \core_course\route\controller\tags_controller::class,
-                'administer_tags',
-            ], ['course' => $course->id]);
-            $coursenode->add(
-                get_string('coursetags', 'tag'),
-                $url,
-                self::TYPE_SETTING,
-                null,
-                'coursetags',
-                new pix_icon('i/settings', ''),
-            );
-            $coursenode->get('coursetags')->set_force_into_more_menu();
-        }
+        // Course tags admin removed - courses not available in NEXO.
 
         // Add enrol nodes.
         enrol_add_course_navigation($coursenode, $course);
@@ -606,21 +592,7 @@ class settings_navigation extends navigation_node {
             }
         }
 
-        // Prepare data for course content download functionality if it is enabled.
-        if (\core\content::can_export_context($coursecontext, $USER)) {
-            $linkattr = \core_course\output\content_export_link::get_attributes($coursecontext);
-            $actionlink = new action_link($linkattr->url, $linkattr->displaystring, null, $linkattr->elementattributes);
-
-            $coursenode->add(
-                $linkattr->displaystring,
-                $actionlink,
-                self::TYPE_SETTING,
-                null,
-                'download',
-                new pix_icon('t/download', '')
-            );
-            $coursenode->get('download')->set_force_into_more_menu(true);
-        }
+        // Course content download removed - courses not available in NEXO.
 
         // Return we are done.
         return $coursenode;

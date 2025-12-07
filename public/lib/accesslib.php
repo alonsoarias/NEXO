@@ -1653,8 +1653,6 @@ function role_assign($roleid, $userid, $contextid, $component = '', $itemid = 0,
     // Role assignments have changed, so mark user as dirty.
     mark_user_dirty($userid);
 
-    core_course_category::role_assignment_changed($roleid, $context);
-
     $event = \core\event\role_assigned::create(array(
         'context' => $context,
         'objectid' => $ra->roleid,
@@ -1766,7 +1764,6 @@ function role_unassign_all(array $params, $subcontexts = false, $includemanual =
             ));
             $event->add_record_snapshot('role_assignments', $ra);
             $event->trigger();
-            core_course_category::role_assignment_changed($ra->roleid, $context);
 
             // Dispatch the hook for post role assignment actions.
             $hook = new \core\hook\access\after_role_unassigned(
@@ -1802,7 +1799,6 @@ function role_unassign_all(array $params, $subcontexts = false, $includemanual =
                             'other'=>array('id'=>$ra->id, 'component'=>$ra->component, 'itemid'=>$ra->itemid)));
                     $event->add_record_snapshot('role_assignments', $ra);
                     $event->trigger();
-                    core_course_category::role_assignment_changed($ra->roleid, $context);
                 }
             }
         }
@@ -2060,11 +2056,6 @@ function can_access_course(stdClass $course, $user = null, $withcapability = '',
 
     if (is_enrolled($coursecontext, $USER, '', $onlyactive)) {
         return true;
-    }
-
-    if (!core_course_category::can_view_course_info($course)) {
-        // No guest access if user does not have capability to browse courses.
-        return false;
     }
 
     // if not enrolled try to gain temporary guest access

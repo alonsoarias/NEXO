@@ -2581,41 +2581,6 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                     $USER->enrol['enrolled'][$course->id] = $until;
                     $access = true;
 
-                } else if (core_course_category::can_view_course_info($course)) {
-                    $params = array('courseid' => $course->id, 'status' => ENROL_INSTANCE_ENABLED);
-                    $instances = $DB->get_records('enrol', $params, 'sortorder, id ASC');
-                    $enrols = enrol_get_plugins(true);
-                    // First ask all enabled enrol instances in course if they want to auto enrol user.
-                    foreach ($instances as $instance) {
-                        if (!isset($enrols[$instance->enrol])) {
-                            continue;
-                        }
-                        // Get a duration for the enrolment, a timestamp in the future, 0 (always) or false.
-                        $until = $enrols[$instance->enrol]->try_autoenrol($instance);
-                        if ($until !== false) {
-                            if ($until == 0) {
-                                $until = ENROL_MAX_TIMESTAMP;
-                            }
-                            $USER->enrol['enrolled'][$course->id] = $until;
-                            $access = true;
-                            break;
-                        }
-                    }
-                    // If not enrolled yet try to gain temporary guest access.
-                    if (!$access) {
-                        foreach ($instances as $instance) {
-                            if (!isset($enrols[$instance->enrol])) {
-                                continue;
-                            }
-                            // Get a duration for the guest access, a timestamp in the future or false.
-                            $until = $enrols[$instance->enrol]->try_guestaccess($instance);
-                            if ($until !== false and $until > time()) {
-                                $USER->enrol['tempguest'][$course->id] = $until;
-                                $access = true;
-                                break;
-                            }
-                        }
-                    }
                 } else {
                     // User is not enrolled and is not allowed to browse courses here.
                     if ($preventredirect) {
@@ -4682,18 +4647,9 @@ function delete_course($courseorid, $showfeedback = true) {
         }
     }
 
-    // Dispatch the hook for pre course delete actions.
-    $hook = new \core_course\hook\before_course_deleted(
-        course: $course,
-    );
-    \core\di::get(\core\hook\manager::class)->dispatch($hook);
-
     // Tell the search manager we are about to delete a course. This prevents us sending updates
     // for each individual context being deleted.
     \core_search\manager::course_deleting_start($courseid);
-
-    $handler = core_course\customfield\course_handler::create();
-    $handler->delete_instance($courseid);
 
     // Make the course completely empty.
     remove_course_contents($courseid, $showfeedback);

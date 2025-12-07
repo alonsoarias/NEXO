@@ -16,8 +16,6 @@
 
 namespace core\navigation;
 
-use cm_info;
-use section_info;
 use core\component;
 use core\context\course as context_course;
 use core\context\coursecat as context_coursecat;
@@ -32,8 +30,6 @@ use core\output\pix_icon;
 use core\url;
 use core_cache\cache;
 use core_cache\session_cache;
-use core_course_category;
-use course_modinfo;
 use moodle_page;
 use stdClass;
 
@@ -248,9 +244,8 @@ class global_navigation extends navigation_node {
             null,
             'courses',
         );
-        if (!core_course_category::user_top()) {
-            $this->rootnodes['courses']->hide();
-        }
+        // Courses node hidden - courses not available in NEXO.
+        $this->rootnodes['courses']->hide();
         $this->rootnodes['users'] = $this->add(get_string('users'), null, self::TYPE_ROOTNODE, null, 'users');
 
         // We always load the frontpage course to ensure it is available without JavaScript enabled.
@@ -523,10 +518,8 @@ class global_navigation extends navigation_node {
      * @return bool
      */
     protected function show_my_categories() {
-        global $CFG;
-        if ($this->showmycategories === null) {
-            $this->showmycategories = !empty($CFG->navshowmycoursecategories) && !core_course_category::is_simple_site();
-        }
+        // Categories not available in NEXO.
+        $this->showmycategories = false;
         return $this->showmycategories;
     }
 
@@ -923,24 +916,8 @@ class global_navigation extends navigation_node {
      * @return void.
      */
     protected function add_category(stdClass $category, navigation_node $parent, $nodetype = self::TYPE_CATEGORY) {
-        global $CFG;
-        if (array_key_exists($category->id, $this->addedcategories)) {
-            return;
-        }
-        $canview = core_course_category::can_view_category($category);
-        $url = $canview ? new url('/course/index.php', ['categoryid' => $category->id]) : null;
-        $context = context_helper::get_navigation_filter_context(context_coursecat::instance($category->id));
-        $categoryname = $canview ? format_string($category->name, true, ['context' => $context]) :
-            get_string('categoryhidden');
-        $categorynode = $parent->add($categoryname, $url, $nodetype, $categoryname, $category->id);
-        if (!$canview) {
-            // User does not have required capabilities to view category.
-            $categorynode->display = false;
-        } else if (!$category->visible) {
-            // Category is hidden but user has capability to view hidden categories.
-            $categorynode->hidden = true;
-        }
-        $this->addedcategories[$category->id] = $categorynode;
+        // Categories not available in NEXO - do nothing.
+        return;
     }
 
     /**
@@ -1719,10 +1696,8 @@ class global_navigation extends navigation_node {
         $coursecontext = context_course::instance($course->id);
 
         if ($coursetype != self::COURSE_MY && $coursetype != self::COURSE_CURRENT && $course->id != $SITE->id) {
-            // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-            if (is_role_switched($course->id)) {
-                // User has to be able to access course in order to switch, let's skip the visibility test here.
-            } else if (!core_course_category::can_view_course_info($course)) {
+            // Courses not available in NEXO - return false for non-site courses.
+            if (!is_role_switched($course->id)) {
                 return false;
             }
         }
@@ -2198,62 +2173,7 @@ class global_navigation extends navigation_node {
         // Get the number of courses we are going to show for each.
         $numshowncourses = count($courses);
         $numshownflatnavcourses = count($flatnavcourses);
-        if ($numshowncourses && $this->show_my_categories()) {
-            // Generate an array containing unique values of all the courses' categories.
-            $categoryids = [];
-            foreach ($courses as $course) {
-                if (in_array($course->category, $categoryids)) {
-                    continue;
-                }
-                $categoryids[] = $course->category;
-            }
-
-            // Array of category IDs that include the categories of the user's courses and the related course categories.
-            $fullpathcategoryids = [];
-            // Get the course categories for the enrolled courses' category IDs.
-            $mycoursecategories = core_course_category::get_many($categoryids);
-            // Loop over each of these categories and build the category tree using each category's path.
-            foreach ($mycoursecategories as $mycoursecat) {
-                $pathcategoryids = explode('/', $mycoursecat->path);
-                // First element of the exploded path is empty since paths begin with '/'.
-                array_shift($pathcategoryids);
-                // Merge the exploded category IDs into the full list of category IDs that we will fetch.
-                $fullpathcategoryids = array_merge($fullpathcategoryids, $pathcategoryids);
-            }
-
-            // Fetch all of the categories related to the user's courses.
-            $pathcategories = core_course_category::get_many($fullpathcategoryids);
-            // Loop over each of these categories and build the category tree.
-            foreach ($pathcategories as $coursecat) {
-                // No need to process categories that have already been added.
-                if (isset($this->addedcategories[$coursecat->id])) {
-                    continue;
-                }
-                // Skip categories that are not visible.
-                if (!$coursecat->is_uservisible()) {
-                    continue;
-                }
-
-                // Get this course category's parent node.
-                $parent = null;
-                if ($coursecat->parent && isset($this->addedcategories[$coursecat->parent])) {
-                    $parent = $this->addedcategories[$coursecat->parent];
-                }
-                if (!$parent) {
-                    // If it has no parent, then it should be right under the My courses node.
-                    $parent = $this->rootnodes['mycourses'];
-                }
-
-                // Build the category object based from the coursecat object.
-                $mycategory = new stdClass();
-                $mycategory->id = $coursecat->id;
-                $mycategory->name = $coursecat->name;
-                $mycategory->visible = $coursecat->visible;
-
-                // Add this category to the nav tree.
-                $this->add_category($mycategory, $parent, self::TYPE_MY_CATEGORY);
-            }
-        }
+        // Categories and courses not available in NEXO - skip category loading.
 
         // Go through each course now and add it to the nav block, and the flatnav if applicable.
         foreach ($courses as $course) {

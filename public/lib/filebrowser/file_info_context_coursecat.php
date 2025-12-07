@@ -59,21 +59,7 @@ class file_info_context_coursecat extends file_info {
      * @return fileinfo|null
      */
     public function get_file_info($component, $filearea, $itemid, $filepath, $filename) {
-        global $DB;
-
-        if (!core_course_category::can_view_category($this->category)) {
-            if (empty($component)) {
-                // we can not list the category contents, so try parent, or top system
-                if ($this->category->parent and $pc = $DB->get_record('course_categories', array('id'=>$this->category->parent))) {
-                    $parent = context_coursecat::instance($pc->id, IGNORE_MISSING);
-                    return $this->browser->get_file_info($parent);
-                } else {
-                    return $this->browser->get_file_info();
-                }
-            }
-            return null;
-        }
-
+        // Categories not available in NEXO.
         if (empty($component)) {
             return $this;
         }
@@ -101,9 +87,7 @@ class file_info_context_coursecat extends file_info {
             // No coursecat description area for "system".
             return null;
         }
-        if (!core_course_category::can_view_category($this->category)) {
-            return null;
-        }
+        // Categories not available in NEXO.
         if (!has_capability('moodle/category:manage', $this->context)) {
             return null;
         }
@@ -252,14 +236,8 @@ class file_info_context_coursecat extends file_info {
 
         $hiddencats = [];
 
-        foreach ($coursecats as $id => &$category) {
-            context_helper::preload_from_record($category);
-            if (!core_course_category::can_view_category($category)) {
-                $hiddencats[$id] = $coursecats[$id];
-                unset($coursecats[$id]);
-            }
-        }
-        return [$coursecats, $hiddencats];
+        // Categories not available in NEXO - return all as hidden.
+        return [[], $coursecats];
     }
 
     /**

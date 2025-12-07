@@ -2131,9 +2131,6 @@ abstract class enrol_plugin {
                         )
                     );
             $event->trigger();
-            // Check if course contacts cache needs to be cleared.
-            core_course_category::user_enrolment_changed($courseid, $ue->userid,
-                    $ue->status, $ue->timestart, $ue->timeend);
         }
 
         // Dispatch the hook for post enrol user actions.
@@ -2248,9 +2245,6 @@ abstract class enrol_plugin {
                     )
                 );
         $event->trigger();
-
-        core_course_category::user_enrolment_changed($instance->courseid, $ue->userid,
-                $ue->status, $ue->timestart, $ue->timeend);
     }
 
     /**
@@ -2338,9 +2332,6 @@ abstract class enrol_plugin {
         $event->trigger();
         // User enrolments have changed, so mark user as dirty.
         mark_user_dirty($userid);
-
-        // Check if courrse contacts cache needs to be cleared.
-        core_course_category::user_enrolment_changed($courseid, $ue->userid, ENROL_USER_SUSPENDED);
 
         // reset current user enrolment caching
         if ($userid == $USER->id) {

@@ -23,7 +23,6 @@
  * @copyright  Sam Marshall
  */
 
-use core_course\modinfo;
 use core\exception\coding_exception;
 use core\exception\moodle_exception;
 
