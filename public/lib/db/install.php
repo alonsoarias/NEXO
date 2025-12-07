@@ -119,12 +119,11 @@ function xmldb_main_install() {
     $defaults = array(
         'rolesactive'           => '0', // marks fully set up system
         'auth'                  => 'email',
-        'enrol_plugins_enabled' => 'manual,guest,self,cohort',
+        // enrol_plugins_enabled removed - enrolment system not used
         'theme'                 => theme_config::DEFAULT_THEME,
         'filter_multilang_converted' => 1,
         'siteidentifier'        => random_string(32).get_host_from_url($CFG->wwwroot),
-        'backup_version'        => 2008111700,
-        'backup_release'        => '2.0 dev',
+        // backup_version and backup_release removed - backup system not used
         'mnet_dispatcher_mode'  => 'off',
         'sessiontimeout'        => 8 * 60 * 60, // Must be present during roles installation.
         'stringfilters'         => '', // These two are managed in a strange way by the filters.
@@ -132,10 +131,8 @@ function xmldb_main_install() {
         'texteditors'           => 'tiny,textarea',
         'antiviruses'           => '',
         'media_plugins_sortorder' => 'videojs,youtube',
-        'upgrade_extracreditweightsstepignored' => 1, // New installs should not run this upgrade step.
-        'upgrade_calculatedgradeitemsignored' => 1, // New installs should not run this upgrade step.
-        'upgrade_letterboundarycourses' => 1, // New installs should not run this upgrade step.
-        'format_plugins_sortorder' => 'topics,weeks,singleactivity,social', // Default order for course format plugins.
+        // Grade-related upgrade steps not needed - grade system not used
+        // format_plugins_sortorder removed - course formats not used
     );
     foreach($defaults as $key => $value) {
         set_config($key, $value);

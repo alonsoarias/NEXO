@@ -341,14 +341,7 @@ $definitions = array(
         'staticacceleration' => true,
     ),
 
-    // Grade categories. Stored at session level as invalidation is very aggressive.
-    'grade_categories' => array(
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'invalidationevents' => array(
-            'changesingradecategories',
-        )
-    ),
+    // Grade categories cache removed - grade system not used
 
     // Store temporary tables information.
     'temp_tables' => array(
@@ -501,27 +494,8 @@ $definitions = array(
         'simpledata' => true,
     ],
 
-    // File cache for H5P Library ids.
-    'h5p_libraries' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'canuselocalstore' => true
-    ],
-
-    // File cache for H5P Library files.
-    'h5p_library_files' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'canuselocalstore' => true
-    ],
-
-    // Cache the grade letters for faster retrival.
-    'grade_letters' => [
-        'mode'                   => cache_store::MODE_REQUEST,
-        'simplekeys'             => true,
-        'staticacceleration'     => true,
-        'staticaccelerationsize' => 100
-    ],
+    // H5P caches removed - H5P not used
+    // Grade letters cache removed - grade system not used
 
     // Cache for licenses.
     'license' => [
@@ -530,45 +504,10 @@ $definitions = array(
         'simpledata' => false,
     ],
 
-    // Cache the grade setting for faster retrieval.
-    'gradesetting' => [
-        'mode'                   => cache_store::MODE_REQUEST,
-        'simplekeys'             => true,
-        'staticacceleration'     => true,
-        'staticaccelerationsize' => 100
-    ],
+    // Grade setting cache removed - grade system not used
+    // Course image cache removed - course system not used
 
-    // Course image cache.
-    'course_image' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'staticacceleration' => true,
-        'datasource' => '\core_course\cache\course_image',
-    ],
-
-    // Cache the course categories where the user has access the content bank.
-    'contentbank_allowed_categories' => [
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'invalidationevents' => [
-            'changesincoursecat',
-            'changesincategoryenrolment',
-        ],
-    ],
-
-    // Cache the courses where the user has access the content bank.
-    'contentbank_allowed_courses' => [
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'invalidationevents' => [
-            'changesincoursecat',
-            'changesincategoryenrolment',
-            'changesincourse',
-        ],
-    ],
+    // Content bank caches removed - contentbank not used
 
     // Users allowed reports according to audience.
     'reportbuilder_allowed_reports' => [
