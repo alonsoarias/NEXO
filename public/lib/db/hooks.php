@@ -26,94 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
     [
-        'hook' => \core_group\hook\after_group_created::class,
-        'callback' => \core_communication\hook_listener::class . '::create_group_communication',
-    ],
-    [
-        'hook' => \core_group\hook\after_group_updated::class,
-        'callback' => \core_communication\hook_listener::class . '::update_group_communication',
-    ],
-    [
-        'hook' => \core_group\hook\after_group_deleted::class,
-        'callback' => \core_communication\hook_listener::class . '::delete_group_communication',
-    ],
-    [
-        'hook' => \core_group\hook\after_group_membership_added::class,
-        'callback' => \core_communication\hook_listener::class . '::add_members_to_group_room',
-    ],
-    [
-        'hook' => \core_group\hook\after_group_membership_removed::class,
-        'callback' => \core_communication\hook_listener::class . '::remove_members_from_group_room',
-    ],
-    [
-        'hook' => \core_group\hook\after_group_membership_added::class,
-        'callback' => \core_courseformat\hook_listener::class . '::add_members_to_group',
-    ],
-    [
-        'hook' => \core_group\hook\after_group_membership_removed::class,
-        'callback' => \core_courseformat\hook_listener::class . '::remove_members_from_group',
-    ],
-    [
-        'hook' => \core_courseformat\hook\after_course_content_updated::class,
-        'callback' => \core_courseformat\hook_listener::class . '::course_content_updated',
-    ],
-    [
-        'hook' => core\hook\access\after_role_switched::class,
-        'callback' => \core_courseformat\hook_listener::class . '::after_role_switched',
-    ],
-    [
-        'hook' => \core_completion\hook\after_cm_completion_updated::class,
-        'callback' => \core_courseformat\hook_listener::class . '::after_cm_completion_updated',
-    ],
-    [
-        'hook' => \core_course\hook\after_course_created::class,
-        'callback' => \core_communication\hook_listener::class . '::create_course_communication',
-    ],
-    [
-        'hook' => \core_course\hook\after_course_updated::class,
-        'callback' => \core_communication\hook_listener::class . '::update_course_communication',
-    ],
-    [
-        'hook' => \core_course\hook\before_course_deleted::class,
-        'callback' => \core_communication\hook_listener::class . '::delete_course_communication',
-    ],
-    [
-        'hook' => \core_user\hook\before_user_updated::class,
-        'callback' => \core_communication\hook_listener::class . '::update_user_room_memberships',
-    ],
-    [
-        'hook' => \core_user\hook\before_user_deleted::class,
-        'callback' => \core_communication\hook_listener::class . '::delete_user_room_memberships',
-    ],
-    [
-        'hook' => \core\hook\access\after_role_assigned::class,
-        'callback' => \core_communication\hook_listener::class . '::update_user_membership_for_role_changes',
-    ],
-    [
-        'hook' => \core\hook\access\after_role_unassigned::class,
-        'callback' => \core_communication\hook_listener::class . '::update_user_membership_for_role_changes',
-    ],
-    [
-        'hook' => \core_enrol\hook\after_enrol_instance_status_updated::class,
-        'callback' => \core_communication\hook_listener::class . '::update_communication_memberships_for_enrol_status_change',
-    ],
-    [
-        'hook' => \core_enrol\hook\before_enrol_instance_deleted::class,
-        'callback' => \core_communication\hook_listener::class . '::remove_communication_memberships_for_enrol_instance_deletion',
-    ],
-    [
-        'hook' => \core_enrol\hook\after_user_enrolled::class,
-        'callback' => \core_communication\hook_listener::class . '::add_communication_membership_for_enrolled_user',
-    ],
-    [
-        'hook' => \core_enrol\hook\before_user_enrolment_updated::class,
-        'callback' => \core_communication\hook_listener::class . '::update_communication_membership_for_updated_user_enrolment',
-    ],
-    [
-        'hook' => \core_enrol\hook\before_user_enrolment_removed::class,
-        'callback' => \core_communication\hook_listener::class . '::remove_communication_membership_for_unenrolled_user',
-    ],
-    [
         'hook' => \core\hook\output\before_standard_footer_html_generation::class,
         'callback' => \core_userfeedback::class . '::before_standard_footer_html_generation',
     ],
@@ -133,10 +45,5 @@ $callbacks = [
     [
         'hook' => \core_files\hook\before_file_created::class,
         'callback' => [\core_files\redactor\hook_listener::class, 'file_redaction_handler'],
-    ],
-    [
-        'hook' => \core_course\hook\before_course_viewed::class,
-        'callback' => [\core_courseformat\hook_listener::class, 'before_course_viewed'],
-        'priority' => 999,
     ],
 ];

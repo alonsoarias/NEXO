@@ -9081,13 +9081,6 @@ function admin_write_settings($formdata) {
         require_logout();
     }
 
-    // Now update $SITE - just update the fields, in case other people have a
-    // a reference to it (e.g. $PAGE, $COURSE).
-    $newsite = $DB->get_record('course', array('id'=>$SITE->id));
-    foreach (get_object_vars($newsite) as $field => $value) {
-        $SITE->$field = $value;
-    }
-
     // now reload all settings - some of them might depend on the changed
     admin_get_root(true);
     return $count;
