@@ -78,8 +78,8 @@ class move_updown_key extends XMLDBAction {
 
         $prev = NULL;
         $next = NULL;
-        $tableparam = required_param('table', PARAM_CLEAN);
-        $keyparam = required_param('key', PARAM_CLEAN);
+        $tableparam = required_param('table', PARAM_ALPHANUMEXT);
+        $keyparam = required_param('key', PARAM_ALPHANUMEXT);
         $direction  = required_param('direction', PARAM_ALPHA);
         $tables = $structure->getTables();
         $table = $structure->getTable($tableparam);

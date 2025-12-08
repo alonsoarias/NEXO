@@ -82,15 +82,15 @@ class edit_index extends XMLDBAction {
         }
 
         // Fetch request data
-        $tableparam = required_param('table', PARAM_CLEAN);
+        $tableparam = required_param('table', PARAM_ALPHANUMEXT);
         if (!$table = $structure->getTable($tableparam)) {
             $this->errormsg = 'Wrong table specified: ' . $tableparam;
             return false;
         }
-        $indexparam = required_param('index', PARAM_CLEAN);
+        $indexparam = required_param('index', PARAM_ALPHANUMEXT);
         if (!$index = $table->getIndex($indexparam)) {
             // Arriving here from a name change, looking for the new key name
-            $indexparam = required_param('name', PARAM_CLEAN);
+            $indexparam = required_param('name', PARAM_ALPHANUMEXT);
             $index = $table->getIndex($indexparam);
         }
 

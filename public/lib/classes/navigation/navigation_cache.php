@@ -50,12 +50,6 @@ class navigation_cache {
      * It can either be unique to start a fresh cache or shared to use an existing cache.
      */
     protected $area;
-    /** @var int cache time information */
-    #[\core\attribute\deprecated(null, since: '4.5', reason: 'This constant is no longer needed.', mdl: 'MDL-79628')]
-    public const CACHETIME = 0;
-    /** @var int cache user id */
-    #[\core\attribute\deprecated(null, since: '4.5', reason: 'This constant is no longer needed.', mdl: 'MDL-79628')]
-    public const CACHEUSERID = 1;
     /** @var int cache value */
     public const CACHEVALUE = 2;
     /** @var null|array An array of cache areas to expire on shutdown */
@@ -65,15 +59,8 @@ class navigation_cache {
      * Contructor for the cache. Requires a area string be passed in.
      *
      * @param string $area The unique string to segregate this particular cache.
-     * @param int $timeout Deprecated since Moodle 4.5. The number of seconds to time the information out after
      */
-    public function __construct($area, $timeout = null) {
-        if ($timeout !== null) {
-            debugging(
-                'The timeout argument has been deprecated. Please remove it from your method calls.',
-                DEBUG_DEVELOPER,
-            );
-        }
+    public function __construct($area) {
         global $USER;
         $this->area = "user_{$USER->id}_{$area}";
         $this->cache = cache::make('core', 'navigation_cache');

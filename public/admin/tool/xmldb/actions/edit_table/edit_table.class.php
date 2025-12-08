@@ -108,10 +108,10 @@ class edit_table extends XMLDBAction {
             $structure = $editeddir->xml_file->getStructure();
         }
 
-        $tableparam = required_param('table', PARAM_CLEAN);
+        $tableparam = required_param('table', PARAM_ALPHANUMEXT);
         if (!$table = $structure->getTable($tableparam)) {
             // Arriving here from a name change, looking for the new table name
-            $tableparam = required_param('name', PARAM_CLEAN);
+            $tableparam = required_param('name', PARAM_ALPHANUMEXT);
             $table = $structure->getTable($tableparam);
         }
 

@@ -226,97 +226,11 @@ enum param: string {
     case STRINGID = 'stringid';
 
     /**
-     * PARAM_CLEAN - obsoleted, please use a more specific type of parameter.
-     * It was one of the first types, that is why it is abused so much ;-)
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'a more specific type of parameter',
-        since: '2.0',
-        reason: 'The CLEAN param type is too generic to perform satisfactory validation',
-        emit: false,
-    )]
-    case CLEAN = 'clean';
-
-    /**
-     * PARAM_INTEGER - deprecated alias for PARAM_INT
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'param::INT',
-        since: '2.0',
-        reason: 'Alias for INT',
-        final: true,
-    )]
-    case INTEGER = 'integer';
-
-    /**
-     * PARAM_NUMBER - deprecated alias of PARAM_FLOAT
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'param::FLOAT',
-        since: '2.0',
-        reason: 'Alias for FLOAT',
-        final: true,
-    )]
-    case NUMBER = 'number';
-
-    /**
-     * PARAM_ACTION - deprecated alias for PARAM_ALPHANUMEXT, use for various actions in forms and urls
-     * NOTE: originally alias for PARAM_ALPHANUMEXT
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'param::ALPHANUMEXT',
-        since: '2.0',
-        reason: 'Alias for PARAM_ALPHANUMEXT',
-        final: true,
-    )]
-    case ACTION = 'action';
-
-    /**
-     * PARAM_FORMAT - deprecated alias for PARAM_ALPHANUMEXT, use for names of plugins, formats, etc.
-     * NOTE: originally alias for PARAM_APLHA
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'param::ALPHANUMEXT',
-        since: '2.0',
-        reason: 'Alias for PARAM_ALPHANUMEXT',
-        final: true,
-    )]
-    case FORMAT = 'format';
-
-    /**
-     * PARAM_MULTILANG - deprecated alias of PARAM_TEXT.
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'param::TEXT',
-        since: '2.0',
-        reason: 'Alias for PARAM_TEXT',
-        final: true,
-    )]
-    case MULTILANG = 'multilang';
-
-    /**
      * PARAM_TIMEZONE - expected timezone. Timezone can be int +-(0-13) or float +-(0.5-12.5) or
      * string separated by '/' and can have '-' &/ '_' (eg. America/North_Dakota/New_Salem
      * America/Port-au-Prince)
      */
     case TIMEZONE = 'timezone';
-
-    /**
-     * PARAM_CLEANFILE - deprecated alias of PARAM_FILE; originally was removing regional chars too
-     * @deprecated since 2.0
-     */
-    #[deprecated(
-        replacement: 'param::FILE',
-        since: '2.0',
-        reason: 'Alias for PARAM_FILE',
-    )]
-    case CLEANFILE = 'cleanfile';
 
     /**
      * PARAM_COMPONENT is used for full component names (aka frankenstyle) such as 'mod_forum = 'core_rating', 'auth_ldap'.
@@ -367,16 +281,7 @@ enum param: string {
      * @return param
      */
     private function canonical(): self {
-        return match ($this) {
-            self::ACTION => self::ALPHANUMEXT,
-            self::CLEANFILE => self::FILE,
-            self::FORMAT => self::ALPHANUMEXT,
-            self::INTEGER => self::INT,
-            self::MULTILANG => self::TEXT,
-            self::NUMBER => self::FLOAT,
-
-            default => $this,
-        };
+        return $this;
     }
 
     /**
@@ -675,23 +580,6 @@ enum param: string {
     protected function clean_param_value_raw_trimmed(mixed $param): string {
         // No cleaning, but strip leading and trailing whitespace.
         return trim((string) $this->clean_param_value_raw($param));
-    }
-
-    /**
-     * Validation for PARAM_CLEAN.
-     *
-     * @param mixed $param
-     * @return string
-     */
-    protected function clean_param_value_clean(mixed $param): string {
-        // General HTML cleaning, try to use more specific type if possible this is deprecated!
-        // Please use more specific type instead.
-        if (is_numeric($param)) {
-            return $param;
-        }
-        $param = fix_utf8($param);
-        // Sweep for scripts, etc.
-        return clean_text($param);
     }
 
     /**

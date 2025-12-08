@@ -462,30 +462,6 @@ class navigation_node implements renderable {
     }
 
     /**
-     * Walk the tree building up a list of all the flat navigation nodes.
-     *
-     * @deprecated since Moodle 4.0
-     * @param flat_navigation $nodes List of the found flat navigation nodes.
-     * @param boolean $showdivider Show a divider before the first node.
-     * @param string $label A label for the collection of navigation links.
-     */
-    public function build_flat_navigation_list(flat_navigation $nodes, $showdivider = false, $label = '') {
-        debugging("Function has been deprecated with the deprecation of the flat_navigation class.");
-        if ($this->showinflatnavigation) {
-            $indent = 0;
-            if ($this->type == self::TYPE_COURSE || $this->key === self::COURSE_INDEX_PAGE) {
-                $indent = 1;
-            }
-            $flat = new flat_navigation_node($this, $indent);
-            $flat->set_showdivider($showdivider, $label);
-            $nodes->add($flat);
-        }
-        foreach ($this->children as $child) {
-            $child->build_flat_navigation_list($nodes, false);
-        }
-    }
-
-    /**
      * Get the child of this node that has the given key + (optional) type.
      *
      * If you are looking for a node and want to search all children + their children
