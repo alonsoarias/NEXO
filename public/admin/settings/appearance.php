@@ -5,8 +5,7 @@
 $ADMIN->add('appearance', new admin_category('themes', new lang_string('themesettingscustom', 'admin')));
 
 $capabilities = array(
-    'moodle/my:configsyspages',
-    'moodle/tag:manage'
+    'moodle/my:configsyspages'
 );
 
 if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // speedup for non-admins, add all caps used on this page
@@ -120,23 +119,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
     $temp->add(new admin_setting_configselect('calendar_exportlookback', new lang_string('configexportlookback','admin'), new lang_string('helpexportlookback', 'admin'), 5, $days));
     $temp->add(new admin_setting_configtext('calendar_exportsalt', new lang_string('calendarexportsalt','admin'), new lang_string('configcalendarexportsalt', 'admin'), random_string(60)));
     $temp->add(new admin_setting_configcheckbox('calendar_showicalsource', new lang_string('configshowicalsource', 'admin'), new lang_string('helpshowicalsource','admin'), 1));
-    $ADMIN->add('appearance', $temp);
-
-    // blog
-    $temp = new admin_settingpage('blog', new lang_string('blog','blog'), 'moodle/site:config', empty($CFG->enableblogs));
-    $temp->add(new admin_setting_configcheckbox('useblogassociations', new lang_string('useblogassociations', 'blog'), new lang_string('configuseblogassociations','blog'), 1));
-    $temp->add(new admin_setting_bloglevel('bloglevel', new lang_string('bloglevel', 'admin'), new lang_string('configbloglevel', 'admin'), 4, array(BLOG_GLOBAL_LEVEL => new lang_string('worldblogs','blog'),
-                                                                                                                                           BLOG_SITE_LEVEL => new lang_string('siteblogs','blog'),
-                                                                                                                                           BLOG_USER_LEVEL => new lang_string('personalblogs','blog'))));
-    $temp->add(new admin_setting_configcheckbox('useexternalblogs', new lang_string('useexternalblogs', 'blog'), new lang_string('configuseexternalblogs','blog'), 1));
-    $temp->add(new admin_setting_configselect('externalblogcrontime', new lang_string('externalblogcrontime', 'blog'), new lang_string('configexternalblogcrontime', 'blog'), 86400,
-        array(43200 => new lang_string('numhours', '', 12),
-              86400 => new lang_string('numhours', '', 24),
-              172800 => new lang_string('numdays', '', 2),
-              604800 => new lang_string('numdays', '', 7))));
-    $temp->add(new admin_setting_configtext('maxexternalblogsperuser', new lang_string('maxexternalblogsperuser','blog'), new lang_string('configmaxexternalblogsperuser', 'blog'), 1));
-    $temp->add(new admin_setting_configcheckbox('blogusecomments', new lang_string('enablecomments', 'admin'), new lang_string('configenablecomments', 'admin'), 1));
-    $temp->add(new admin_setting_configcheckbox('blogshowcommentscount', new lang_string('showcommentscount', 'admin'), new lang_string('configshowcommentscount', 'admin'), 1));
     $ADMIN->add('appearance', $temp);
 
     // Navigation settings
@@ -270,12 +252,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
     $setting->set_updatedcallback('js_reset_all_caches');
     $temp->add($setting);
     $ADMIN->add('appearance', $temp);
-
-    // Link to tag management interface.
-    $url = new moodle_url('/tag/manage.php');
-    $hidden = empty($CFG->usetags);
-    $page = new admin_externalpage('managetags', new lang_string('managetags', 'tag'), $url, 'moodle/tag:manage', $hidden);
-    $ADMIN->add('appearance', $page);
 
     $temp = new admin_settingpage('additionalhtml', new lang_string('additionalhtml', 'admin'));
     $temp->add(new admin_setting_heading('additionalhtml_heading', new lang_string('additionalhtml_heading', 'admin'), new lang_string('additionalhtml_desc', 'admin')));

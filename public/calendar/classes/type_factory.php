@@ -58,6 +58,6 @@ class type_factory {
      * @return array List of available calendar types
      */
     public static function get_list_of_calendar_types() {
-        return ['gregorian' => get_string('calendartype', 'calendartype_gregorian')];
+        return ['gregorian' => 'Gregorian'];
     }
 }

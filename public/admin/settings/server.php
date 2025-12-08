@@ -243,24 +243,6 @@ if ($hassiteconfig) {
         ]
     ));
 
-    $temp->add(new admin_setting_configcheckbox('disablegradehistory', new lang_string('disablegradehistory', 'grades'),
-        new lang_string('disablegradehistory_help', 'grades'), 0));
-
-    $temp->add(new admin_setting_configselect('gradehistorylifetime', new lang_string('gradehistorylifetime', 'grades'),
-        new lang_string('gradehistorylifetime_help', 'grades'), 0,
-        [
-            0 => new lang_string('neverdeletehistory', 'grades'),
-            1000 => new lang_string('numdays', '', 1000),
-            365 => new lang_string('numdays', '', 365),
-            180 => new lang_string('numdays', '', 180),
-            150 => new lang_string('numdays', '', 150),
-            120 => new lang_string('numdays', '', 120),
-            90 => new lang_string('numdays', '', 90),
-            60 => new lang_string('numdays', '', 60),
-            30 => new lang_string('numdays', '', 30),
-        ]
-    ));
-
     $temp->add(new admin_setting_configselect('tempdatafoldercleanup', new lang_string('tempdatafoldercleanup', 'admin'),
         new lang_string('configtempdatafoldercleanup', 'admin'), 168,
         [
