@@ -13,34 +13,32 @@ $ADMIN->add('root', new admin_externalpage('adminnotifications', new lang_string
 // Hidden upgrade script.
 $ADMIN->add('root', new admin_externalpage('upgradesettings', new lang_string('upgradesettings', 'admin'), "$CFG->wwwroot/$CFG->admin/upgradesettings.php", 'moodle/site:config', true));
 
-// Site administration - General settings.
-$ADMIN->add('root', new admin_category('site', new lang_string('sitesettings')));
-
-if ($hassiteconfig) {
-    $optionalsubsystems = new admin_settingpage('optionalsubsystems', new lang_string('advancedfeatures', 'admin'));
-    $ADMIN->add('site', $optionalsubsystems);
-}
-
 // Users.
 $ADMIN->add('root', new admin_category('users', new lang_string('users', 'admin')));
-
-// AI.
-$ADMIN->add('root', new admin_category('ai', new lang_string('ai', 'ai')));
 
 // Plugins.
 $ADMIN->add('root', new admin_category('modules', new lang_string('plugins', 'admin')));
 
+// AI as subcategory of Plugins.
+$ADMIN->add('modules', new admin_category('ai', new lang_string('ai', 'ai')));
+
 // Appearance (includes language and themes).
 $ADMIN->add('root', new admin_category('appearance', new lang_string('appearance', 'admin')));
 
-// Server (includes location, email, tasks, etc.).
+// Server (includes location, email, tasks, messaging, etc.).
 $ADMIN->add('root', new admin_category('server', new lang_string('server', 'admin')));
+
+// Advanced features under Server.
+if ($hassiteconfig) {
+    $optionalsubsystems = new admin_settingpage('optionalsubsystems', new lang_string('advancedfeatures', 'admin'));
+    $ADMIN->add('server', $optionalsubsystems);
+}
+
+// Messaging as subcategory of Server.
+$ADMIN->add('server', new admin_category('messaging', new lang_string('messagingcategory', 'admin')));
 
 // Security.
 $ADMIN->add('root', new admin_category('security', new lang_string('security', 'admin')));
-
-// Messaging.
-$ADMIN->add('root', new admin_category('messaging', new lang_string('messagingcategory', 'admin')));
 
 // Reports.
 $ADMIN->add('root', new admin_category('reports', new lang_string('reports')));
