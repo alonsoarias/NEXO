@@ -781,13 +781,19 @@ function user_convert_text_to_menu_items($text, $page) {
             $namebits[1] = $namebits[1] ?: 'core';
             // Check the validity of the identifier part of the string.
             if (clean_param($namebits[0], PARAM_STRINGID) !== '' && clean_param($namebits[1], PARAM_COMPONENT) !== '') {
-                // Treat this as a language string.
-                $child->title = get_string($namebits[0], $namebits[1]);
-                $child->titleidentifier = implode(',', $namebits);
+                // Treat this as a language string - but check if it exists first.
+                if (get_string_manager()->string_exists($namebits[0], $namebits[1])) {
+                    $child->title = get_string($namebits[0], $namebits[1]);
+                    $child->titleidentifier = implode(',', $namebits);
+                }
             }
         }
         if (empty($child->title)) {
-            // Use it as is, don't even clean it.
+            // Use it as is, don't even clean it, or skip if it looks like an orphan string reference.
+            if (strpos($bits[0], ',') !== false) {
+                // Skip orphan language string references like 'grades,grades'.
+                continue;
+            }
             $child->title = $bits[0];
             $child->titleidentifier = str_replace(" ", "-", $bits[0]);
         }

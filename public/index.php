@@ -61,4 +61,30 @@ $PAGE->set_title(get_string('home'));
 $PAGE->set_heading($SITE->fullname);
 
 echo $OUTPUT->header();
+
+// Front page content for guests.
+echo html_writer::start_div('frontpage-container');
+
+// Site summary if available.
+if (!empty($SITE->summary)) {
+    echo html_writer::div(format_text($SITE->summary, FORMAT_HTML), 'site-summary mb-4');
+}
+
+// Login prompt for guests.
+if (!isloggedin() || isguestuser()) {
+    echo html_writer::start_div('login-prompt text-center my-5');
+    echo html_writer::tag('h2', get_string('loginto', 'moodle', $SITE->fullname), ['class' => 'mb-4']);
+    echo html_writer::start_div('login-buttons');
+    echo $OUTPUT->single_button(
+        new moodle_url('/login/index.php'),
+        get_string('login'),
+        'get',
+        ['class' => 'btn-lg']
+    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+}
+
+echo html_writer::end_div(); // frontpage-container.
+
 echo $OUTPUT->footer();
