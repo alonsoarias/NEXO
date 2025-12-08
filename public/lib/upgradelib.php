@@ -644,8 +644,6 @@ function upgrade_component_updated(string $component, string $messageplug = '',
         upgrade_plugin_mnet_functions($component);
         core_upgrade_time::record_detail('upgrade_plugin_mnet_functions');
     }
-    core_tag_area::reset_definitions_for_component($component);
-    core_upgrade_time::record_detail('core_tag_area::reset_definitions_for_component');
 }
 
 /**
@@ -657,9 +655,7 @@ function upgrade_plugins($type, $startcallback, $endcallback, $verbose) {
     global $CFG, $DB;
 
 /// special cases
-    if ($type === 'mod') {
-        return upgrade_plugins_modules($startcallback, $endcallback, $verbose);
-    } else if ($type === 'block') {
+    if ($type === 'block') {
         return upgrade_plugins_blocks($startcallback, $endcallback, $verbose);
     }
 
@@ -786,164 +782,6 @@ function upgrade_plugins($type, $startcallback, $endcallback, $verbose) {
         }
     }
 }
-
-/**
- * Find and check all modules and load them up or upgrade them if necessary
- *
- * @global object
- * @global object
- */
-function upgrade_plugins_modules($startcallback, $endcallback, $verbose) {
-    global $CFG, $DB;
-
-    $mods = core_component::get_plugin_list('mod');
-
-    foreach ($mods as $mod=>$fullmod) {
-
-        if ($mod === 'NEWMODULE') {   // Someone has unzipped the template, ignore it
-            continue;
-        }
-
-        $component = clean_param('mod_'.$mod, PARAM_COMPONENT);
-
-        // check module dir is valid name
-        if (empty($component)) {
-            throw new plugin_defective_exception('mod_'.$mod, 'Invalid plugin directory name.');
-        }
-
-        if (!is_readable($fullmod.'/version.php')) {
-            throw new plugin_defective_exception($component, 'Missing version.php');
-        }
-
-        $module = new stdClass();
-        $plugin = new stdClass();
-        $plugin->version = null;
-        require($fullmod .'/version.php');  // Defines $plugin with version etc.
-
-        // Check if the legacy $module syntax is still used.
-        if (!is_object($module) or (count((array)$module) > 0)) {
-            throw new plugin_defective_exception($component, 'Unsupported $module syntax detected in version.php');
-        }
-
-        // Prepare the record for the {modules} table.
-        $module = clone($plugin);
-        unset($module->version);
-        unset($module->component);
-        unset($module->dependencies);
-        unset($module->release);
-
-        if (empty($plugin->version)) {
-            throw new plugin_defective_exception($component, 'Missing $plugin->version number in version.php.');
-        }
-
-        if (empty($plugin->component)) {
-            throw new plugin_defective_exception($component, 'Missing $plugin->component declaration in version.php.');
-        }
-
-        if ($plugin->component !== $component) {
-            throw new plugin_misplaced_exception($plugin->component, null, $fullmod);
-        }
-
-        if (!empty($plugin->requires)) {
-            if ($plugin->requires > $CFG->version) {
-                throw new upgrade_requires_exception($component, $plugin->version, $CFG->version, $plugin->requires);
-            } else if ($plugin->requires < 2010000000) {
-                throw new plugin_defective_exception($component, 'Plugin is not compatible with Moodle 2.x or later.');
-            }
-        }
-
-        if (empty($module->cron)) {
-            $module->cron = 0;
-        }
-
-        // all modules must have en lang pack
-        if (!is_readable("$fullmod/lang/en/$mod.php")) {
-            throw new plugin_defective_exception($component, 'Missing mandatory en language pack.');
-        }
-
-        $module->name = $mod;   // The name MUST match the directory
-
-        $installedversion = $DB->get_field('config_plugins', 'value', array('name'=>'version', 'plugin'=>$component)); // No caching!
-
-        if (file_exists($fullmod.'/db/install.php')) {
-            if (get_config($module->name, 'installrunning')) {
-                require_once($fullmod.'/db/install.php');
-                $recover_install_function = 'xmldb_'.$module->name.'_install_recovery';
-                if (function_exists($recover_install_function)) {
-                    $startcallback($component, true, $verbose);
-                    $recover_install_function();
-                    unset_config('installrunning', $module->name);
-                    // Install various components too
-                    upgrade_component_updated($component);
-                    $endcallback($component, true, $verbose);
-                }
-            }
-        }
-
-        if (empty($installedversion)) {
-            $startcallback($component, true, $verbose);
-
-        /// Execute install.xml (XMLDB) - must be present in all modules
-            $DB->get_manager()->install_from_xmldb_file($fullmod.'/db/install.xml');
-            core_upgrade_time::record_detail('install.xml');
-
-        /// Add record into modules table - may be needed in install.php already
-            $module->id = $DB->insert_record('modules', $module);
-            core_upgrade_time::record_detail('insert_record');
-            upgrade_mod_savepoint(true, $plugin->version, $module->name, false);
-
-        /// Post installation hook - optional
-            if (file_exists("$fullmod/db/install.php")) {
-                require_once("$fullmod/db/install.php");
-                // Set installation running flag, we need to recover after exception or error
-                set_config('installrunning', 1, $module->name);
-                $post_install_function = 'xmldb_'.$module->name.'_install';
-                $post_install_function();
-                unset_config('installrunning', $module->name);
-                core_upgrade_time::record_detail('install.php');
-            }
-
-        /// Install various components
-            upgrade_component_updated($component);
-
-            $endcallback($component, true, $verbose);
-
-        } else if ($installedversion < $plugin->version) {
-        /// If versions say that we need to upgrade but no upgrade files are available, notify and continue
-            $startcallback($component, false, $verbose);
-
-            if (is_readable($fullmod.'/db/upgrade.php')) {
-                require_once($fullmod.'/db/upgrade.php');  // defines new upgrading function
-                $newupgrade_function = 'xmldb_'.$module->name.'_upgrade';
-                $result = $newupgrade_function($installedversion, $module);
-                core_upgrade_time::record_detail('upgrade.php');
-            } else {
-                $result = true;
-            }
-
-            $installedversion = $DB->get_field('config_plugins', 'value', array('name'=>'version', 'plugin'=>$component)); // No caching!
-            $currmodule = $DB->get_record('modules', array('name'=>$module->name));
-            if ($installedversion < $plugin->version) {
-                // store version if not already there
-                upgrade_mod_savepoint($result, $plugin->version, $mod, false);
-            }
-
-            // update cron flag if needed
-            if ($currmodule->cron != $module->cron) {
-                $DB->set_field('modules', 'cron', $module->cron, array('name' => $module->name));
-            }
-
-            // Upgrade various components
-            upgrade_component_updated($component);
-
-            $endcallback($component, false, $verbose);
-
-        } else if ($installedversion > $plugin->version) {
-            throw new downgrade_exception($component, $installedversion, $plugin->version);
-        }
-    }
-}
-
 
 /**
  * This function finds all available blocks and install them

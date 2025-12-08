@@ -4781,19 +4781,6 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
     $coursecontext = context_course::instance($courseid);
     $fs = get_file_storage();
 
-    // Delete course completion information, this has to be done before grades and enrols.
-    $cc = new completion_info($course);
-    $cc->clear_criteria();
-    if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('completion', 'completion'), 'notifysuccess');
-    }
-
-    // Remove all data from gradebook - this needs to be done before course modules
-    // because while deleting this information, the system may need to reference
-    // the course modules that own the grades.
-    remove_course_grades($courseid, $showfeedback);
-    remove_grade_letters($coursecontext, $showfeedback);
-
     // Delete course blocks in any all child contexts,
     // they may depend on modules so delete them first.
     $childcontexts = $coursecontext->get_child_contexts(); // Returns all subcontexts since 2.2.
@@ -4852,13 +4839,6 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
                         // Delete activity context questions and question categories.
                         // We delete the questions after the activity database is removed,
                         // because questions are referenced via question reference tables
-                        // and cannot be deleted while the activities that use them still exist.
-                        question_delete_activity($cm, coursedeletion: $coursedeletion);
-                        // Delete all tag instances associated with the instance of this module.
-                        core_tag_tag::delete_instances("mod_{$modname}", null, context_module::instance($cm->id)->id);
-                        core_tag_tag::remove_all_item_tags('core', 'course_modules', $cm->id);
-                        // Notify the competency subsystem.
-                        \core_competency\api::hook_course_module_deleted($cm);
                         // Delete cm and its context - orphaned contexts are purged in cron in case of any race condition.
                         context_helper::delete_instance(CONTEXT_MODULE, $cm->id);
                         $DB->delete_records('course_modules_completion', ['coursemoduleid' => $cm->id]);
@@ -4909,13 +4889,6 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
         echo $OUTPUT->notification($strdeleted.get_string('type_mod_plural', 'plugin'), 'notifysuccess');
     }
 
-    // Delete content bank contents.
-    $cb = new \core_contentbank\contentbank();
-    $cbdeleted = $cb->delete_contents($coursecontext);
-    if ($showfeedback && $cbdeleted) {
-        echo $OUTPUT->notification($strdeleted.get_string('contentbank', 'contentbank'), 'notifysuccess');
-    }
-
     // Make sure there are no subcontexts left - all valid blocks and modules should be already gone.
     $childcontexts = $coursecontext->get_child_contexts(); // Returns all subcontexts since 2.2.
     foreach ($childcontexts as $childcontext) {
@@ -4951,39 +4924,15 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
     // Die comments!
     \core_comment\manager::delete_comments($coursecontext->id);
 
-    // Ratings are history too.
-    $delopt = new stdclass();
-    $delopt->contextid = $coursecontext->id;
-    $rm = new rating_manager();
-    $rm->delete_ratings($delopt);
-
-    // Delete course tags.
-    core_tag_tag::remove_all_item_tags('core', 'course', $course->id);
-
-    // Give the course format the opportunity to remove its obscure data.
-    $format = course_get_format($course);
-    $format->delete_format_data();
-
-    // Notify the competency subsystem.
-    \core_competency\api::hook_course_deleted($course);
-
-    // Delete calendar events.
-    $DB->delete_records('event', array('courseid' => $course->id));
-    $fs->delete_area_files($coursecontext->id, 'calendar');
-
     // Delete all related records in other core tables that may have a courseid
     // This array stores the tables that need to be cleared, as
     // table_name => column_name that contains the course id.
     $tablestoclear = array(
-        'backup_courses' => 'courseid',  // Scheduled backup stuff.
         'user_lastaccess' => 'courseid', // User access info.
     );
     foreach ($tablestoclear as $table => $col) {
         $DB->delete_records($table, array($col => $course->id));
     }
-
-    // Delete all course backup files.
-    $fs->delete_area_files($coursecontext->id, 'backup');
 
     // Cleanup course record - remove links to deleted stuff.
     // Do not wipe cacherev, as this course might be reused and we need to ensure that it keeps
@@ -5152,38 +5101,6 @@ function reset_course_userdata($data) {
         $DB->set_field('course', 'enddate', $enddate, array('id' => $data->courseid));
     }
 
-    if (!empty($data->reset_events)) {
-        $DB->delete_records('event', array('courseid' => $data->courseid));
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteevents', 'calendar'), 'error' => false);
-    }
-
-    if (!empty($data->reset_notes)) {
-        require_once($CFG->dirroot.'/notes/lib.php');
-        note_delete_all($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deletenotes', 'notes'), 'error' => false);
-    }
-
-    if (!empty($data->delete_blog_associations)) {
-        require_once($CFG->dirroot.'/blog/lib.php');
-        blog_remove_associations_for_course($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteblogassociations', 'blog'), 'error' => false);
-    }
-
-    if (!empty($data->reset_completion)) {
-        // Delete course and activity completion information.
-        $course = $DB->get_record('course', array('id' => $data->courseid));
-        $cc = new completion_info($course);
-        $cc->delete_all_completion_data();
-        $status[] = array('component' => $componentstr,
-                'item' => get_string('deletecompletiondata', 'completion'), 'error' => false);
-    }
-
-    if (!empty($data->reset_competency_ratings)) {
-        \core_competency\api::hook_course_reset_competency_ratings($data->courseid);
-        $status[] = array('component' => $componentstr,
-            'item' => get_string('deletecompetencyratings', 'core_competency'), 'error' => false);
-    }
-
     $componentstr = get_string('roles');
 
     if (!empty($data->reset_roles_overrides)) {
@@ -5340,18 +5257,6 @@ function reset_course_userdata($data) {
         }
     }
 
-    $componentstr = get_string('gradebook', 'grades');
-    // Reset gradebook,.
-    if (!empty($data->reset_gradebook_items)) {
-        remove_course_grades($data->courseid, false);
-        grade_grab_course_grades($data->courseid);
-        grade_regrade_final_grades($data->courseid, async: true);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removeallcourseitems', 'grades'), 'error' => false);
-
-    } else if (!empty($data->reset_gradebook_grades)) {
-        grade_course_reset($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removeallcoursegrades', 'grades'), 'error' => false);
-    }
     // Reset comments.
     if (!empty($data->reset_comments)) {
         \core_comment\manager::reset_course_page_comments($context);

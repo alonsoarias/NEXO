@@ -2019,43 +2019,48 @@ class plugin_manager {
      * @return array same array with altered order of items
      */
     protected function reorder_plugin_types(array $types) {
-        $fix = ['mod' => $types['mod']];
-        foreach (core_component::get_plugin_list('mod') as $plugin => $fulldir) {
-            if (!$subtypes = core_component::get_subplugins('mod_' . $plugin)) {
-                continue;
-            }
-            foreach ($subtypes as $subtype => $ignored) {
-                $fix[$subtype] = $types[$subtype];
+        $fix = [];
+
+        // Block plugins.
+        if (isset($types['block'])) {
+            $fix['block'] = $types['block'];
+        }
+        if (isset($types['filter'])) {
+            $fix['filter'] = $types['filter'];
+        }
+
+        // Editor plugins and subplugins.
+        if (isset($types['editor'])) {
+            $fix['editor'] = $types['editor'];
+            foreach (core_component::get_plugin_list('editor') as $plugin => $fulldir) {
+                if (!$subtypes = core_component::get_subplugins('editor_' . $plugin)) {
+                    continue;
+                }
+                foreach ($subtypes as $subtype => $ignored) {
+                    if (isset($types[$subtype])) {
+                        $fix[$subtype] = $types[$subtype];
+                    }
+                }
             }
         }
 
-        $fix['mod']        = $types['mod'];
-        $fix['block']      = $types['block'];
-        $fix['qtype']      = $types['qtype'];
-        $fix['qbank']      = $types['qbank'];
-        $fix['qbehaviour'] = $types['qbehaviour'];
-        $fix['qformat']    = $types['qformat'];
-        $fix['filter']     = $types['filter'];
-
-        $fix['editor']     = $types['editor'];
-        foreach (core_component::get_plugin_list('editor') as $plugin => $fulldir) {
-            if (!$subtypes = core_component::get_subplugins('editor_' . $plugin)) {
-                continue;
-            }
-            foreach ($subtypes as $subtype => $ignored) {
-                $fix[$subtype] = $types[$subtype];
-            }
+        // Auth plugins.
+        if (isset($types['auth'])) {
+            $fix['auth'] = $types['auth'];
         }
 
-        $fix['enrol'] = $types['enrol'];
-        $fix['auth']  = $types['auth'];
-        $fix['tool']  = $types['tool'];
-        foreach (core_component::get_plugin_list('tool') as $plugin => $fulldir) {
-            if (!$subtypes = core_component::get_subplugins('tool_' . $plugin)) {
-                continue;
-            }
-            foreach ($subtypes as $subtype => $ignored) {
-                $fix[$subtype] = $types[$subtype];
+        // Tool plugins and subplugins.
+        if (isset($types['tool'])) {
+            $fix['tool'] = $types['tool'];
+            foreach (core_component::get_plugin_list('tool') as $plugin => $fulldir) {
+                if (!$subtypes = core_component::get_subplugins('tool_' . $plugin)) {
+                    continue;
+                }
+                foreach ($subtypes as $subtype => $ignored) {
+                    if (isset($types[$subtype])) {
+                        $fix[$subtype] = $types[$subtype];
+                    }
+                }
             }
         }
 

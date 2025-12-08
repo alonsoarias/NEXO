@@ -11601,11 +11601,8 @@ class admin_settings_h5plib_handler_select extends admin_setting_configselect {
             return true;
         }
 
-        $this->choices = \core_h5p\local\library\autoloader::get_all_handlers();
-        foreach ($this->choices as $name => $class) {
-            $this->choices[$name] = new lang_string('sitepolicyhandlerplugin', 'core_admin',
-                ['name' => new lang_string('pluginname', $name), 'component' => $name]);
-        }
+        // H5P subsystem was removed, return empty choices.
+        $this->choices = [];
 
         return true;
     }
