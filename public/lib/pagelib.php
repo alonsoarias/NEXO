@@ -1168,18 +1168,16 @@ class moodle_page {
         }
 
         if (!$this->_context) {
-            $this->set_context(context_course::instance($this->_course->id));
+            // NEXO: Use system context since courses don't exist.
+            if ($this->_course->id == $SITE->id) {
+                $this->set_context(context_system::instance());
+            } else {
+                $this->set_context(context_course::instance($this->_course->id));
+            }
         }
 
-        // Notify course format that this page is set for the course.
-        if ($this->_course->id != $SITE->id) {
-            require_once($CFG->dirroot.'/course/lib.php');
-            $courseformat = course_get_format($this->_course);
-            $this->add_body_class('format-'. $courseformat->get_format());
-            $courseformat->page_set_course($this);
-        } else {
-            $this->add_body_class('format-site');
-        }
+        // NEXO: Course format removed - always set format-site.
+        $this->add_body_class('format-site');
     }
 
     /**

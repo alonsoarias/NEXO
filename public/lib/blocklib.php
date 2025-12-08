@@ -2742,33 +2742,16 @@ function blocks_get_default_site_course_blocks() {
 function blocks_add_default_course_blocks($course) {
     global $CFG;
 
+    // NEXO: Only site blocks are supported since courses are removed.
     if (isset($CFG->defaultblocks_override)) {
         $blocknames = blocks_parse_default_blocks_list($CFG->defaultblocks_override);
-
-    } else if ($course->id == SITEID) {
+    } else {
         $blocknames = blocks_get_default_site_course_blocks();
-
-    } else if (isset($CFG->{'defaultblocks_' . $course->format})) {
-        $blocknames = blocks_parse_default_blocks_list($CFG->{'defaultblocks_' . $course->format});
-
-    } else {
-        require_once($CFG->dirroot. '/course/lib.php');
-        $blocknames = course_get_format($course)->get_default_blocks();
-
     }
 
+    $pagetypepattern = 'site-index';
     $showinsubcontexts = false;
-    if ($course->id == SITEID) {
-        $pagetypepattern = 'site-index';
-    } else {
-        $format = course_get_format($course);
-        if ($format->has_view_page()) {
-            $pagetypepattern = 'course-view-*';
-        } else {
-            $pagetypepattern = '*';
-            $showinsubcontexts = true;
-        }
-    }
+
     $page = new moodle_page();
     $page->set_course($course);
     $page->blocks->add_blocks(
