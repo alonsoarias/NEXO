@@ -33,6 +33,7 @@
         "ai": "public/ai",
         "access": null,
         "admin": "public/admin",
+        "calendar": "public/calendar",
         "adminpresets": "public/admin/presets",
         "antivirus": "public/lib/antivirus",
         "auth": "public/auth",
