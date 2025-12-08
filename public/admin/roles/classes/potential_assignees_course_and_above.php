@@ -25,9 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * User selector subclass for the list of potential users on the assign roles page,
- * when we are assigning in a context at or above the course level. In this case we
- * show all the users in the system who do not already have the role.
+ * User selector subclass for the list of potential users on the assign roles page.
+ * Shows all users in the system who do not already have the role.
  */
 class core_role_potential_assignees_course_and_above extends core_role_assign_user_selector_base {
     public function find_users($search) {

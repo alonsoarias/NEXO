@@ -61,8 +61,6 @@ abstract class context_helper extends context {
             CONTEXT_SYSTEM => \core\context\system::class,
             CONTEXT_USER => \core\context\user::class,
             CONTEXT_COURSECAT => \core\context\coursecat::class,
-            CONTEXT_COURSE => \core\context\course::class,
-            CONTEXT_MODULE => \core\context\module::class,
             CONTEXT_BLOCK => \core\context\block::class,
         );
 
@@ -421,23 +419,6 @@ abstract class context_helper extends context {
         }
     }
 
-    /**
-     * Preload all contexts instances from course.
-     *
-     * To be used if you expect multiple queries for course activities...
-     *
-     * @param int $courseid
-     */
-    public static function preload_course($courseid) {
-        // Users can call this multiple times without doing any harm.
-        if (isset(context::$cache_preloaded[$courseid])) {
-            return;
-        }
-        $coursecontext = context\course::instance($courseid);
-        $coursecontext->get_child_contexts();
-
-        context::$cache_preloaded[$courseid] = true;
-    }
 
     /**
      * Delete context instance
