@@ -114,9 +114,6 @@ class webservice {
         //retrieve user link to the token
         $user = $DB->get_record('user', array('id' => $token->userid, 'deleted' => 0), '*', MUST_EXIST);
 
-        // let enrol plugins deal with new enrolments if necessary
-        enrol_check_plugins($user, false);
-
         // setup user session to check capability
         \core\session\manager::set_user($user);
         set_login_session_preferences();
@@ -1124,7 +1121,6 @@ abstract class webservice_server implements webservice_server_interface {
         }
 
         // now fake user login, the session is completely empty too
-        enrol_check_plugins($user, false);
         \core\session\manager::set_user($user);
         set_login_session_preferences();
         $this->userid = $user->id;

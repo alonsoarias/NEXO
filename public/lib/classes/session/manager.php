@@ -630,9 +630,6 @@ class manager {
         self::destroy($sid);
         self::add_session($user->id);
 
-        // Let enrol plugins deal with new enrolments if necessary.
-        enrol_check_plugins($user);
-
         // Setup $USER object.
         self::set_user($user);
     }
@@ -1088,9 +1085,6 @@ class manager {
         $user = get_complete_user_data('id', $userid);
         $user->realuser       = $_SESSION['REALUSER']->id;
         $user->loginascontext = $context;
-
-        // Let enrol plugins deal with new enrolments if necessary.
-        enrol_check_plugins($user);
 
         if ($generateevent) {
             // Create event before $USER is updated.
