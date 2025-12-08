@@ -17,9 +17,6 @@
 /**
  * This file is executed right after the install.xml
  *
- * For more information, take a look to the documentation available:
- *     - Upgrade API: {@link https://moodledev.io/docs/guides/upgrade}
- *
  * @package   core_install
  * @category  upgrade
  * @copyright 2009 Petr Skoda (http://skodak.org)
@@ -31,30 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Main post-install tasks to be executed after the BD schema is available
  *
- * This function is automatically executed after Moodle core DB has been
- * created at initial install. It's in charge of perform the initial tasks
- * not covered by the {@link install.xml} file, like create initial users,
- * roles, templates, moving stuff from other plugins...
- *
- * Note that the function is only invoked once, at install time, so if new tasks
- * are needed in the future, they will need to be added both here (for new sites)
- * and in the corresponding {@link upgrade.php} file (for existing sites).
- *
- * All plugins within Moodle (modules, blocks, reports...) support the existence of
- * their own install.php file, using the "Frankenstyle" component name as
- * defined at {@link https://moodledev.io/general/development/policies/codingstyle/frankenstyle}, for example:
- *     - {@link xmldb_page_install()}. (modules don't require the plugintype ("mod_") to be used.
- *     - {@link xmldb_enrol_meta_install()}.
- *     - {@link xmldb_workshopform_accumulative_install()}.
- *     - ....
- *
- * Finally, note that it's also supported to have one uninstall.php file that is
- * executed also once, each time one plugin is uninstalled (before the DB schema is
- * deleted). Those uninstall files will contain one function, using the "Frankenstyle"
- * naming conventions, like {@link xmldb_enrol_meta_uninstall()} or {@link xmldb_workshop_uninstall()}.
+ * This is a stripped-down version for NEXO without courses.
  */
 function xmldb_main_install() {
-    global $CFG, $DB, $SITE, $OUTPUT;
+    global $CFG, $DB, $OUTPUT;
 
     // Make sure system context exists
     $syscontext = context_system::instance(0, MUST_EXIST, false);
@@ -62,98 +39,34 @@ function xmldb_main_install() {
         throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new system context id!');
     }
 
-
-    // Create site course
-    if ($DB->record_exists('course', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create frontpage course, courses already exist.');
-    }
-    $newsite = new stdClass();
-    $newsite->fullname     = '';
-    $newsite->shortname    = '';
-    $newsite->summary      = NULL;
-    $newsite->newsitems    = 3;
-    $newsite->numsections  = 1;
-    $newsite->category     = 0;
-    $newsite->format       = 'site';  // Only for this course
-    $newsite->timecreated  = time();
-    $newsite->timemodified = $newsite->timecreated;
-
-    if (defined('SITEID')) {
-        $newsite->id = SITEID;
-        $DB->import_record('course', $newsite);
-        $DB->get_manager()->reset_sequence('course');
-    } else {
-        $newsite->id = $DB->insert_record('course', $newsite);
-        define('SITEID', $newsite->id);
-    }
-    // set the field 'numsections'. We can not use format_site::update_format_options() because
-    // the file is not loaded
-    $DB->insert_record('course_format_options', array('courseid' => SITEID, 'format' => 'site',
-        'sectionid' => 0, 'name' => 'numsections', 'value' => $newsite->numsections));
-    $SITE = get_site();
-    if ($newsite->id != $SITE->id) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new site course id!');
-    }
-    // Make sure site course context exists
-    context_course::instance($SITE->id);
-    // Update the global frontpage cache
-    $SITE = $DB->get_record('course', array('id'=>$newsite->id), '*', MUST_EXIST);
-
-
-    // Create default course category
-    if ($DB->record_exists('course_categories', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default course category, categories already exist.');
-    }
-    $cat = new stdClass();
-    $cat->name         = get_string('defaultcategoryname');
-    $cat->descriptionformat = FORMAT_HTML;
-    $cat->depth        = 1;
-    $cat->sortorder    = get_max_courses_in_category();
-    $cat->timemodified = time();
-    $catid = $DB->insert_record('course_categories', $cat);
-    $DB->set_field('course_categories', 'path', '/'.$catid, array('id'=>$catid));
-    // Make sure category context exists
-    context_coursecat::instance($catid);
-
-
     $defaults = array(
         'rolesactive'           => '0', // marks fully set up system
         'auth'                  => 'email',
-        'enrol_plugins_enabled' => 'manual,guest,self,cohort',
         'theme'                 => theme_config::DEFAULT_THEME,
         'filter_multilang_converted' => 1,
         'siteidentifier'        => random_string(32).get_host_from_url($CFG->wwwroot),
-        'backup_version'        => 2008111700,
-        'backup_release'        => '2.0 dev',
         'mnet_dispatcher_mode'  => 'off',
         'sessiontimeout'        => 8 * 60 * 60, // Must be present during roles installation.
-        'stringfilters'         => '', // These two are managed in a strange way by the filters.
-        'filterall'             => 0, // setting page, so have to be initialised here.
+        'stringfilters'         => '',
+        'filterall'             => 0,
         'texteditors'           => 'tiny,textarea',
         'antiviruses'           => '',
         'media_plugins_sortorder' => 'videojs,youtube',
-        'upgrade_extracreditweightsstepignored' => 1, // New installs should not run this upgrade step.
-        'upgrade_calculatedgradeitemsignored' => 1, // New installs should not run this upgrade step.
-        'upgrade_letterboundarycourses' => 1, // New installs should not run this upgrade step.
-        'format_plugins_sortorder' => 'topics,weeks,singleactivity,social', // Default order for course format plugins.
     );
     foreach($defaults as $key => $value) {
         set_config($key, $value);
     }
 
-
     // Bootstrap mnet
     $mnethost = new stdClass();
     $mnethost->wwwroot    = $CFG->wwwroot;
     $mnethost->name       = '';
-    $mnethost->name       = '';
     $mnethost->public_key = '';
 
     if (empty($_SERVER['SERVER_ADDR'])) {
-        // SERVER_ADDR is only returned by Apache-like webservers
         preg_match("@^(?:http[s]?://)?([A-Z0-9\-\.]+).*@i", $CFG->wwwroot, $matches);
         $my_hostname = $matches[1];
-        $my_ip       = gethostbyname($my_hostname);  // Returns unmodified hostname on failure. DOH!
+        $my_ip       = gethostbyname($my_hostname);
         if ($my_ip == $my_hostname) {
             $mnethost->ip_address = 'UNKNOWN';
         } else {
@@ -183,7 +96,7 @@ function xmldb_main_install() {
     $mnet_app->sso_jump_url      = '/auth/xmlrpc/jump.php';
     $DB->insert_record('mnet_application', $mnet_app);
 
-    // Set up the probably-to-be-removed-soon 'All hosts' record
+    // Set up the 'All hosts' record
     $mnetallhosts                     = new stdClass();
     $mnetallhosts->wwwroot            = '';
     $mnetallhosts->ip_address         = '';
@@ -194,10 +107,10 @@ function xmldb_main_install() {
     $mnetallhosts->deleted            = 0;
     $mnetallhosts->name               = 'All Hosts';
     $mnetallhosts->applicationid      = $moodleapplicationid;
-    $mnetallhosts->id                 = $DB->insert_record('mnet_host', $mnetallhosts, true);
+    $mnetallhosts->id = $DB->insert_record('mnet_host', $mnetallhosts, true);
     set_config('mnet_all_hosts_id', $mnetallhosts->id);
 
-    // Create guest record - do not assign any role, guest user gets the default guest role automatically on the fly
+    // Create guest record
     if ($DB->record_exists('user', array())) {
         throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default users, users already exist.');
     }
@@ -217,11 +130,8 @@ function xmldb_main_install() {
     if ($guest->id != 1) {
         echo $OUTPUT->notification('Unexpected id generated for the Guest account. Your database configuration or clustering setup may not be fully supported', 'notifyproblem');
     }
-    // Store guest id
     set_config('siteguest', $guest->id);
-    // Make sure user context exists
     context_user::instance($guest->id);
-
 
     // Now create admin user
     $admin = new stdClass();
@@ -236,7 +146,7 @@ function xmldb_main_install() {
     $admin->lang         = $CFG->lang;
     $admin->maildisplay  = 1;
     $admin->timemodified = time();
-    $admin->lastip       = CLI_SCRIPT ? '0.0.0.0' : getremoteaddr(); // installation hijacking prevention
+    $admin->lastip       = CLI_SCRIPT ? '0.0.0.0' : getremoteaddr();
     $admin->id = $DB->insert_record('user', $admin);
 
     if ($admin->id != 2) {
@@ -246,27 +156,18 @@ function xmldb_main_install() {
         echo $OUTPUT->notification('Nonconsecutive id generated for the Admin account. Your database configuration or clustering setup may not be fully supported.', 'notifyproblem');
     }
 
-    // Store list of admins
     set_config('siteadmins', $admin->id);
-    // Make sure user context exists
     context_user::instance($admin->id);
 
+    // Install the roles system - only user-related roles
+    $managerrole = create_role('', 'manager', '', 'manager');
+    $guestrole   = create_role('', 'guest', '', 'guest');
+    $userrole    = create_role('', 'user', '', 'user');
 
-    // Install the roles system.
-    $managerrole        = create_role('', 'manager', '', 'manager');
-    $coursecreatorrole  = create_role('', 'coursecreator', '', 'coursecreator');
-    $editteacherrole    = create_role('', 'editingteacher', '', 'editingteacher');
-    $noneditteacherrole = create_role('', 'teacher', '', 'teacher');
-    $studentrole        = create_role('', 'student', '', 'student');
-    $guestrole          = create_role('', 'guest', '', 'guest');
-    $userrole           = create_role('', 'user', '', 'user');
-    $frontpagerole      = create_role('', 'frontpage', '', 'frontpage');
-
-    // Now is the correct moment to install capabilities - after creation of legacy roles, but before assigning of roles
+    // Now is the correct moment to install capabilities
     update_capabilities('moodle');
 
-
-    // Default allow role matrices.
+    // Default allow role matrices
     foreach ($DB->get_records('role') as $role) {
         foreach (array('assign', 'override', 'switch', 'view') as $type) {
             $function = "core_role_set_{$type}_allowed";
@@ -277,21 +178,17 @@ function xmldb_main_install() {
         }
     }
 
-    // Set up the context levels where you can assign each role.
-    set_role_contextlevels($managerrole,        get_default_contextlevels('manager'));
-    set_role_contextlevels($coursecreatorrole,  get_default_contextlevels('coursecreator'));
-    set_role_contextlevels($editteacherrole,    get_default_contextlevels('editingteacher'));
-    set_role_contextlevels($noneditteacherrole, get_default_contextlevels('teacher'));
-    set_role_contextlevels($studentrole,        get_default_contextlevels('student'));
-    set_role_contextlevels($guestrole,          get_default_contextlevels('guest'));
-    set_role_contextlevels($userrole,           get_default_contextlevels('user'));
+    // Set up the context levels where you can assign each role
+    set_role_contextlevels($managerrole, get_default_contextlevels('manager'));
+    set_role_contextlevels($guestrole,   get_default_contextlevels('guest'));
+    set_role_contextlevels($userrole,    get_default_contextlevels('user'));
 
-    // Init theme, JS and template revisions.
+    // Init theme, JS and template revisions
     set_config('themerev', time());
     set_config('jsrev', time());
     set_config('templaterev', time());
 
-    // No admin setting for this any more, GD is now required, remove in Moodle 2.6.
+    // GD is now required
     set_config('gdversion', 2);
 
     // Install licenses
@@ -311,26 +208,7 @@ function xmldb_main_install() {
     $mypage->private = 1;
     $DB->insert_record('my_pages', $mypage);
 
-    $mycoursespage = new stdClass();
-    $mycoursespage->userid = null;
-    $mycoursespage->name = '__courses';
-    $mycoursespage->private = 0;
-    $mycoursespage->sortorder  = 0;
-    $DB->insert_record('my_pages', $mycoursespage);
-
-    // Set a sensible default sort order for the most-used question types.
-    set_config('multichoice_sortorder', 1, 'question');
-    set_config('truefalse_sortorder', 2, 'question');
-    set_config('match_sortorder', 3, 'question');
-    set_config('shortanswer_sortorder', 4, 'question');
-    set_config('numerical_sortorder', 5, 'question');
-    set_config('essay_sortorder', 6, 'question');
-
-    require_once($CFG->libdir . '/db/upgradelib.php');
-    make_default_scale();
-    make_competence_scale();
-
-    // Create default core site admin presets.
+    // Create default core site admin presets
     require_once($CFG->dirroot . '/admin/presets/classes/helper.php');
     \core_adminpresets\helper::create_default_presets();
 }
