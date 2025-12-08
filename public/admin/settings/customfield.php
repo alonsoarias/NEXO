@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 
 /** @var admin_root $ADMIN */
 $ADMIN->add(
-    'root',
+    'modules',
     new admin_category(
         'customfield',
         new lang_string('customfields', 'core_customfield')

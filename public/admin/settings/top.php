@@ -14,7 +14,7 @@ $ADMIN->add('root', new admin_externalpage('adminnotifications', new lang_string
 $ADMIN->add('root', new admin_externalpage('upgradesettings', new lang_string('upgradesettings', 'admin'), "$CFG->wwwroot/$CFG->admin/upgradesettings.php", 'moodle/site:config', true));
 
 // Site administration - General settings.
-$ADMIN->add('root', new admin_category('site', new lang_string('sitesettings', 'admin')));
+$ADMIN->add('root', new admin_category('site', new lang_string('sitesettings')));
 
 if ($hassiteconfig) {
     $optionalsubsystems = new admin_settingpage('optionalsubsystems', new lang_string('advancedfeatures', 'admin'));
