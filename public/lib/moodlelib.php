@@ -3594,8 +3594,6 @@ function truncate_userinfo(array $info) {
  */
 function delete_user(stdClass $user) {
     global $CFG, $DB, $SESSION;
-    require_once($CFG->libdir.'/grouplib.php');
-    require_once($CFG->libdir.'/gradelib.php');
     require_once($CFG->dirroot.'/message/lib.php');
     require_once($CFG->dirroot.'/user/lib.php');
 
@@ -3644,23 +3642,9 @@ function delete_user(stdClass $user) {
     // Keep a copy of user context, we need it for event.
     $usercontext = context_user::instance($user->id);
 
-    // Delete all grades - backup is kept in grade_grades_history table.
-    grade_user_delete($user->id);
-
-    // TODO: remove from cohorts using standard API here.
-
-    // Remove user tags.
-    core_tag_tag::remove_all_item_tags('core', 'user', $user->id);
-
-    // Unconditionally unenrol from all courses.
-    enrol_user_delete($user);
-
     // Unenrol from all roles in all contexts.
     // This might be slow but it is really needed - modules might do some extra cleanup!
     role_unassign_all(array('userid' => $user->id));
-
-    // Notify the competency subsystem.
-    \core_competency\api::hook_user_deleted($user->id);
 
     // Now do a brute force cleanup.
 
