@@ -369,12 +369,7 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
         }
     }
 
-    if (core_tag_tag::is_enabled('core', 'user') and empty($USER->newadminuser)) {
-        $mform->addElement('header', 'moodle_interests', get_string('interests'));
-        $mform->addElement('tags', 'interests', get_string('interestslist'),
-            array('itemtype' => 'user', 'component' => 'core'));
-        $mform->addHelpButton('interests', 'interestslist');
-    }
+    // NEXO: Tags system not available, interests section removed
 
     // Moodle optional fields.
     $mform->addElement('header', 'moodle_optional', get_string('optional', 'form'));

@@ -26,7 +26,6 @@
         "fileconverter": "public/files/converter",
         "theme": "public/theme",
         "local": "public/local",
-        "paygw": "public/payment/gateway",
         "smsgateway": "public/sms/gateway"
     },
     "subsystems": {
@@ -69,10 +68,8 @@
         "media": "public/media",
         "message": "public/message",
         "mimetypes": null,
-        "mnet": "public/mnet",
         "my": "public/my",
         "pagetype": null,
-        "payment": "public/payment",
         "pix": null,
         "plagiarism": "public/plagiarism",
         "plugin": null,
@@ -92,6 +89,5 @@
         "xapi": "public/lib/xapi"
     },
     "deprecatedplugintypes": {
-        "mnetservice": "public/mnet/service"
     }
 }
