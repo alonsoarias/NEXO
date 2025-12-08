@@ -58,13 +58,13 @@ function tool_mfa_after_require_login($courseorid = null, $autologinguest = null
  * @param navigation_node $navigation
  * @param stdClass $user
  * @param context_user $usercontext
- * @param stdClass $course
- * @param context_course $coursecontext
+ * @param stdClass|null $course
+ * @param context_course|null $coursecontext
  *
  * @return mix void or null
  * @throws \moodle_exception
  */
-function tool_mfa_extend_navigation_user_settings(navigation_node $navigation, stdClass $user, $usercontext, stdClass $course, $coursecontext) {
+function tool_mfa_extend_navigation_user_settings(navigation_node $navigation, stdClass $user, $usercontext, ?stdClass $course = null, $coursecontext = null) {
     global $PAGE;
 
     // Only inject if user is on the preferences page.

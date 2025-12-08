@@ -30,14 +30,14 @@ defined('MOODLE_INTERNAL') || die();
  * @param navigation_node $useraccount
  * @param stdClass $user
  * @param context_user $context
- * @param stdClass $course
- * @param context_course $coursecontext
+ * @param stdClass|null $course
+ * @param context_course|null $coursecontext
  */
 function auth_oauth2_extend_navigation_user_settings(navigation_node $useraccount,
                                                      stdClass $user,
                                                      context_user $context,
-                                                     stdClass $course,
-                                                     context_course $coursecontext) {
+                                                     ?stdClass $course = null,
+                                                     ?context_course $coursecontext = null) {
     global $USER;
 
     if (\auth_oauth2\api::is_enabled() && !\core\session\manager::is_loggedinas()) {
