@@ -35,6 +35,9 @@ class secondary extends view {
     /** @var string $headertitle The header for this particular menu*/
     public $headertitle;
 
+    /** @var string $moremenulabel The label for the more menu */
+    public $moremenulabel;
+
     /** @var int The maximum limit of navigation nodes displayed in the secondary navigation */
     const MAX_DISPLAYED_NAV_NODES = 5;
 

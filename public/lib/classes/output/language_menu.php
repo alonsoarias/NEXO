@@ -66,10 +66,6 @@ class language_menu implements renderable, templatable {
             return false;
         }
 
-        if ($this->page->course != SITEID && !empty($this->page->course->lang)) {
-            // Do not show lang menu if language forced.
-            return false;
-        }
 
         if (count($this->langs) < 2) {
             return false;
