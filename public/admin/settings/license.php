@@ -41,5 +41,5 @@ if ($hassiteconfig) {
         new lang_string('rememberuserlicensepref', 'admin'),
         new lang_string('rememberuserlicensepref_help', 'admin'),
         1));
-    $ADMIN->add('license', $temp);
+    $ADMIN->add('site', $temp);
 }

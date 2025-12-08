@@ -80,5 +80,5 @@ if ($hassiteconfig) {
         ));
     }
 
-    $ADMIN->add('location', $temp);
+    $ADMIN->add('server', $temp);
 }

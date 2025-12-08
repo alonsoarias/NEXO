@@ -1,6 +1,6 @@
 <?php
 
-// This file defines settingpages and externalpages under the "appearance" category
+// This file defines language settingpages under the "appearance" category
 
 use core_admin\local\settings\setting_scheduled_task_status;
 
@@ -22,6 +22,6 @@ if ($hassiteconfig) {
         new lang_string('enablepdfexportfont_desc', 'admin'), 0));
     $temp->add(new setting_scheduled_task_status('langimporttaskstatus', '\tool_langimport\task\update_langpacks_task'));
 
-    $ADMIN->add('language', $temp);
+    $ADMIN->add('appearance', $temp);
 
 } // end of speedup

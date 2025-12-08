@@ -55,7 +55,7 @@ echo html_writer::start_div('dashboard-container');
 
 // Welcome section.
 echo html_writer::start_div('welcome-section mb-4');
-echo html_writer::tag('h2', get_string('hello') . ', ' . fullname($USER) . '!', ['class' => 'mb-3']);
+echo html_writer::tag('h2', get_string('welcomeback', 'moodle', ['firstname' => $USER->firstname]), ['class' => 'mb-3']);
 echo html_writer::end_div();
 
 // Quick links section.

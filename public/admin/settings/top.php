@@ -10,29 +10,46 @@ $hassiteconfig = has_capability('moodle/site:config', $systemcontext);
 
 $ADMIN->add('root', new admin_externalpage('adminnotifications', new lang_string('notifications'), "$CFG->wwwroot/$CFG->admin/index.php"));
 
- // hidden upgrade script
+// Hidden upgrade script.
 $ADMIN->add('root', new admin_externalpage('upgradesettings', new lang_string('upgradesettings', 'admin'), "$CFG->wwwroot/$CFG->admin/upgradesettings.php", 'moodle/site:config', true));
+
+// Site administration - General settings.
+$ADMIN->add('root', new admin_category('site', new lang_string('sitesettings', 'admin')));
 
 if ($hassiteconfig) {
     $optionalsubsystems = new admin_settingpage('optionalsubsystems', new lang_string('advancedfeatures', 'admin'));
-    $ADMIN->add('root', $optionalsubsystems);
+    $ADMIN->add('site', $optionalsubsystems);
 }
 
-$ADMIN->add('root', new admin_category('users', new lang_string('users','admin')));
+// Users.
+$ADMIN->add('root', new admin_category('users', new lang_string('users', 'admin')));
+
+// AI.
 $ADMIN->add('root', new admin_category('ai', new lang_string('ai', 'ai')));
-$ADMIN->add('root', new admin_category('license', new lang_string('license')));
-$ADMIN->add('root', new admin_category('location', new lang_string('location','admin')));
-$ADMIN->add('root', new admin_category('language', new lang_string('language')));
-$ADMIN->add('root', new admin_category('messaging', new lang_string('messagingcategory', 'admin')));
+
+// Plugins.
 $ADMIN->add('root', new admin_category('modules', new lang_string('plugins', 'admin')));
-$ADMIN->add('root', new admin_category('security', new lang_string('security','admin')));
-$ADMIN->add('root', new admin_category('appearance', new lang_string('appearance','admin')));
-$ADMIN->add('root', new admin_category('server', new lang_string('server','admin')));
+
+// Appearance (includes language and themes).
+$ADMIN->add('root', new admin_category('appearance', new lang_string('appearance', 'admin')));
+
+// Server (includes location, email, tasks, etc.).
+$ADMIN->add('root', new admin_category('server', new lang_string('server', 'admin')));
+
+// Security.
+$ADMIN->add('root', new admin_category('security', new lang_string('security', 'admin')));
+
+// Messaging.
+$ADMIN->add('root', new admin_category('messaging', new lang_string('messagingcategory', 'admin')));
+
+// Reports.
 $ADMIN->add('root', new admin_category('reports', new lang_string('reports')));
+
+// Development.
 $ADMIN->add('root', new admin_category('development', new lang_string('development', 'admin')));
 
-// hidden unsupported category
+// Hidden unsupported category.
 $ADMIN->add('root', new admin_category('unsupported', new lang_string('unsupported', 'admin'), true));
 
-// hidden search script
+// Hidden search script.
 $ADMIN->add('root', new admin_externalpage('search', new lang_string('search', 'admin'), "$CFG->wwwroot/$CFG->admin/search.php", 'moodle/site:configview', true));
