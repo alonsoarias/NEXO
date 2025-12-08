@@ -3629,8 +3629,6 @@ function delete_user(stdClass $user) {
     // Purge log of previous password hashes.
     $DB->delete_records('user_password_history', array('userid' => $user->id));
 
-    // Last course access not necessary either.
-    $DB->delete_records('user_lastaccess', array('userid' => $user->id));
     // Remove all user tokens.
     $DB->delete_records('external_tokens', array('userid' => $user->id));
 
@@ -4471,14 +4469,9 @@ function get_complete_user_data($field, $value, $unused = null, $throwexception 
     // Preload preference cache.
     check_user_preferences_loaded($user);
 
-    // Load course enrolment related stuff.
-    $user->lastcourseaccess    = array(); // During last session.
-    $user->currentcourseaccess = array(); // During current session.
-    if ($lastaccesses = $DB->get_records('user_lastaccess', array('userid' => $user->id))) {
-        foreach ($lastaccesses as $lastaccess) {
-            $user->lastcourseaccess[$lastaccess->courseid] = $lastaccess->timeaccess;
-        }
-    }
+    // NEXO: Course-related access tracking removed.
+    $user->lastcourseaccess    = array();
+    $user->currentcourseaccess = array();
 
     // Add cohort theme.
     if (!empty($CFG->allowcohortthemes)) {
@@ -4854,15 +4847,7 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
     // Die comments!
     \core_comment\manager::delete_comments($coursecontext->id);
 
-    // Delete all related records in other core tables that may have a courseid
-    // This array stores the tables that need to be cleared, as
-    // table_name => column_name that contains the course id.
-    $tablestoclear = array(
-        'user_lastaccess' => 'courseid', // User access info.
-    );
-    foreach ($tablestoclear as $table => $col) {
-        $DB->delete_records($table, array($col => $course->id));
-    }
+    // NEXO: Course-related tables removed.
 
     // Cleanup course record - remove links to deleted stuff.
     // Do not wipe cacherev, as this course might be reused and we need to ensure that it keeps
