@@ -104,8 +104,8 @@ useredit_load_preferences($user);
 // Load custom profile fields data.
 profile_load_data($user);
 
-// User interests.
-$user->interests = core_tag_tag::get_item_tags_array('core', 'user', $id);
+// User interests - NEXO: Tags system not available
+$user->interests = [];
 
 if ($user->id !== -1) {
     $usercontext = context_user::instance($user->id);
