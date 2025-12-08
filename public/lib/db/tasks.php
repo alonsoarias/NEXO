@@ -60,24 +60,6 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-        'classname' => 'core\task\backup_cleanup_task',
-        'blocking' => 0,
-        'minute' => '10',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\tag_cron_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '3',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'core\task\context_cleanup_task',
         'blocking' => 0,
         'minute' => '25',
@@ -132,79 +114,7 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-        'classname' => 'core\task\grade_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\grade_history_cleanup_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '0',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\completion_regular_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\completion_daily_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\portfolio_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'core\task\plagiarism_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\calendar_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\blog_cron_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\question_preview_cleanup_task',
         'blocking' => 0,
         'minute' => '*',
         'hour' => '*',
@@ -234,33 +144,6 @@ $tasks = array(
         'classname' => 'core\task\cache_cron_task',
         'blocking' => 0,
         'minute' => '50',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\automated_backup_task',
-        'blocking' => 0,
-        'minute' => '50',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\badges_cron_task',
-        'blocking' => 0,
-        'minute' => '*/5',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\badges_message_task',
-        'blocking' => 0,
-        'minute' => '*/5',
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
@@ -303,37 +186,10 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-        'classname' => 'core\task\stats_cron_task',
-        'blocking' => 0,
-        'minute' => '0',
-        'hour' => '0',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'core\task\password_reset_cleanup_task',
         'blocking' => 0,
         'minute' => '0',
         'hour' => '*/6',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\complete_plans_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\sync_plans_from_template_cohorts_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
@@ -357,37 +213,10 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-        'classname' => 'core\task\analytics_cleanup_task',
-        'blocking' => 0,
-        'minute' => '42',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'core\task\task_log_cleanup_task',
         'blocking' => 0,
         'minute' => 'R',
         'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\h5p_get_content_types_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '1',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'core\task\h5p_clean_orphaned_records_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '0',
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
@@ -399,8 +228,7 @@ $tasks = array(
         'hour' => '0',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*',
-    ),
+        'month' => '*'),
     array(
         'classname' => 'core_reportbuilder\task\send_schedules',
         'blocking' => 0,
@@ -408,8 +236,7 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*',
-    ),
+        'dayofweek' => '*'),
     [
         'classname' => 'core\task\task_lock_cleanup_task',
         'blocking' => 0,
@@ -427,44 +254,6 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
-    ],
-    [
-        'classname' => 'core\task\show_started_courses_task',
-        'blocking' => 0,
-        'minute' => '00',
-        'hour' => '01',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*',
-        'disabled' => true,
-    ],
-    [
-        'classname' => 'core\task\hide_ended_courses_task',
-        'blocking' => 0,
-        'minute' => '00',
-        'hour' => '01',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*',
-        'disabled' => true,
-    ],
-    [
-        'classname' => 'core_communication\task\synchronise_providers_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => 'R',
-        'month' => '*',
-    ],
-    [
-        'classname' => 'core\task\automated_backup_report_task',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'month' => '*',
-        'dayofweek' => '*',
     ],
     [
         'classname' => 'core\task\update_geoip2file_task',
@@ -485,5 +274,4 @@ $tasks = array(
         'dayofweek' => '*',
         'month' => '*',
         'disabled' => false,
-    ],
-);
+    ]);
