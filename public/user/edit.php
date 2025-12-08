@@ -264,7 +264,7 @@ if ($userform->is_cancelled()) {
 
         $a = new stdClass();
         $a->url = $CFG->wwwroot . '/user/emailupdate.php?key=' . $emailchangedkey . '&id=' . $user->id;
-        $a->site = format_string($SITE->fullname, true, array('context' => context_course::instance(SITEID)));
+        $a->site = format_string($SITE->fullname, true, array('context' => context_system::instance()));
 
         $placeholders = \core_user::get_name_placeholders($user);
         foreach ($placeholders as $field => $value) {

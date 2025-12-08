@@ -56,7 +56,7 @@ class site_registration_form extends \moodleform {
         $registered = $this->_customdata['registered'];
 
         $siteinfo = registration::get_site_info([
-            'name' => format_string($site->fullname, true, array('context' => context_course::instance(SITEID))),
+            'name' => format_string($site->fullname, true, array('context' => context_system::instance())),
             'description' => $site->summary,
             'contactname' => fullname($admin, true),
             'contactemail' => $admin->email,

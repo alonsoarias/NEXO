@@ -923,13 +923,7 @@ function get_user_roles_sitewide_accessdata($userid) {
         $accessdata['ra'][$syscontext->path][(int)$CFG->defaultuserroleid] = (int)$CFG->defaultuserroleid;
     }
 
-    // load the "default frontpage role"
-    if (!empty($CFG->defaultfrontpageroleid)) {
-        $frontpagecontext = context_course::instance(get_site()->id);
-        if ($frontpagecontext->path) {
-            $accessdata['ra'][$frontpagecontext->path][(int)$CFG->defaultfrontpageroleid] = (int)$CFG->defaultfrontpageroleid;
-        }
-    }
+    // NEXO: default frontpage role removed - no courses exist
 
     // Preload every assigned role.
     $sql = "SELECT ctx.path, ra.roleid, ra.contextid
@@ -2589,12 +2583,13 @@ function get_context_info_list(context $context) {
  * Returns true if this context is the front page context, or a context inside it,
  * otherwise false.
  *
+ * NEXO: Always returns false since courses are removed.
+ *
  * @param context $context a context object.
  * @return bool
  */
 function is_inside_frontpage(context $context) {
-    $frontpagecontext = context_course::instance(SITEID);
-    return strpos($context->path . '/', $frontpagecontext->path . '/') === 0;
+    return false;
 }
 
 /**

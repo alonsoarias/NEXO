@@ -1899,7 +1899,7 @@ class block_manager {
         }
 
         $systemcontext = context_system::instance();
-        $frontpagecontext = context_course::instance(SITEID);
+        $frontpagecontext = $systemcontext;
         $parentcontext = context::instance_by_id($data->bui_parentcontextid);
 
         // Updating stickiness and contexts.  See MDL-21375 for details.

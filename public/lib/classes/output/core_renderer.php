@@ -4640,7 +4640,7 @@ EOD;
         $context->sitename = format_string(
             $SITE->fullname,
             true,
-            ['context' => context_course::instance(SITEID), "escape" => false]
+            ['context' => context_system::instance(), "escape" => false]
         );
 
         return $this->render_from_template('core/loginform', $context);
@@ -4735,7 +4735,7 @@ EOD;
         $context['sitename'] = format_string(
             $SITE->fullname,
             true,
-            ['context' => context_course::instance(SITEID), "escape" => false]
+            ['context' => context_system::instance(), "escape" => false]
         );
 
         return $this->render_from_template('core/signup_form_layout', $context);

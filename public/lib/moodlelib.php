@@ -2479,7 +2479,12 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
 
     // Fetch the system context, the course context, and prefetch its child contexts.
     $sysctx = context_system::instance();
-    $coursecontext = context_course::instance($course->id, MUST_EXIST);
+    // NEXO: Use system context instead of course context since courses don't exist.
+    if ($course->id == SITEID) {
+        $coursecontext = $sysctx;
+    } else {
+        $coursecontext = context_course::instance($course->id, MUST_EXIST);
+    }
     if ($cm) {
         $cmcontext = context_module::instance($cm->id, MUST_EXIST);
     } else {
