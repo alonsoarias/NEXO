@@ -17,7 +17,6 @@
 namespace core\output\requirements;
 
 use core_component;
-use core\context\course as context_course;
 use core\exception\coding_exception;
 use core\output\core_renderer;
 use core\output\js_writer;
@@ -309,8 +308,6 @@ class page_requirements_manager {
             if (!is_null($page->context)) {
                 $contextid = $page->context->id;
                 $contextinstanceid = $page->context->instanceid;
-                $courseid = $page->course->id;
-                $coursecontext = context_course::instance($courseid);
             }
 
             $this->M_cfg = [
@@ -329,8 +326,8 @@ class page_requirements_manager {
                 'svgicons'              => $page->theme->use_svg_icons(),
                 'usertimezone'          => usertimezone(),
                 'language'              => current_language(),
-                'courseId'              => isset($courseid) ? (int) $courseid : 0,
-                'courseContextId'       => isset($coursecontext) ? $coursecontext->id : 0,
+                'courseId'              => 0,
+                'courseContextId'       => 0,
                 'contextid'             => $contextid,
                 'contextInstanceId'     => (int) $contextinstanceid,
                 'langrev'               => get_string_manager()->get_revision(),
