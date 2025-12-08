@@ -468,106 +468,11 @@ $definitions = array(
         'simplekeys' => true,
     ],
 
-    // The list of favourited content items (activities, resources and their subtypes) for a user.
-    'user_favourite_course_content_items' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-    ],
-
-    \core_course\local\service\content_item_service::RECOMMENDATION_CACHE => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-    ],
-
-    // Caches contentbank extensions management.
-    'contentbank_enabled_extensions' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'staticacceleration' => true,
-    ],
-    'contentbank_context_extensions' => [
-        'mode' => cache_store::MODE_REQUEST,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'staticacceleration' => true,
-    ],
-
-    // Language strings for H5P content-type libraries.
-    // Key "{$libraryname}/{$language}"" contains translations for a given library and language.
-    // Key "$libraryname" has a list of all of the available languages for the library.
-    'h5p_content_type_translations' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simpledata' => true,
-    ],
-
-    // File cache for H5P Library ids.
-    'h5p_libraries' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'canuselocalstore' => true
-    ],
-
-    // File cache for H5P Library files.
-    'h5p_library_files' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'canuselocalstore' => true
-    ],
-
-    // Cache the grade letters for faster retrival.
-    'grade_letters' => [
-        'mode'                   => cache_store::MODE_REQUEST,
-        'simplekeys'             => true,
-        'staticacceleration'     => true,
-        'staticaccelerationsize' => 100
-    ],
-
     // Cache for licenses.
     'license' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'simpledata' => false,
-    ],
-
-    // Cache the grade setting for faster retrieval.
-    'gradesetting' => [
-        'mode'                   => cache_store::MODE_REQUEST,
-        'simplekeys'             => true,
-        'staticacceleration'     => true,
-        'staticaccelerationsize' => 100
-    ],
-
-    // Course image cache.
-    'course_image' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'staticacceleration' => true,
-        'datasource' => '\core_course\cache\course_image',
-    ],
-
-    // Cache the course categories where the user has access the content bank.
-    'contentbank_allowed_categories' => [
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'invalidationevents' => [
-            'changesincoursecat',
-            'changesincategoryenrolment',
-        ],
-    ],
-
-    // Cache the courses where the user has access the content bank.
-    'contentbank_allowed_courses' => [
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'invalidationevents' => [
-            'changesincoursecat',
-            'changesincategoryenrolment',
-            'changesincourse',
-        ],
     ],
 
     // Users allowed reports according to audience.
