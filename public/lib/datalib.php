@@ -584,22 +584,35 @@ function get_users_confirmed() {
 /**
  * Returns $course object of the top-level site.
  *
- * @return object A {@link $COURSE} object for the site, exception if not found
+ * NEXO: Returns a simulated site object since course table was removed.
+ *
+ * @return object A {@link $COURSE} object for the site
  */
 function get_site() {
-    global $SITE, $DB;
+    global $SITE, $CFG;
 
-    if (!empty($SITE->id)) {   // We already have a global to use, so return that
+    if (!empty($SITE->id)) {
         return $SITE;
     }
 
-    if ($course = $DB->get_record('course', array('category'=>0))) {
-        return $course;
-    } else {
-        // course table exists, but the site is not there,
-        // unfortunately there is no automatic way to recover
-        throw new moodle_exception('nosite', 'error');
-    }
+    // Create a simulated site object since course table doesn't exist in NEXO
+    $site = new stdClass();
+    $site->id = 1;
+    $site->category = 0;
+    $site->sortorder = 0;
+    $site->fullname = $CFG->sitefullname ?? 'NEXO Site';
+    $site->shortname = $CFG->siteshortname ?? 'NEXO';
+    $site->idnumber = '';
+    $site->summary = '';
+    $site->summaryformat = FORMAT_HTML;
+    $site->format = 'site';
+    $site->visible = 1;
+    $site->lang = '';
+    $site->theme = '';
+    $site->timecreated = time();
+    $site->timemodified = time();
+
+    return $site;
 }
 
 /**
@@ -607,22 +620,26 @@ function get_site() {
  * already-loaded $COURSE or $SITE object, then the loaded object will be used,
  * saving a database query.
  *
- * If it reuses an existing object, by default the object will be cloned. This
- * means you can modify the object safely without affecting other code.
+ * NEXO: Course table doesn't exist, only the simulated site is available.
  *
  * @param int $courseid Course id
  * @param bool $clone If true (default), makes a clone of the record
  * @return stdClass A course object
- * @throws dml_exception If not found in database
+ * @throws dml_exception If not found
  */
 function get_course($courseid, $clone = true) {
-    global $DB, $COURSE, $SITE;
+    global $COURSE, $SITE;
     if (!empty($COURSE->id) && $COURSE->id == $courseid) {
         return $clone ? clone($COURSE) : $COURSE;
     } else if (!empty($SITE->id) && $SITE->id == $courseid) {
         return $clone ? clone($SITE) : $SITE;
+    } else if ($courseid == 1 || $courseid == SITEID) {
+        // Return the simulated site for SITEID
+        $site = get_site();
+        return $clone ? clone($site) : $site;
     } else {
-        return $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+        // Courses don't exist in NEXO
+        throw new dml_exception('invalidrecord', 'course');
     }
 }
 
