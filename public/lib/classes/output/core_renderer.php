@@ -460,14 +460,6 @@ class core_renderer extends renderer_base {
     }
 
     /**
-     * @deprecated since Moodle 4.3 MDL-78744
-     */
-    #[\core\attribute\deprecated(null, since: '4.3', mdl: 'MDL-78744', final: true)]
-    public function activity_information() {
-        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
-    }
-
-    /**
      * Returns standard navigation between activities in a course.
      *
      * @return string the navigation HTML.
@@ -3992,39 +3984,32 @@ EOD;
 
     /**
      * Helper function to decide whether to show the communication link or not.
+     * NEXO: Communication removed - always returns false.
      *
      * @return bool
      */
     public function has_communication_links(): bool {
-        if (during_initial_install() || !\core_communication\api::is_available()) {
-            return false;
-        }
-        return !empty($this->communication_link());
+        return false;
     }
 
     /**
      * Returns the communication link, complete with html.
+     * NEXO: Communication removed - always returns empty string.
      *
      * @return string
      */
     public function communication_link(): string {
-        $link = $this->communication_url() ?? '';
-        $commicon = $this->pix_icon('t/messages-o', '', 'moodle', ['class' => 'fa fa-comments']);
-        $newwindowicon = $this->pix_icon('i/externallink', get_string('opensinnewwindow'), 'moodle', ['class' => 'ms-1']);
-        $content = $commicon . get_string('communicationroomlink', 'course') . $newwindowicon;
-        $html = html_writer::tag('a', $content, ['target' => '_blank', 'href' => $link]);
-
-        return !empty($link) ? $html : '';
+        return '';
     }
 
     /**
      * Returns the communication url for a given instance if it exists.
+     * NEXO: Communication removed - always returns empty string.
      *
      * @return string
      */
     public function communication_url(): string {
-        global $COURSE;
-        return \core_communication\helper::get_course_communication_url($COURSE);
+        return '';
     }
 
     /**
