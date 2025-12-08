@@ -3313,7 +3313,7 @@ function get_auth_plugin($auth) {
 function get_enabled_auth_plugins($fix=false) {
     global $CFG;
 
-    $default = array('manual', 'nologin');
+    $default = array('manual');
 
     if (empty($CFG->auth)) {
         $auths = array();
@@ -3325,7 +3325,7 @@ function get_enabled_auth_plugins($fix=false) {
     $oldauthconfig = implode(',', $auths);
     foreach ($auths as $k => $authname) {
         if (in_array($authname, $default)) {
-            // The manual and nologin plugin never need to be stored.
+            // The manual plugin never need to be stored.
             unset($auths[$k]);
         } else if (!exists_auth_plugin($authname)) {
             debugging(get_string('authpluginnotfound', 'debug', $authname));

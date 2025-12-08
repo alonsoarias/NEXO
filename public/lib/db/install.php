@@ -41,7 +41,7 @@ function xmldb_main_install() {
 
     $defaults = array(
         'rolesactive'           => '0', // marks fully set up system
-        'auth'                  => 'email',
+        'auth'                  => 'manual',
         'theme'                 => theme_config::DEFAULT_THEME,
         'filter_multilang_converted' => 1,
         'siteidentifier'        => random_string(32).get_host_from_url($CFG->wwwroot),
