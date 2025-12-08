@@ -55,12 +55,12 @@ echo html_writer::start_div('dashboard-container');
 
 // Welcome section.
 echo html_writer::start_div('welcome-section mb-4');
-echo html_writer::tag('h2', get_string('welcome') . ', ' . fullname($USER) . '!', ['class' => 'mb-3']);
+echo html_writer::tag('h2', get_string('hello') . ', ' . fullname($USER) . '!', ['class' => 'mb-3']);
 echo html_writer::end_div();
 
 // Quick links section.
 echo html_writer::start_div('quick-links-section');
-echo html_writer::tag('h3', get_string('quicklinks', 'block_admin_bookmarks'), ['class' => 'mb-3']);
+echo html_writer::tag('h3', get_string('navigation'), ['class' => 'mb-3']);
 
 $quicklinks = [
     [

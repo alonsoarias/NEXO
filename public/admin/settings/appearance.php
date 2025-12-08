@@ -38,24 +38,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
 
     $ADMIN->add('appearance', $temp);
 
-    // Course colours section.
-    $temp = new admin_settingpage('coursecolors', new lang_string('coursecolorsettings', 'admin'));
-    $temp->add(new admin_setting_heading('coursecolorheading', '',
-        new lang_string('coursecolorheading_desc', 'admin')));
-
-    $basecolors = ['#81ecec', '#74b9ff', '#a29bfe', '#dfe6e9', '#00b894',
-            '#0984e3', '#b2bec3', '#fdcb6e', '#fd79a8', '#6c5ce7'];
-
-    foreach ($basecolors as $key => $color) {
-        $number = $key + 1;
-        $name = 'core_admin/coursecolor' . $number;
-        $title = get_string('coursecolor', 'admin', $number);
-        $setting = new admin_setting_configcolourpicker($name, $title, '', $color);
-        $temp->add($setting);
-    }
-
-    $ADMIN->add('appearance', $temp);
-
     // Calendar settings.
     $temp = new admin_settingpage('calendar', new lang_string('calendarsettings','admin'));
 
@@ -152,27 +134,8 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
             1
         ));
     }
-    $temp->add(new admin_setting_configcheckbox('navshowfullcoursenames', new lang_string('navshowfullcoursenames', 'admin'), new lang_string('navshowfullcoursenames_help', 'admin'), 0));
-    $temp->add(new admin_setting_configcheckbox('navshowcategories', new lang_string('navshowcategories', 'admin'), new lang_string('confignavshowcategories', 'admin'), 1));
-    $temp->add(new admin_setting_configcheckbox('navshowmycoursecategories', new lang_string('navshowmycoursecategories', 'admin'), new lang_string('navshowmycoursecategories_help', 'admin'), 0));
-    $temp->add(new admin_setting_configcheckbox('navshowallcourses', new lang_string('navshowallcourses', 'admin'), new lang_string('confignavshowallcourses', 'admin'), 0));
-    $sortoptions = array(
-        'sortorder' => new lang_string('sort_sortorder', 'admin'),
-        'fullname' => new lang_string('sort_fullname', 'admin'),
-        'shortname' => new lang_string('sort_shortname', 'admin'),
-        'idnumber' => new lang_string('sort_idnumber', 'admin'),
-    );
-    $temp->add(new admin_setting_configselect('navsortmycoursessort', new lang_string('navsortmycoursessort', 'admin'), new lang_string('navsortmycoursessort_help', 'admin'), 'sortorder', $sortoptions));
-    $temp->add(new admin_setting_configcheckbox('navsortmycourseshiddenlast',
-            new lang_string('navsortmycourseshiddenlast', 'admin'),
-            new lang_string('navsortmycourseshiddenlast_help', 'admin'),
-            1));
-    $temp->add(new admin_setting_configtext('navcourselimit', new lang_string('navcourselimit', 'admin'),
-        new lang_string('confignavcourselimit', 'admin'), 10, PARAM_INT));
     $temp->add(new admin_setting_configcheckbox('usesitenameforsitepages', new lang_string('usesitenameforsitepages', 'admin'), new lang_string('configusesitenameforsitepages', 'admin'), 0));
     $temp->add(new admin_setting_configcheckbox('linkadmincategories', new lang_string('linkadmincategories', 'admin'), new lang_string('linkadmincategories_help', 'admin'), 1));
-    $temp->add(new admin_setting_configcheckbox('navshowfrontpagemods', new lang_string('navshowfrontpagemods', 'admin'), new lang_string('navshowfrontpagemods_help', 'admin'), 1));
-    $temp->add(new admin_setting_configcheckbox('navadduserpostslinks', new lang_string('navadduserpostslinks', 'admin'), new lang_string('navadduserpostslinks_help', 'admin'), 1));
 
     $ADMIN->add('appearance', $temp);
 
@@ -203,13 +166,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
     $ltemp += get_string_manager()->get_list_of_translations(true);
     $temp->add(new admin_setting_configselect('doclang', get_string('doclang', 'admin'), get_string('configdoclang', 'admin'), '', $ltemp));
     $temp->add(new admin_setting_configcheckbox('doctonewwindow', new lang_string('doctonewwindow', 'admin'), new lang_string('configdoctonewwindow', 'admin'), 0));
-    $temp->add(new admin_setting_configtext(
-        'coursecreationguide',
-        new lang_string('coursecreationguide', 'admin'),
-        new lang_string('coursecreationguide_help', 'admin'),
-        'https://moodle.academy/coursequickstart',
-        PARAM_URL
-    ));
     $ADMIN->add('appearance', $temp);
 
     if (!empty($CFG->enabledashboard)) {
@@ -220,30 +176,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
 
     $temp = new admin_externalpage('profilepage', new lang_string('myprofile', 'admin'), $CFG->wwwroot . '/user/profilesys.php',
             'moodle/my:configsyspages');
-    $ADMIN->add('appearance', $temp);
-
-    // coursecontact is the person responsible for course - usually manages enrolments, receives notification, etc.
-    $temp = new admin_settingpage('coursecontact', new lang_string('courses'));
-    $temp->add(new admin_setting_special_coursecontact());
-    $temp->add(new admin_setting_configcheckbox('coursecontactduplicates',
-            new lang_string('coursecontactduplicates', 'admin'),
-            new lang_string('coursecontactduplicates_desc', 'admin'), 0));
-    $temp->add(new admin_setting_configcheckbox('courselistshortnames',
-            new lang_string('courselistshortnames', 'admin'),
-            new lang_string('courselistshortnames_desc', 'admin'), 0));
-    $temp->add(new admin_setting_configtext('coursesperpage', new lang_string('coursesperpage', 'admin'), new lang_string('configcoursesperpage', 'admin'), 20, PARAM_INT));
-    $temp->add(new admin_setting_configtext('courseswithsummarieslimit', new lang_string('courseswithsummarieslimit', 'admin'), new lang_string('configcourseswithsummarieslimit', 'admin'), 10, PARAM_INT));
-
-    $temp->add(new admin_setting_configtext('courseoverviewfileslimit', new lang_string('courseoverviewfileslimit'),
-            new lang_string('configcourseoverviewfileslimit', 'admin'), 1, PARAM_INT));
-    $temp->add(new admin_setting_filetypes('courseoverviewfilesext', new lang_string('courseoverviewfilesext'),
-        new lang_string('configcourseoverviewfilesext', 'admin'), 'web_image'
-    ));
-
-    $temp->add(new admin_setting_configtext('coursegraceperiodbefore', new lang_string('coursegraceperiodbefore', 'admin'),
-        new lang_string('configcoursegraceperiodbefore', 'admin'), 0, PARAM_INT));
-    $temp->add(new admin_setting_configtext('coursegraceperiodafter', new lang_string('coursegraceperiodafter', 'admin'),
-        new lang_string('configcoursegraceperiodafter', 'admin'), 0, PARAM_INT));
     $ADMIN->add('appearance', $temp);
 
     $temp = new admin_settingpage('ajax', new lang_string('ajaxuse'));
@@ -280,16 +212,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
 
     $setting = new admin_setting_configcheckbox('allowuserthemes', new lang_string('allowuserthemes', 'admin'),
         new lang_string('configallowuserthemes', 'admin'), 0);
-    $setting->set_updatedcallback('theme_purge_used_in_context_caches');
-    $temp->add($setting);
-
-    $setting = new admin_setting_configcheckbox('allowcoursethemes', new lang_string('allowcoursethemes', 'admin'),
-        new lang_string('configallowcoursethemes', 'admin'), 0);
-    $setting->set_updatedcallback('theme_purge_used_in_context_caches');
-    $temp->add($setting);
-
-    $setting = new admin_setting_configcheckbox('allowcategorythemes',  new lang_string('allowcategorythemes', 'admin'),
-        new lang_string('configallowcategorythemes', 'admin'), 0);
     $setting->set_updatedcallback('theme_purge_used_in_context_caches');
     $temp->add($setting);
 

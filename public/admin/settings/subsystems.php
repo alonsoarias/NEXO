@@ -8,18 +8,8 @@ if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
 
     $optionalsubsystems->add(new admin_setting_configcheckbox('enablerssfeeds', new lang_string('enablerssfeeds', 'admin'), new lang_string('configenablerssfeeds', 'admin'), 0));
 
-    $optionalsubsystems->add($checkbox = new admin_setting_configcheckbox('enableavailability',
-            new lang_string('enableavailability', 'availability'),
-            new lang_string('enableavailability_desc', 'availability'), 1));
-    $checkbox->set_affects_modinfo(true);
-
-    $optionalsubsystems->add(new admin_setting_configcheckbox('enableplagiarism', new lang_string('enableplagiarism','plagiarism'), new lang_string('configenableplagiarism','plagiarism'), 0));
-
     $optionalsubsystems->add(new admin_setting_configcheckbox('enableglobalsearch', new lang_string('enableglobalsearch', 'admin'),
         new lang_string('enableglobalsearch_desc', 'admin'), 0, 1, 0));
-
-    $optionalsubsystems->add(new admin_setting_configcheckbox('allowstealth', new lang_string('allowstealthmodules'),
-        new lang_string('allowstealthmodules_help'), 0, 1, 0));
 
     $optionalsubsystems->add(new admin_setting_configcheckbox('messaging',
         new lang_string('messaging', 'admin'),

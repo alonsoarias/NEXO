@@ -41,8 +41,6 @@ if ($hassiteconfig || has_any_capability($capabilities, $systemcontext)) { // Sp
         $choices['confirmed'] = new lang_string('confirmed', 'admin');
         $choices['suspended'] = new lang_string('suspended', 'auth');
         $choices['profile'] = new lang_string('profilefields', 'admin');
-        $choices['courserole'] = new lang_string('courserole', 'filters');
-        $choices['anycourses'] = new lang_string('anycourses', 'filters');
         $choices['systemrole'] = new lang_string('globalrole', 'role');
         $choices['cohort'] = new lang_string('idnumber', 'core_cohort');
         $choices['firstaccess'] = new lang_string('firstaccess', 'filters');
@@ -106,12 +104,10 @@ if ($hassiteconfig || has_any_capability($capabilities, $systemcontext)) { // Sp
         if (!during_initial_install()) {
             $context = context_system::instance();
 
-            $otherroles      = array();
-            $guestroles      = array();
-            $userroles       = array();
-            $creatornewroles = array();
+            $otherroles   = array();
+            $guestroles   = array();
+            $userroles    = array();
 
-            $defaultteacherid = null;
             $defaultuserid    = null;
             $defaultguestid   = null;
 
@@ -119,20 +115,6 @@ if ($hassiteconfig || has_any_capability($capabilities, $systemcontext)) { // Sp
             foreach ($roles as $role) {
                 $rolename = $role->localname;
                 switch ($role->archetype) {
-                    case 'manager':
-                        $creatornewroles[$role->id] = $rolename;
-                        break;
-                    case 'coursecreator':
-                        break;
-                    case 'editingteacher':
-                        $defaultteacherid = isset($defaultteacherid) ? $defaultteacherid : $role->id;
-                        $creatornewroles[$role->id] = $rolename;
-                        break;
-                    case 'teacher':
-                        $creatornewroles[$role->id] = $rolename;
-                        break;
-                    case 'student':
-                        break;
                     case 'guest':
                         $defaultguestid = isset($defaultguestid) ? $defaultguestid : $role->id;
                         $guestroles[$role->id] = $rolename;
@@ -141,10 +123,14 @@ if ($hassiteconfig || has_any_capability($capabilities, $systemcontext)) { // Sp
                         $defaultuserid = isset($defaultuserid) ? $defaultuserid : $role->id;
                         $userroles[$role->id] = $rolename;
                         break;
+                    case 'manager':
+                    case 'coursecreator':
+                    case 'editingteacher':
+                    case 'teacher':
+                    case 'student':
                     case 'frontpage':
                         break;
                     default:
-                        $creatornewroles[$role->id] = $rolename;
                         $otherroles[$role->id] = $rolename;
                         break;
                 }
@@ -160,30 +146,18 @@ if ($hassiteconfig || has_any_capability($capabilities, $systemcontext)) { // Sp
                 $defaultuserid = 0;
             }
 
-            $restorersnewrole = $creatornewroles;
-            $restorersnewrole[0] = new lang_string('none');
-
             $temp->add(new admin_setting_configselect('notloggedinroleid', new lang_string('notloggedinroleid', 'admin'),
                           new lang_string('confignotloggedinroleid', 'admin'), $defaultguestid, ($guestroles + $otherroles)));
             $temp->add(new admin_setting_configselect('guestroleid', new lang_string('guestroleid', 'admin'),
                           new lang_string('guestroleid_help', 'admin'), $defaultguestid, ($guestroles + $otherroles)));
             $temp->add(new admin_setting_configselect('defaultuserroleid', new lang_string('defaultuserroleid', 'admin'),
                           new lang_string('configdefaultuserroleid', 'admin'), $defaultuserid, ($userroles + $otherroles)));
-            $temp->add(new admin_setting_configselect('creatornewroleid', new lang_string('creatornewroleid', 'admin'),
-                          new lang_string('creatornewroleid_help', 'admin'), $defaultteacherid, $creatornewroles));
-            $temp->add(new admin_setting_configselect('restorernewroleid', new lang_string('restorernewroleid', 'admin'),
-                          new lang_string('restorernewroleid_help', 'admin'), $defaultteacherid, $restorersnewrole));
 
             // Release memory.
             unset($otherroles);
             unset($guestroles);
             unset($userroles);
-            unset($creatornewroles);
-            unset($restorersnewrole);
         }
-
-        $temp->add(new admin_setting_configcheckbox('enroladminnewcourse', new lang_string('enroladminnewcourse', 'admin'),
-            new lang_string('enroladminnewcourse_help', 'admin'), 1));
 
         $temp->add(new admin_setting_configcheckbox('autologinguests', new lang_string('autologinguests', 'admin'), new lang_string('configautologinguests', 'admin'), 0));
 
@@ -198,8 +172,6 @@ if ($hassiteconfig || has_any_capability($capabilities, $systemcontext)) { // Sp
                              'firstaccess' => new lang_string('firstaccess'),
                              'lastaccess' => new lang_string('lastaccess'),
                              'lastip' => new lang_string('lastip'),
-                             'mycourses' => new lang_string('mycourses'),
-                             'groups' => new lang_string('groups'),
                              'suspended' => new lang_string('suspended', 'auth'),
                        )));
 

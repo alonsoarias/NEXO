@@ -344,7 +344,6 @@ if ($hassiteconfig) {
     $temp->add(new admin_setting_configtext('repositorysyncfiletimeout', new lang_string('syncfiletimeout', 'repository'), new lang_string('configsyncfiletimeout', 'repository'), 1, PARAM_INT));
     $temp->add(new admin_setting_configtext('repositorysyncimagetimeout', new lang_string('syncimagetimeout', 'repository'), new lang_string('configsyncimagetimeout', 'repository'), 3, PARAM_INT));
     $temp->add(new admin_setting_configcheckbox('repositoryallowexternallinks', new lang_string('allowexternallinks', 'repository'), new lang_string('configallowexternallinks', 'repository'), 1));
-    $temp->add(new admin_setting_configcheckbox('legacyfilesinnewcourses', new lang_string('legacyfilesinnewcourses', 'admin'), new lang_string('legacyfilesinnewcourses_help', 'admin'), 0));
     $temp->add(new admin_setting_configcheckbox('legacyfilesaddallowed', new lang_string('legacyfilesaddallowed', 'admin'), new lang_string('legacyfilesaddallowed_help', 'admin'), 1));
     $ADMIN->add('repositorysettings', $temp);
     $ADMIN->add('repositorysettings', new admin_externalpage('repositorynew',
@@ -446,18 +445,6 @@ if ($hassiteconfig) {
     $temp->add(new admin_setting_configduration('searchindextime',
             new lang_string('searchindextime', 'admin'), new lang_string('searchindextime_desc', 'admin'),
             600));
-    $temp->add(new admin_setting_heading('searchcoursesheading', new lang_string('searchablecourses', 'admin'), ''));
-    $options = [
-        0 => new lang_string('searchallavailablecourses_off', 'admin'),
-        1 => new lang_string('searchallavailablecourses_on', 'admin')
-    ];
-    $temp->add(new admin_setting_configselect('searchallavailablecourses',
-            new lang_string('searchallavailablecourses', 'admin'),
-            new lang_string('searchallavailablecoursesdesc', 'admin'),
-            0, $options));
-    $temp->add(new admin_setting_configcheckbox('searchincludeallcourses',
-        new lang_string('searchincludeallcourses', 'admin'), new lang_string('searchincludeallcourses_desc', 'admin'),
-        0));
 
     // Search display options.
     $temp->add(new admin_setting_heading('searchdisplay', new lang_string('searchdisplay', 'admin'), ''));

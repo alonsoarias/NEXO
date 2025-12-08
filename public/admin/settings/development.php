@@ -28,11 +28,6 @@ if ($hassiteconfig) { // Speedup for non-admins, add all caps used on this page.
     $temp->add(new admin_setting_configcheckbox('forceclean', new lang_string('forceclean', 'core_admin'),
         new lang_string('forceclean_desc', 'core_admin'), 0));
 
-    // Relative course dates mode setting.
-    $temp->add(new admin_setting_configcheckbox('enablecourserelativedates',
-        new lang_string('enablecourserelativedates', 'core_admin'),
-        new lang_string('enablecourserelativedates_desc', 'core_admin'), 0));
-
     // Sharing to MoodleNet setting.
     $temp->add(new admin_setting_configcheckbox('enablesharingtomoodlenet',
         new lang_string('enablesharingtomoodlenet', 'core_admin'),
