@@ -90,11 +90,6 @@ if ($id == -1) {
     }
 }
 
-// Remote users cannot be edited.
-if ($user->id != -1 and is_mnet_remote_user($user)) {
-    redirect($CFG->wwwroot . "/user/view.php?id=$id&course={$course->id}");
-}
-
 if ($user->id != $USER->id and is_siteadmin($user) and !is_siteadmin($USER)) {  // Only admins may edit other admins.
     throw new \moodle_exception('useradmineditadmin');
 }
@@ -192,7 +187,6 @@ if ($userform->is_cancelled()) {
         $createpassword = !empty($usernew->createpassword);
         unset($usernew->createpassword);
         $usernew = file_postupdate_standard_editor($usernew, 'description', $editoroptions, null, 'user', 'profile', null);
-        $usernew->mnethostid = $CFG->mnet_localhost_id; // Always local user.
         $usernew->confirmed  = 1;
         $usernew->timecreated = time();
         if ($authplugin->is_internal()) {

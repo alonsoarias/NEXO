@@ -69,17 +69,6 @@ if (isguestuser($user)) {
 // User interests separated by commas.
 $user->interests = core_tag_tag::get_item_tags_array('core', 'user', $user->id);
 
-// Remote users cannot be edited. Note we have to perform the strict user_not_fully_set_up() check.
-// Otherwise the remote user could end up in endless loop between user/view.php and here.
-// Required custom fields are not supported in MNet environment anyway.
-if (is_mnet_remote_user($user)) {
-    if (user_not_fully_set_up($user, true)) {
-        $hostwwwroot = $DB->get_field('mnet_host', 'wwwroot', array('id' => $user->mnethostid));
-        throw new \moodle_exception('usernotfullysetup', 'mnet', '', $hostwwwroot);
-    }
-    redirect($CFG->wwwroot . "/user/view.php?course={$course->id}");
-}
-
 // Load the appropriate auth plugin.
 $userauth = get_auth_plugin($user->auth);
 

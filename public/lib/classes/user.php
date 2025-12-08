@@ -1229,10 +1229,6 @@ class user {
      */
     protected static function default_preference_permission_check($user, $preferencename) {
         global $USER;
-        if (is_mnet_remote_user($user)) {
-            // Can't edit MNET user.
-            return false;
-        }
 
         if (self::is_current_user($user)) {
             // Editing own profile.

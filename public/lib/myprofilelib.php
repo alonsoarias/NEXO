@@ -68,7 +68,7 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
     }
 
     // Edit profile.
-    if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+    if (isloggedin() && !isguestuser($user)) {
         if (($iscurrentuser || is_siteadmin($USER) || !is_siteadmin($user)) && has_capability('moodle/user:update',
                     $systemcontext)) {
             $url = new moodle_url('/user/editadvanced.php', array('id' => $user->id, 'course' => $courseid,
@@ -123,24 +123,6 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
     }
     // TODO Does not support custom user profile fields (MDL-70456).
     $identityfields = array_flip(\core_user\fields::get_identity_fields($courseorusercontext, false));
-
-    if (is_mnet_remote_user($user)) {
-        $sql = "SELECT h.id, h.name, h.wwwroot,
-                       a.name as application, a.display_name
-                  FROM {mnet_host} h, {mnet_application} a
-                 WHERE h.id = ? AND h.applicationid = a.id";
-
-        $remotehost = $DB->get_record_sql($sql, array($user->mnethostid));
-        $remoteuser = new stdclass();
-        $remoteuser->remotetype = $remotehost->display_name;
-        $hostinfo = new stdclass();
-        $hostinfo->remotename = $remotehost->name;
-        $hostinfo->remoteurl  = $remotehost->wwwroot;
-
-        $node = new core_user\output\myprofile\node('contact', 'mnet', get_string('remoteuser', 'mnet', $remoteuser), null, null,
-            get_string('remoteuserinfo', 'mnet', $hostinfo), null, 'remoteuserinfo');
-        $tree->add_node($node);
-    }
 
     if ($iscurrentuser
         or (!isset($hiddenfields['email']) and (

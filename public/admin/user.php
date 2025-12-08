@@ -9,7 +9,6 @@
     $delete       = optional_param('delete', 0, PARAM_INT);
     $confirm      = optional_param('confirm', '', PARAM_ALPHANUM);   //md5 confirmation hash
     $confirmuser  = optional_param('confirmuser', 0, PARAM_INT);
-    $acl          = optional_param('acl', '0', PARAM_INT);           // id of user to tweak mnet ACL (requires $access)
     $suspend      = optional_param('suspend', 0, PARAM_INT);
     $unsuspend    = optional_param('unsuspend', 0, PARAM_INT);
     $unlock       = optional_param('unlock', 0, PARAM_INT);
@@ -29,7 +28,7 @@
     $user = null;
     if ($confirmuser and confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
-        if (!$user = $DB->get_record('user', array('id'=>$confirmuser, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if (!$user = $DB->get_record('user', array('id'=>$confirmuser))) {
             throw new \moodle_exception('nousers');
         }
 
@@ -45,7 +44,7 @@
         }
 
     } else if ($resendemail && confirm_sesskey()) {
-        if (!$user = $DB->get_record('user', ['id' => $resendemail, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0])) {
+        if (!$user = $DB->get_record('user', ['id' => $resendemail, 'deleted' => 0])) {
             throw new \moodle_exception('nousers');
         }
 
@@ -65,7 +64,7 @@
     } else if ($delete and confirm_sesskey()) {              // Delete a selected user, after confirmation
         require_capability('moodle/user:delete', $sitecontext);
 
-        $user = $DB->get_record('user', array('id'=>$delete, 'mnethostid'=>$CFG->mnet_localhost_id), '*', MUST_EXIST);
+        $user = $DB->get_record('user', array('id'=>$delete), '*', MUST_EXIST);
 
         if ($user->deleted) {
             throw new \moodle_exception('usernotdeleteddeleted', 'error');
@@ -96,38 +95,10 @@
                 echo $OUTPUT->notification($returnurl, get_string('deletednot', '', fullname($user, true)));
             }
         }
-    } else if ($acl and confirm_sesskey()) {
-        if (!has_capability('moodle/user:update', $sitecontext)) {
-            throw new \moodle_exception('nopermissions', 'error', '', 'modify the NMET access control list');
-        }
-        if (!$user = $DB->get_record('user', array('id'=>$acl))) {
-            throw new \moodle_exception('nousers', 'error');
-        }
-        if (!is_mnet_remote_user($user)) {
-            throw new \moodle_exception('usermustbemnet', 'error');
-        }
-        $accessctrl = strtolower(required_param('accessctrl', PARAM_ALPHA));
-        if ($accessctrl != 'allow' and $accessctrl != 'deny') {
-            throw new \moodle_exception('invalidaccessparameter', 'error');
-        }
-        $aclrecord = $DB->get_record('mnet_sso_access_control', array('username'=>$user->username, 'mnet_host_id'=>$user->mnethostid));
-        if (empty($aclrecord)) {
-            $aclrecord = new stdClass();
-            $aclrecord->mnet_host_id = $user->mnethostid;
-            $aclrecord->username = $user->username;
-            $aclrecord->accessctrl = $accessctrl;
-            $DB->insert_record('mnet_sso_access_control', $aclrecord);
-        } else {
-            $aclrecord->accessctrl = $accessctrl;
-            $DB->update_record('mnet_sso_access_control', $aclrecord);
-        }
-        $mnethosts = $DB->get_records('mnet_host', null, 'id', 'id,wwwroot,name');
-        redirect($returnurl);
-
     } else if ($suspend and confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
 
-        if ($user = $DB->get_record('user', array('id'=>$suspend, 'mnethostid'=>$CFG->mnet_localhost_id, 'deleted'=>0))) {
+        if ($user = $DB->get_record('user', array('id'=>$suspend, 'deleted'=>0))) {
             if (!is_siteadmin($user) and $USER->id != $user->id and $user->suspended != 1) {
                 $user->suspended = 1;
                 // Force logout.
@@ -140,7 +111,7 @@
     } else if ($unsuspend and confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
 
-        if ($user = $DB->get_record('user', array('id'=>$unsuspend, 'mnethostid'=>$CFG->mnet_localhost_id, 'deleted'=>0))) {
+        if ($user = $DB->get_record('user', array('id'=>$unsuspend, 'deleted'=>0))) {
             if ($user->suspended != 0) {
                 $user->suspended = 0;
                 user_update_user($user, false);
@@ -151,7 +122,7 @@
     } else if ($unlock and confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
 
-        if ($user = $DB->get_record('user', array('id'=>$unlock, 'mnethostid'=>$CFG->mnet_localhost_id, 'deleted'=>0))) {
+        if ($user = $DB->get_record('user', array('id'=>$unlock, 'deleted'=>0))) {
             login_unlock_account($user);
         }
         redirect($returnurl);

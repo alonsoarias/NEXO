@@ -81,14 +81,6 @@ if (\core\session\manager::is_loggedinas()) {
     throw new \moodle_exception('cannotcallscript');
 }
 
-if (is_mnet_remote_user($USER)) {
-    $message = get_string('usercannotchangepassword', 'mnet');
-    if ($idprovider = $DB->get_record('mnet_host', array('id'=>$USER->mnethostid))) {
-        $message .= get_string('userchangepasswordlink', 'mnet', $idprovider);
-    }
-    throw new \moodle_exception('userchangepasswordlink', 'mnet', '', $message);
-}
-
 // load the appropriate auth plugin
 $userauth = get_auth_plugin($USER->auth);
 

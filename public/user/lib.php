@@ -857,12 +857,6 @@ function user_convert_text_to_menu_items($text, $page) {
  *          realuserprofileurl moodle_url the url of the user's profile
  *          realuseravatar     string     a HTML fragment - the rendered
  *                                        user_picture for this user
- *
- *          MNET PROVIDER FIELDS
- *          asmnetuser            bool   whether viewing as a user from an
- *                                       MNet provider
- *          mnetidprovidername    string name of the MNet provider
- *          mnetidproviderwwwroot string URL of the MNet provider
  */
 function user_get_user_navigation_info($user, $page, $options = array()) {
     global $OUTPUT, $DB, $SESSION, $CFG;
@@ -901,13 +895,6 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
         $user, $avataroptions
     );
     // Build a list of items for a regular user.
-
-    // Query MNet status.
-    if ($returnobject->metadata['asmnetuser'] = is_mnet_remote_user($user)) {
-        $mnetidprovider = $DB->get_record('mnet_host', array('id' => $user->mnethostid));
-        $returnobject->metadata['mnetidprovidername'] = $mnetidprovider->name;
-        $returnobject->metadata['mnetidproviderwwwroot'] = $mnetidprovider->wwwroot;
-    }
 
     // Did the user just log in?
     if (isset($SESSION->justloggedin)) {

@@ -520,7 +520,7 @@ class behat_navigation extends behat_base {
             $courseid = SITEID;
         }
 
-        if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+        if (isloggedin() && !isguestuser($user)) {
             if (is_siteadmin($user) ||  has_capability('moodle/user:update', $systemcontext)) {
                 $url = new moodle_url('/user/editadvanced.php', array('id' => $user->id, 'course' => SITEID,
                     'returnto' => 'profile'));

@@ -1892,17 +1892,6 @@ class moodle_page {
             $themeorder[] = 'site';
         }
 
-        $mnetpeertheme = '';
-        $mnetvarsok = isset($CFG->mnet_localhost_id) && isset($USER->mnethostid);
-        if (isloggedin() and $mnetvarsok and $USER->mnethostid != $CFG->mnet_localhost_id) {
-            require_once($CFG->dirroot.'/mnet/peer.php');
-            $mnetpeer = new mnet_peer();
-            $mnetpeer->set_id($USER->mnethostid);
-            if ($mnetpeer->force_theme == 1 && $mnetpeer->theme != '') {
-                $mnetpeertheme = $mnetpeer->theme;
-            }
-        }
-
         foreach ($themeorder as $themetype) {
 
             switch ($themetype) {
@@ -1931,11 +1920,7 @@ class moodle_page {
 
                 case 'user':
                     if (!empty($CFG->allowuserthemes) && !empty($USER->theme)) {
-                        if ($mnetpeertheme) {
-                            return $mnetpeertheme;
-                        } else {
-                            return $USER->theme;
-                        }
+                        return $USER->theme;
                     }
                 break;
 
@@ -1946,10 +1931,6 @@ class moodle_page {
                 break;
 
                 case 'site':
-                    if ($mnetpeertheme) {
-                        return $mnetpeertheme;
-                    }
-
                     // Use theme if it is set in config.
                     if (!empty($CFG->theme)) {
                         return $CFG->theme;

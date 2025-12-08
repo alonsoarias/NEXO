@@ -282,11 +282,11 @@ class users extends system_report {
             false,
             new lang_string('suspenduser', 'admin'),
         ))->add_callback(static function(\stdclass $row) use ($USER, $contextsystem): bool {
-            return has_capability('moodle/user:update', $contextsystem) && !$row->suspended && !is_mnet_remote_user($row) &&
+            return has_capability('moodle/user:update', $contextsystem) && !$row->suspended &&
                 !($row->id == $USER->id || is_siteadmin($row));
         }));
 
-        // Action to unsuspend users (non mnet remote users).
+        // Action to unsuspend users.
         $this->add_action((new action(
             new moodle_url('/admin/user.php', ['unsuspend' => ':id', 'sesskey' => sesskey()]),
             new pix_icon('t/hide', ''),
@@ -294,11 +294,11 @@ class users extends system_report {
             false,
             new lang_string('unsuspenduser', 'admin'),
         ))->add_callback(static function(\stdclass $row) use ($USER, $contextsystem): bool {
-            return has_capability('moodle/user:update', $contextsystem) && $row->suspended && !is_mnet_remote_user($row) &&
+            return has_capability('moodle/user:update', $contextsystem) && $row->suspended &&
                 !($row->id == $USER->id || is_siteadmin($row));
         }));
 
-        // Action to unlock users (non mnet remote users).
+        // Action to unlock users.
         $this->add_action((new action(
             new moodle_url('/admin/user.php', ['unlock' => ':id', 'sesskey' => sesskey()]),
             new pix_icon('t/unlock', ''),
@@ -306,44 +306,7 @@ class users extends system_report {
             false,
             new lang_string('unlockaccount', 'admin'),
         ))->add_callback(static function(\stdclass $row) use ($contextsystem): bool {
-            return has_capability('moodle/user:update', $contextsystem) && !is_mnet_remote_user($row) &&
-                login_is_lockedout($row);
-        }));
-
-        // Action to suspend users (mnet remote users).
-        $this->add_action((new action(
-            new moodle_url('/admin/user.php', ['acl' => ':id', 'sesskey' => sesskey(), 'accessctrl' => 'deny']),
-            new pix_icon('t/show', ''),
-            [],
-            false,
-            new lang_string('denyaccess', 'mnet'),
-        ))->add_callback(static function(\stdclass $row) use ($DB, $contextsystem): bool {
-            if (!$accessctrl = $DB->get_field(table: 'mnet_sso_access_control', return: 'accessctrl',
-                conditions: ['username' => $row->username, 'mnet_host_id' => $row->mnethostid]
-            )) {
-                $accessctrl = 'allow';
-            }
-
-            return has_capability('moodle/user:update', $contextsystem) && !$row->suspended &&
-                is_mnet_remote_user($row) && $accessctrl == 'allow';
-        }));
-
-        // Action to unsuspend users (mnet remote users).
-        $this->add_action((new action(
-            new moodle_url('/admin/user.php', ['acl' => ':id', 'sesskey' => sesskey(), 'accessctrl' => 'allow']),
-            new pix_icon('t/hide', ''),
-            [],
-            false,
-            new lang_string('allowaccess', 'mnet'),
-        ))->add_callback(static function(\stdclass $row) use ($DB, $contextsystem): bool {
-            if (!$accessctrl = $DB->get_field(table: 'mnet_sso_access_control', return: 'accessctrl',
-                conditions: ['username' => $row->username, 'mnet_host_id' => $row->mnethostid]
-            )) {
-                $accessctrl = 'allow';
-            }
-
-            return has_capability('moodle/user:update', $contextsystem) && !$row->suspended &&
-                is_mnet_remote_user($row) && $accessctrl == 'deny';
+            return has_capability('moodle/user:update', $contextsystem) && login_is_lockedout($row);
         }));
 
         // Action to delete users.
@@ -377,7 +340,7 @@ class users extends system_report {
             ]))->out(false);
 
             return has_capability('moodle/user:delete', $contextsystem) &&
-                !is_mnet_remote_user($row) && $row->id != $USER->id && !is_siteadmin($row);
+                $row->id != $USER->id && !is_siteadmin($row);
         }));
 
         $this->add_action_divider();
@@ -401,7 +364,7 @@ class users extends system_report {
             false,
             new lang_string('resendemail', 'moodle'),
         ))->add_callback(static function(\stdclass $row): bool {
-            return !$row->confirmed && !is_mnet_remote_user($row);
+            return !$row->confirmed;
         }));
     }
 

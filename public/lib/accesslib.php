@@ -1859,7 +1859,7 @@ function isguestuser($user = null) {
 
     // make sure we have the user id cached in config table, because we are going to use it a lot
     if (empty($CFG->siteguest)) {
-        if (!$guestid = $DB->get_field('user', 'id', array('username'=>'guest', 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if (!$guestid = $DB->get_field('user', 'id', array('username'=>'guest'))) {
             // guest does not exist yet, weird
             return false;
         }
@@ -4065,7 +4065,7 @@ function get_role_users($roleid, context $context, $parent = false, $fields = ''
         $fields = 'u.id, u.confirmed, u.username, '. $allnames . ', ' .
                   'u.maildisplay, u.mailformat, u.maildigest, u.email, u.emailstop, u.city, '.
                   'u.country, u.picture, u.idnumber, u.department, u.institution, '.
-                  'u.lang, u.timezone, u.lastaccess, u.mnethostid, r.name AS rolename, r.sortorder, '.
+                  'u.lang, u.timezone, u.lastaccess, r.name AS rolename, r.sortorder, '.
                   'r.shortname AS roleshortname, rn.name AS rolecoursealias';
     }
 

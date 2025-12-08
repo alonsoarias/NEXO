@@ -298,12 +298,6 @@ class manager {
             // Restore notifications.
             $GLOBALS['SESSION']->notifications = $notifications;
         }
-        if (isset($CFG->mnet_localhost_id)) {
-            $GLOBALS['USER']->mnethostid = $CFG->mnet_localhost_id;
-        } else {
-            // Not installed yet, the future host id will be most probably 1.
-            $GLOBALS['USER']->mnethostid = 1;
-        }
 
         // Link global $USER and $SESSION.
         $_SESSION = array();

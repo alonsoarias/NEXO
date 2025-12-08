@@ -61,7 +61,6 @@ class provider implements
             'policyagreed' => 'privacy:metadata:policyagreed',
             'deleted' => 'privacy:metadata:deleted',
             'suspended' => 'privacy:metadata:suspended',
-            'mnethostid' => 'privacy:metadata:mnethostid',
             'username' => 'privacy:metadata:username',
             'password' => 'privacy:metadata:password',
             'idnumber' => 'privacy:metadata:idnumber',

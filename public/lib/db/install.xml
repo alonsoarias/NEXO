@@ -99,52 +99,7 @@
         <INDEX NAME="contextid-filter-name" UNIQUE="true" FIELDS="contextid, filter, name" COMMENT="In each context, at most one value per name per filter."/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="event" COMMENT="For everything with a time associated to it">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="name" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="format" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="repeatid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Component that created this event, if specified, only component itself can edit and delete it"/>
-        <FIELD NAME="modulename" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="type" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="eventtype" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="timeduration" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="timesort" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="visible" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="uuid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="sequence" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="subscriptionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The event_subscription id this event is associated with."/>
-        <FIELD NAME="priority" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The event's display priority. For multiple events with the same module name, instance and eventtype (e.g. for group overrides), the one with the higher priority will be displayed."/>
-        <FIELD NAME="location" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Event Location"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="course_categories" REFFIELDS="id"/>
-        <KEY NAME="subscriptionid" TYPE="foreign" FIELDS="subscriptionid" REFTABLE="event_subscriptions" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
-        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
-        <INDEX NAME="timestart" UNIQUE="false" FIELDS="timestart"/>
-        <INDEX NAME="timeduration" UNIQUE="false" FIELDS="timeduration"/>
-        <INDEX NAME="uuid" UNIQUE="false" FIELDS="uuid"/>
-        <INDEX NAME="type-timesort" UNIQUE="false" FIELDS="type, timesort"/>
-        <INDEX NAME="groupid-courseid-categoryid-visible-userid" UNIQUE="false" FIELDS="groupid, courseid, categoryid, visible, userid" COMMENT="used for calendar view"/>
-        <INDEX NAME="eventtype" UNIQUE="false" FIELDS="eventtype"/>
-        <INDEX NAME="component" UNIQUE="false" FIELDS="component, eventtype, instance"/>
-        <INDEX NAME="modulename-instance-eventtype" UNIQUE="false" FIELDS="modulename, instance, eventtype" COMMENT="Improve performance on assign adhoc tasks."/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="cache_filters" COMMENT="For keeping information about cached data">
+<TABLE NAME="cache_filters" COMMENT="For keeping information about cached data">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="filter" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false"/>
@@ -160,31 +115,7 @@
         <INDEX NAME="filter_md5key" UNIQUE="false" FIELDS="filter, md5key"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="log" COMMENT="Every action is logged as far as possible">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="ip" TYPE="char" LENGTH="45" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="module" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="action" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="url" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="info" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course-module-action" UNIQUE="false" FIELDS="course, module, action"/>
-        <INDEX NAME="time" UNIQUE="false" FIELDS="time"/>
-        <INDEX NAME="action" UNIQUE="false" FIELDS="action"/>
-        <INDEX NAME="userid-course" UNIQUE="false" FIELDS="userid, course"/>
-        <INDEX NAME="cmid" UNIQUE="false" FIELDS="cmid"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="log_queries" COMMENT="Logged database queries.">
+<TABLE NAME="log_queries" COMMENT="Logged database queries.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="qtype" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="query type constant"/>
@@ -488,8 +419,7 @@
         <FIELD NAME="policyagreed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="suspended" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="suspended flag prevents users to log in"/>
-        <FIELD NAME="mnethostid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+<FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="password" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="idnumber" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="firstname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
@@ -534,7 +464,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="username" UNIQUE="true" FIELDS="mnethostid, username"/>
+        <INDEX NAME="username" UNIQUE="true" FIELDS="username"/>
         <INDEX NAME="deleted" UNIQUE="false" FIELDS="deleted"/>
         <INDEX NAME="confirmed" UNIQUE="false" FIELDS="confirmed"/>
         <INDEX NAME="firstname" UNIQUE="false" FIELDS="firstname"/>
@@ -824,191 +754,7 @@
         <INDEX NAME="userfieldidx" UNIQUE="true" FIELDS="userid, fieldid"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="mnet_application" COMMENT="Information about applications on remote hosts">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="display_name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="xmlrpc_server_url" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="sso_land_url" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="sso_jump_url" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="mnet_host" COMMENT="Information about the local and remote hosts for RPC">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Unique Host ID"/>
-        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="wwwroot" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="ip_address" TYPE="char" LENGTH="45" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="80" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="public_key" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="public_key_expires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="transport" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="portno" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="last_connect_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="last_log_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="force_theme" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="theme" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="applicationid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="sslverification" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_host table"/>
-        <KEY NAME="applicationid" TYPE="foreign" FIELDS="applicationid" REFTABLE="mnet_application" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="last_log_id" UNIQUE="false" FIELDS="last_log_id"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_host2service" COMMENT="Information about the services for a given host">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="hostid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="serviceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="publish" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="subscribe" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_host2service table"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="hostid_serviceid" UNIQUE="true" FIELDS="hostid, serviceid"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_log" COMMENT="Store session data from users migrating to other sites">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="hostid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique host ID"/>
-        <FIELD NAME="remoteid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="ip" TYPE="char" LENGTH="45" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="coursename" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="module" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="action" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="url" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="info" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_log table"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="hostid_userid_course" UNIQUE="false" FIELDS="hostid, userid, course"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_rpc" COMMENT="Functions or methods that we may publish or subscribe to">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Unique Function ID"/>
-        <FIELD NAME="functionname" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="xmlrpcpath" TYPE="char" LENGTH="80" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="plugintype" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="pluginname" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="help" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="profile" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Method signature"/>
-        <FIELD NAME="filename" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="classname" TYPE="char" LENGTH="150" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="static" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_rpc table"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="enabled_xmlrpcpath" UNIQUE="false" FIELDS="enabled, xmlrpcpath"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_remote_rpc" COMMENT="This table describes functions that might be called remotely (we have less information about them than local functions)">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="functionname" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="xmlrpcpath" TYPE="char" LENGTH="80" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="plugintype" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="pluginname" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="mnet_service" COMMENT="A service is a group of functions">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Unique Service ID"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="apiversion" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="offer" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Do we even offer this service?"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_service table"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="mnet_service2rpc" COMMENT="Group functions or methods under a service">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Required ID field"/>
-        <FIELD NAME="serviceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique service ID"/>
-        <FIELD NAME="rpcid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique Function ID"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_service2rpc table"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="rpcid_serviceid" UNIQUE="true" FIELDS="rpcid, serviceid"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_remote_service2rpc" COMMENT="Group functions or methods under a service">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Required ID field"/>
-        <FIELD NAME="serviceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique service ID"/>
-        <FIELD NAME="rpcid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique Function ID"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_remote_service2rpc table"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="rpcid_serviceid" UNIQUE="true" FIELDS="rpcid, serviceid"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_session" COMMENT="Store session data from users migrating to other sites">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Required ID field"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique user ID"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Unique username"/>
-        <FIELD NAME="token" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" COMMENT="Unique SHA1 Token"/>
-        <FIELD NAME="mnethostid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unique remote host ID"/>
-        <FIELD NAME="useragent" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" COMMENT="SHA1 hash of User Agent"/>
-        <FIELD NAME="confirm_timeout" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="UNIX timestamp for expiry of session"/>
-        <FIELD NAME="session_id" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" COMMENT="The PHP Session ID"/>
-        <FIELD NAME="expires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Expire time of session on peer"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_session table"/>
-        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-        <KEY NAME="mnethostid" TYPE="foreign" FIELDS="mnethostid" REFTABLE="mnet_host" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="token" UNIQUE="true" FIELDS="token"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="mnet_sso_access_control" COMMENT="Users by host permitted (or not) to login from a remote provider">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Required ID field"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Username"/>
-        <FIELD NAME="mnet_host_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="id of mnet host"/>
-        <FIELD NAME="accessctrl" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="allow" SEQUENCE="false" COMMENT="Whether or not this user/host can login"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the mnet_sso_access_control table"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="mnethostid_username" UNIQUE="true" FIELDS="mnet_host_id, username"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="events_queue" COMMENT="This table is for storing queued events. It stores only one copy of the eventdata here, and entries from this table are being references by the event_queue_handlers table.">
+<TABLE NAME="events_queue" COMMENT="This table is for storing queued events. It stores only one copy of the eventdata here, and entries from this table are being references by the event_queue_handlers table.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="eventdata" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="serialized version of the data object passed to the event handler."/>
@@ -2207,22 +1953,7 @@
         <INDEX NAME="timemodified" UNIQUE="false" FIELDS="timemodified"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="moodlenet_share_progress" COMMENT="Records MoodleNet share progress">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="type" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="resourceurl" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="status" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="stored_progress" COMMENT="Records for any long running tasks we want to poll for progress">
+<TABLE NAME="stored_progress" COMMENT="Records for any long running tasks we want to poll for progress">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="idnumber" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>

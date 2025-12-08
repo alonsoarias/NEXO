@@ -212,10 +212,9 @@ class user_edit_form extends moodleform {
             $errors['email'] = get_string('invalidemail');
         } else if (($usernew->email !== $user->email) && empty($CFG->allowaccountssameemail)) {
             // Make a case-insensitive query for the given email address.
-            $select = $DB->sql_equal('email', ':email', false) . ' AND mnethostid = :mnethostid AND id <> :userid';
+            $select = $DB->sql_equal('email', ':email', false) . ' AND id <> :userid';
             $params = array(
                 'email' => $usernew->email,
-                'mnethostid' => $CFG->mnet_localhost_id,
                 'userid' => $usernew->id
             );
             // If there are other user(s) that already have the same email, show an error.

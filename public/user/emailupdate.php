@@ -71,10 +71,9 @@ if (empty($preferences['newemailattemptsleft'])) {
     // Detect duplicate before saving.
     if (empty($CFG->allowaccountssameemail)) {
         // Make a case-insensitive query for the given email address.
-        $select = $DB->sql_equal('email', ':email', false) . ' AND mnethostid = :mnethostid AND id <> :userid';
+        $select = $DB->sql_equal('email', ':email', false) . ' AND id <> :userid';
         $params = array(
             'email' => $user->email,
-            'mnethostid' => $CFG->mnet_localhost_id,
             'userid' => $user->id
         );
         // If there are other user(s) that already have the same email, cancel and redirect.

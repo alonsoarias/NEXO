@@ -141,7 +141,6 @@ class core_user_external extends \core_external\external_api {
         $params = self::validate_parameters(self::create_users_parameters(), array('users' => $users));
 
         $availableauths  = core_component::get_plugin_list('auth');
-        unset($availableauths['mnet']);       // These would need mnethostid too.
         unset($availableauths['webservice']); // We do not want new webservice users for now.
 
         $availablethemes = core_component::get_plugin_list('theme');
@@ -161,7 +160,7 @@ class core_user_external extends \core_external\external_api {
             }
 
             // Make sure that the username doesn't already exist.
-            if ($DB->record_exists('user', array('username' => $user['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
+            if ($DB->record_exists('user', array('username' => $user['username']))) {
                 throw new invalid_parameter_exception('Username already exists: '.$user['username']);
             }
 
@@ -190,7 +189,6 @@ class core_user_external extends \core_external\external_api {
             }
 
             $user['confirmed'] = true;
-            $user['mnethostid'] = $CFG->mnet_localhost_id;
 
             // Start of user info validation.
             // Make sure we validate current user info as handled by current GUI. See user/editadvanced_form.php func validation().
@@ -198,10 +196,9 @@ class core_user_external extends \core_external\external_api {
                 throw new invalid_parameter_exception('Email address is invalid: '.$user['email']);
             } else if (empty($CFG->allowaccountssameemail)) {
                 // Make a case-insensitive query for the given email address.
-                $select = $DB->sql_equal('email', ':email', false) . ' AND mnethostid = :mnethostid';
+                $select = $DB->sql_equal('email', ':email', false);
                 $params = array(
-                    'email' => $user['email'],
-                    'mnethostid' => $user['mnethostid']
+                    'email' => $user['email']
                 );
                 // If there are other user(s) that already have the same email, throw an error.
                 if ($DB->record_exists_select('user', $select, $params)) {
@@ -588,10 +585,6 @@ class core_user_external extends \core_external\external_api {
                     throw new moodle_exception('usernotupdateddeleted', '', '', null,
                             'User is a deleted user');
                 }
-                if (is_mnet_remote_user($existinguser)) {
-                    throw new moodle_exception('usernotupdatedremote', '', '', null,
-                            'User is a remote user');
-                }
                 if (isguestuser($existinguser->id)) {
                     throw new moodle_exception('usernotupdatedguest', '', '', null,
                             'Cannot update guest account');
@@ -604,10 +597,9 @@ class core_user_external extends \core_external\external_api {
                     } else if (empty($CFG->allowaccountssameemail)) {
                         // Make a case-insensitive query for the given email address
                         // and make sure to exclude the user being updated.
-                        $select = $DB->sql_equal('email', ':email', false) . ' AND mnethostid = :mnethostid AND id <> :userid';
+                        $select = $DB->sql_equal('email', ':email', false) . ' AND id <> :userid';
                         $params = array(
                             'email' => $user['email'],
-                            'mnethostid' => $CFG->mnet_localhost_id,
                             'userid' => $user['id']
                         );
                         // Skip if there are other user(s) that already have the same email.
@@ -1746,7 +1738,7 @@ class core_user_external extends \core_external\external_api {
 
         // Load the appropriate auth plugin.
         $userauth = get_auth_plugin($user->auth);
-        if (is_mnet_remote_user($user) or !$userauth->can_edit_profile() or $userauth->edit_profile_url()) {
+        if (!$userauth->can_edit_profile() or $userauth->edit_profile_url()) {
             throw new moodle_exception('noprofileedit', 'auth');
         }
 
