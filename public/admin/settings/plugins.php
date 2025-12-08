@@ -24,12 +24,9 @@
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 
-$ADMIN->add('modules', new admin_category('modsettings', new lang_string('activitymodules')));
-$ADMIN->add('modules', new admin_category('formatsettings', new lang_string('courseformats')));
 $ADMIN->add('modules', new admin_category('customfieldsettings', new lang_string('customfields', 'core_customfield')));
 $ADMIN->add('modules', new admin_category('blocksettings', new lang_string('blocks')));
 $ADMIN->add('modules', new admin_category('authsettings', new lang_string('authentication', 'admin')));
-$ADMIN->add('modules', new admin_category('enrolments', new lang_string('enrolments', 'enrol')));
 $ADMIN->add('modules', new admin_category('editorsettings', new lang_string('editors', 'editor')));
 $ADMIN->add('modules', new admin_category('antivirussettings', new lang_string('antiviruses', 'antivirus')));
 $ADMIN->add('modules', new admin_category('mlbackendsettings', new lang_string('mlbackendsettings', 'admin')));
@@ -38,23 +35,15 @@ $ADMIN->add('modules', new admin_category('mediaplayers', new lang_string('type_
 $ADMIN->add('modules', new admin_category('fileconverterplugins', new lang_string('type_fileconverter_plural', 'plugin')));
 $ADMIN->add('modules', new admin_category('paymentgateways', new lang_string('type_paygw_plural', 'plugin')));
 $ADMIN->add('modules', new admin_category('dataformatsettings', new lang_string('dataformats')));
-$ADMIN->add('modules', new admin_category('portfoliosettings', new lang_string('portfolios', 'portfolio'),
-    empty($CFG->enableportfolios)));
 $ADMIN->add('modules', new admin_category('repositorysettings', new lang_string('repositories', 'repository')));
-$ADMIN->add('modules', new admin_category('qbanksettings', new lang_string('type_qbank_plural', 'plugin')));
-$ADMIN->add('modules', new admin_category('qbehavioursettings', new lang_string('questionbehaviours', 'admin')));
-$ADMIN->add('modules', new admin_category('qtypesettings', new lang_string('questiontypes', 'admin')));
 $ADMIN->add('modules', new admin_category('plagiarism', new lang_string('plagiarism', 'plagiarism')));
-$ADMIN->add('modules', new admin_category('coursereports', new lang_string('coursereports')));
 $ADMIN->add('modules', new admin_category('reportplugins', new lang_string('reports')));
 $ADMIN->add('modules', new admin_category('searchplugins', new lang_string('search', 'admin')));
 $ADMIN->add('modules', new admin_category('tools', new lang_string('tools', 'admin')));
 $ADMIN->add('modules', new admin_category('cache', new lang_string('caching', 'cache')));
 $ADMIN->add('cache', new admin_category('cachestores', new lang_string('cachestores', 'cache')));
-$ADMIN->add('modules', new admin_category('calendartype', new lang_string('calendartypes', 'calendar')));
 $ADMIN->add('modules', new admin_category('communicationsettings', new lang_string('communication', 'core_communication')));
 $ADMIN->add('modules', new admin_category('sms', new lang_string('sms', 'core_sms')));
-$ADMIN->add('modules', new admin_category('contentbanksettings', new lang_string('contentbank')));
 $ADMIN->add('modules', new admin_category('localplugins', new lang_string('localplugins')));
 
 
@@ -63,33 +52,6 @@ if ($hassiteconfig) {
     $ADMIN->locate('modules')->set_sorting(true);
 
     $ADMIN->add('modules', new admin_page_pluginsoverview());
-
-    // activity modules
-
-    $ADMIN->add('modsettings', new admin_page_managemods());
-
-    $temp = new admin_settingpage('managemodulescommon', new lang_string('commonactivitysettings', 'admin'));
-    $temp->add(new admin_setting_configcheckbox('requiremodintro',
-        get_string('requiremodintro', 'admin'), get_string('requiremodintro_desc', 'admin'), 0));
-    $ADMIN->add('modsettings', $temp);
-
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('mod');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\mod $plugin */
-        $plugin->load_settings($ADMIN, 'modsettings', $hassiteconfig);
-    }
-
-    // course formats
-    $temp = new admin_settingpage('manageformats', new lang_string('manageformats', 'core_admin'));
-    $temp->add(new admin_setting_manageformats());
-    $ADMIN->add('formatsettings', $temp);
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('format');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\format $plugin */
-        $plugin->load_settings($ADMIN, 'formatsettings', $hassiteconfig);
-    }
 
     // Custom fields.
     $temp = new admin_settingpage('managecustomfields', new lang_string('managecustomfields', 'core_admin'));
@@ -195,22 +157,6 @@ if ($hassiteconfig) {
         /** @var \core\plugininfo\auth $plugin */
         $plugin->load_settings($ADMIN, 'authsettings', $hassiteconfig);
     }
-
-    // Enrolment plugins
-    $temp = new admin_settingpage('manageenrols', new lang_string('manageenrols', 'enrol'));
-    $temp->add(new admin_setting_manageenrols());
-    $ADMIN->add('enrolments', $temp);
-
-    $temp = new admin_externalpage('enroltestsettings', get_string('testsettings', 'core_enrol'), new moodle_url("/enrol/test_settings.php"), 'moodle/site:config', true);
-    $ADMIN->add('enrolments', $temp);
-
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('enrol');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\enrol $plugin */
-        $plugin->load_settings($ADMIN, 'enrolments', $hassiteconfig);
-    }
-
 
 /// Editor plugins
     $temp = new admin_settingpage('manageeditors', new lang_string('editorsettings', 'editor'));
@@ -402,62 +348,6 @@ if ($hassiteconfig) {
         $plugin->load_settings($ADMIN, 'dataformatsettings', $hassiteconfig);
     }
 
-    //== Portfolio settings ==
-    require_once($CFG->libdir. '/portfoliolib.php');
-    $manage = new lang_string('manageportfolios', 'portfolio');
-    $url = "$CFG->wwwroot/$CFG->admin/portfolio.php";
-
-    // Add manage page (with table)
-    $temp = new admin_page_manageportfolios();
-    $ADMIN->add('portfoliosettings', $temp);
-
-    // Add common settings page
-    $temp = new admin_settingpage('manageportfolioscommon', new lang_string('commonportfoliosettings', 'portfolio'));
-    $temp->add(new admin_setting_heading('manageportfolioscommon', '', new lang_string('commonsettingsdesc', 'portfolio')));
-    $fileinfo = portfolio_filesize_info(); // make sure this is defined in one place since its used inside portfolio too to detect insane settings
-    $fileoptions = $fileinfo['options'];
-    $temp->add(new admin_setting_configselect(
-        'portfolio_moderate_filesize_threshold',
-        new lang_string('moderatefilesizethreshold', 'portfolio'),
-        new lang_string('moderatefilesizethresholddesc', 'portfolio'),
-        $fileinfo['moderate'], $fileoptions));
-    $temp->add(new admin_setting_configselect(
-        'portfolio_high_filesize_threshold',
-        new lang_string('highfilesizethreshold', 'portfolio'),
-        new lang_string('highfilesizethresholddesc', 'portfolio'),
-        $fileinfo['high'], $fileoptions));
-
-    $temp->add(new admin_setting_configtext(
-        'portfolio_moderate_db_threshold',
-        new lang_string('moderatedbsizethreshold', 'portfolio'),
-        new lang_string('moderatedbsizethresholddesc', 'portfolio'),
-        20, PARAM_INT, 3));
-
-    $temp->add(new admin_setting_configtext(
-        'portfolio_high_db_threshold',
-        new lang_string('highdbsizethreshold', 'portfolio'),
-        new lang_string('highdbsizethresholddesc', 'portfolio'),
-        50, PARAM_INT, 3));
-
-    $ADMIN->add('portfoliosettings', $temp);
-    $ADMIN->add('portfoliosettings', new admin_externalpage('portfolionew', new lang_string('addnewportfolio', 'portfolio'), $url, 'moodle/site:config', true));
-    $ADMIN->add('portfoliosettings', new admin_externalpage('portfoliodelete', new lang_string('deleteportfolio', 'portfolio'), $url, 'moodle/site:config', true));
-    $ADMIN->add('portfoliosettings', new admin_externalpage('portfoliocontroller', new lang_string('manageportfolios', 'portfolio'), $url, 'moodle/site:config', true));
-
-    foreach (portfolio_instances(false, false) as $portfolio) {
-        require_once($CFG->dirroot . '/portfolio/' . $portfolio->get('plugin') . '/lib.php');
-        $classname = 'portfolio_plugin_' . $portfolio->get('plugin');
-        $ADMIN->add(
-            'portfoliosettings',
-            new admin_externalpage(
-                'portfoliosettings' . $portfolio->get('id'),
-                $portfolio->get('name'),
-                $url . '?action=edit&pf=' . $portfolio->get('id'),
-                'moodle/site:config'
-            )
-        );
-    }
-
     // repository setting
     require_once("$CFG->dirroot/repository/lib.php");
     $managerepo = new lang_string('manage', 'repository');
@@ -495,95 +385,6 @@ if ($hassiteconfig) {
     }
 }
 
-// Question bank settings.
-if ($hassiteconfig || has_capability('moodle/question:config', $systemcontext)) {
-    $temp = new admin_settingpage('manageqbanks', new lang_string('manageqbanks', 'admin'));
-    $temp->add(new \core_question\admin\manage_qbank_plugins_page());
-    $ADMIN->add('qbanksettings', $temp);
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('qbank');
-
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\qbank $plugin */
-        $plugin->load_settings($ADMIN, 'qbanksettings', $hassiteconfig);
-    }
-}
-
-// Question type settings
-if ($hassiteconfig || has_capability('moodle/question:config', $systemcontext)) {
-
-    // Question behaviour settings.
-    $ADMIN->add('qbehavioursettings', new admin_page_manageqbehaviours());
-
-    // Question type settings.
-    $ADMIN->add('qtypesettings', new admin_page_manageqtypes());
-
-    // Question preview defaults.
-    $settings = new admin_settingpage('qdefaultsetting',
-            get_string('questionpreviewdefaults', 'question'),
-            'moodle/question:config');
-    $ADMIN->add('qtypesettings', $settings);
-
-    $settings->add(new admin_setting_heading('qdefaultsetting_preview_options',
-            '', get_string('questionpreviewdefaults_desc', 'question')));
-
-    // These keys are question_display_options::HIDDEN and VISIBLE.
-    $hiddenofvisible = array(
-        0 => get_string('notshown', 'question'),
-        1 => get_string('shown', 'question'),
-    );
-
-    $settings->add(new admin_setting_question_behaviour('question_preview/behaviour',
-            get_string('howquestionsbehave', 'question'), '',
-                    'deferredfeedback'));
-
-    $settings->add(new admin_setting_configselect('question_preview/correctness',
-            get_string('whethercorrect', 'question'), '', 1, $hiddenofvisible));
-
-    // These keys are question_display_options::HIDDEN, MARK_ONLY and MARK_AND_MAX.
-    $marksoptions = array(
-        0 => get_string('notshown', 'question'),
-        1 => get_string('showmaxmarkonly', 'question'),
-        2 => get_string('showmarkandmax', 'question'),
-    );
-    $settings->add(new admin_setting_configselect('question_preview/marks',
-            get_string('marks', 'question'), '', 2, $marksoptions));
-
-    $settings->add(new admin_setting_configselect('question_preview/markdp',
-            get_string('decimalplacesingrades', 'question'), '', 2, array(0, 1, 2, 3, 4, 5, 6, 7)));
-
-    $settings->add(new admin_setting_configselect('question_preview/feedback',
-            get_string('specificfeedback', 'question'), '', 1, $hiddenofvisible));
-
-    $settings->add(new admin_setting_configselect('question_preview/generalfeedback',
-            get_string('generalfeedback', 'question'), '', 1, $hiddenofvisible));
-
-    $settings->add(new admin_setting_configselect('question_preview/rightanswer',
-            get_string('rightanswer', 'question'), '', 1, $hiddenofvisible));
-
-    $settings->add(new admin_setting_configselect('question_preview/history',
-            get_string('responsehistory', 'question'), '', 0, $hiddenofvisible));
-
-    // Question editing settings.
-    $settings = new admin_settingpage('qediting',
-            get_string('questionediting', 'question'),
-            'moodle/question:config');
-    $ADMIN->add('qtypesettings', $settings);
-
-    $settings->add(new admin_setting_heading('qediting_options',
-            '', get_string('questionediting_desc', 'question')));
-
-    $settings->add(new admin_setting_configcheckbox('questiondefaultssave',
-            get_string('questiondefaultssave', 'question'), get_string('questiondefaultssave_desc', 'question'), 1));
-
-    // Settings for particular question types.
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('qtype');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\qtype $plugin */
-        $plugin->load_settings($ADMIN, 'qtypesettings', $hassiteconfig);
-    }
-}
-
 // Plagiarism plugin settings
 if ($hassiteconfig && !empty($CFG->enableplagiarism)) {
     $ADMIN->add('plagiarism', new admin_externalpage('manageplagiarismplugins', new lang_string('manageplagiarism', 'plagiarism'),
@@ -600,30 +401,6 @@ if ($hassiteconfig && !empty($CFG->enableplagiarism)) {
 // Comments report, note this page is really just a means to delete comments so check that.
 $ADMIN->add('reports', new admin_externalpage('comments', new lang_string('comments'), $CFG->wwwroot . '/comment/index.php',
     'moodle/comment:delete'));
-
-// Course reports settings
-if ($hassiteconfig) {
-    $pages = array();
-    foreach (core_component::get_plugin_list('coursereport') as $report => $path) {
-        $file = $CFG->dirroot . '/course/report/' . $report . '/settings.php';
-        if (file_exists($file)) {
-            $settings = new admin_settingpage('coursereport' . $report,
-                    new lang_string('pluginname', 'coursereport_' . $report), 'moodle/site:config');
-            // settings.php may create a subcategory or unset the settings completely
-            include($file);
-            if ($settings) {
-                $pages[] = $settings;
-            }
-        }
-    }
-    if (!empty($pages)) {
-        core_collator::asort_objects_by_property($pages, 'visiblename');
-        foreach ($pages as $page) {
-            $ADMIN->add('coursereports', $page);
-        }
-    }
-    unset($pages);
-}
 
 // Now add reports
 $pages = array();
@@ -823,16 +600,6 @@ if ($hassiteconfig) {
     }
 }
 
-// Add Calendar type settings.
-if ($hassiteconfig) {
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('calendartype');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\calendartype $plugin */
-        $plugin->load_settings($ADMIN, 'calendartype', $hassiteconfig);
-    }
-}
-
 // Communication plugins.
 if ($hassiteconfig && core_communication\api::is_available()) {
     $temp = new admin_settingpage('managecommunicationproviders',
@@ -867,24 +634,6 @@ if ($hassiteconfig) {
             include($settingspath);
             $ADMIN->add('smsgateway', $settings);
         }
-    }
-}
-
-// Content bank content types.
-if ($hassiteconfig) {
-    $temp = new admin_settingpage('managecontentbanktypes', new lang_string('managecontentbanktypes'));
-    $temp->add(new admin_setting_managecontentbankcontenttypes());
-    $ADMIN->add('contentbanksettings', $temp);
-    $ADMIN->add('contentbanksettings',
-        new admin_externalpage('contentbank', new lang_string('contentbankcustomfields', 'contentbank'),
-            $CFG->wwwroot . '/contentbank/customfield.php',
-            'moodle/contentbank:configurecustomfields'
-        )
-    );
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('contenttype');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\contentbank $plugin */
-        $plugin->load_settings($ADMIN, 'contentbanksettings', $hassiteconfig);
     }
 }
 
