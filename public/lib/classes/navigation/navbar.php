@@ -16,10 +16,7 @@
 
 namespace core\navigation;
 
-use core\context\course as context_course;
 use core\context_helper;
-use core_course_category;
-use core\context\coursecat as context_coursecat;
 use core\output\action_link;
 use core\output\pix_icon;
 use core\url;
@@ -178,15 +175,6 @@ class navbar extends navigation_node {
                     if (!$navigationactivenode->mainnavonly) {
                         $items[] = new breadcrumb_navigation_node($navigationactivenode);
                     }
-                    if (
-                        !empty($CFG->navshowcategories) &&
-                            $navigationactivenode->type === self::TYPE_COURSE &&
-                            $navigationactivenode->parent->key === 'currentcourse'
-                    ) {
-                        foreach ($this->get_course_categories() as $item) {
-                            $items[] = new breadcrumb_navigation_node($item);
-                        }
-                    }
                     $navigationactivenode = $navigationactivenode->parent;
                 }
             } else if ($navigationactivenode) {
@@ -194,15 +182,6 @@ class navbar extends navigation_node {
                 while ($navigationactivenode && $navigationactivenode->parent !== null) {
                     if (!$navigationactivenode->mainnavonly) {
                         $items[] = new breadcrumb_navigation_node($navigationactivenode);
-                    }
-                    if (
-                        !empty($CFG->navshowcategories) &&
-                            $navigationactivenode->type === self::TYPE_COURSE &&
-                            $navigationactivenode->parent->key === 'currentcourse'
-                    ) {
-                        foreach ($this->get_course_categories() as $item) {
-                            $items[] = new breadcrumb_navigation_node($item);
-                        }
                     }
                     $navigationactivenode = $navigationactivenode->parent;
                 }
@@ -235,59 +214,6 @@ class navbar extends navigation_node {
         }
         $this->items = array_reverse($items);
         return $this->items;
-    }
-
-    /**
-     * Get the list of categories leading to this course.
-     *
-     * This function is used by {@link navbar::get_items()} to add back the "courses"
-     * node and category chain leading to the current course.  Note that this is only ever
-     * called for the current course, so we don't need to bother taking in any parameters.
-     *
-     * @return array
-     */
-    private function get_course_categories() {
-        global $CFG;
-        require_once($CFG->dirroot . '/course/lib.php');
-
-        $categories = [];
-        $cap = 'moodle/category:viewhiddencategories';
-        $showcategories = !core_course_category::is_simple_site();
-
-        if ($showcategories) {
-            foreach ($this->page->categories as $category) {
-                $context = context_coursecat::instance($category->id);
-                if (!core_course_category::can_view_category($category)) {
-                    continue;
-                }
-
-                $displaycontext = context_helper::get_navigation_filter_context($context);
-                $url = new url('/course/index.php', ['categoryid' => $category->id]);
-                $name = format_string($category->name, true, ['context' => $displaycontext]);
-                $categorynode = breadcrumb_navigation_node::create($name, $url, self::TYPE_CATEGORY, null, $category->id);
-                if (!$category->visible) {
-                    $categorynode->hidden = true;
-                }
-                $categories[] = $categorynode;
-            }
-        }
-
-        // Don't show the 'course' node if enrolled in this course.
-        $coursecontext = context_course::instance($this->page->course->id);
-        if (!is_enrolled($coursecontext, null, '', true)) {
-            $courses = $this->page->navigation->get('courses');
-            if (!$courses) {
-                // Courses node may not be present.
-                $courses = breadcrumb_navigation_node::create(
-                    get_string('courses'),
-                    new url('/course/index.php'),
-                    self::TYPE_CONTAINER
-                );
-            }
-            $categories[] = $courses;
-        }
-
-        return $categories;
     }
 
     /**
