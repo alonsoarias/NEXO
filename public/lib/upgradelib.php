@@ -963,13 +963,7 @@ function upgrade_plugins_blocks($startcallback, $endcallback, $verbose) {
 
     // Finally, if we are in the first_install of BLOCKS setup frontpage and admin page blocks
     if ($first_install) {
-        //Iterate over each course - there should be only site course here now
-        if ($courses = $DB->get_records('course')) {
-            foreach ($courses as $course) {
-                blocks_add_default_course_blocks($course);
-            }
-        }
-
+        // NEXO: Skip course blocks since courses don't exist, only add system blocks
         blocks_add_default_system_blocks();
     }
 }
