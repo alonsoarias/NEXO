@@ -978,9 +978,6 @@ if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
     $showcampaigncontent = !isset($CFG->showcampaigncontent) || $CFG->showcampaigncontent;
 }
 
-// Encourage admins to enable the user feedback feature if it is not enabled already.
-$showfeedbackencouragement = empty($CFG->enableuserfeedback);
-
 // Check if the service and support content setting is enabled or not.
 $servicesandsupportcontent = !isset($CFG->showservicesandsupportcontent) || $CFG->showservicesandsupportcontent;
 
@@ -1014,7 +1011,6 @@ echo $output->admin_notifications_page(
     $invalidforgottenpasswordurl,
     $croninfrequent,
     $showcampaigncontent,
-    $showfeedbackencouragement,
     $servicesandsupportcontent,
     $xmlrpcwarning
 );

@@ -12,8 +12,6 @@ $ADMIN->add('root', new admin_externalpage('adminnotifications', new lang_string
 
  // hidden upgrade script
 $ADMIN->add('root', new admin_externalpage('upgradesettings', new lang_string('upgradesettings', 'admin'), "$CFG->wwwroot/$CFG->admin/upgradesettings.php", 'moodle/site:config', true));
-$userfeedback = new admin_settingpage('userfeedback', new lang_string('feedbacksettings', 'admin'));
-$ADMIN->add('root', $userfeedback);
 
 if ($hassiteconfig) {
     $optionalsubsystems = new admin_settingpage('optionalsubsystems', new lang_string('advancedfeatures', 'admin'));

@@ -3040,14 +3040,6 @@ $functions = array(
         'ajax'          => true,
         'capabilities'  => 'moodle/contentbank:manageowncontent',
     ],
-    'core_create_userfeedback_action_record' => [
-        'classname'     => 'core\external\record_userfeedback_action',
-        'classpath'     => '',
-        'description'   => 'Record the action that the user takes in the user feedback notification for future use.',
-        'type'          => 'write',
-        'ajax'          => true,
-        'capabilities'  => '',
-    ],
     'core_reportbuilder_filters_reset' => [
         'classname'   => 'core_reportbuilder\external\filters\reset',
         'description' => 'Reset filters for given report',
