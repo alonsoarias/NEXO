@@ -186,8 +186,27 @@ class activity_header implements renderable, templatable {
             return ['title' => ''];
         }
 
-        // Activity completion and dates not available in NEXO.
         $activityinfo = null;
+        if (!$this->hidecompletion) {
+            $completiondetails = \core_completion\cm_completion_details::get_instance($this->page->cm, $this->user->id);
+            $activitydates = \core\activity_dates::get_dates_for_module($this->page->cm, $this->user->id);
+
+            $activitycompletion = new \core_course\output\activity_completion($this->page->cm, $completiondetails);
+            $activitycompletiondata = (array) $activitycompletion->export_for_template($output);
+            $activitydates = new \core_course\output\activity_dates($activitydates);
+            $activitydatesdata = (array) $activitydates->export_for_template($output);
+            $data = array_merge($activitycompletiondata, $activitydatesdata);
+
+            $activityinfo = $output->render_from_template('core_course/activity_info', $data);
+        }
+
+        $format = course_get_format($this->page->course);
+        if ($format->supports_components()) {
+            $this->page->requires->js_call_amd(
+                'core_courseformat/local/content/activity_header',
+                'init'
+            );
+        }
 
         $additionalitems = '';
         if (!$this->hideoverflow && !is_null($this->additionalnavitems)) {

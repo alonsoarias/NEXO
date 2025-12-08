@@ -1969,8 +1969,7 @@ function navmenulist($course, $sections, $modinfo, $strsection, $strjumpto, $wid
     $menu = array();
     $doneheading = false;
 
-    // Course format options not available in NEXO.
-    $courseformatoptions = [];
+    $courseformatoptions = course_get_format($course)->get_format_options();
     $coursecontext = context_course::instance($course->id);
 
     $menu[] = '<ul class="navmenulist"><li class="jumpto section"><span>'.$strjumpto.'</span><ul>';

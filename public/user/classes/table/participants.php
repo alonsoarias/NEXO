@@ -489,6 +489,7 @@ class participants extends \table_sql implements dynamic_table {
      */
     public function has_capability(): bool {
         global $CFG;
+        require_once($CFG->dirroot . '/course/lib.php');
 
         $context = $this->course->id == SITEID ? \context_system::instance() : $this->get_context();
         return course_can_view_participants($context);

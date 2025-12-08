@@ -28,6 +28,7 @@ use core\report_helper;
 
 require('../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->dirroot.'/course/lib.php');
 global $SITE, $PAGE;
 
 $id = optional_param('id', 0, PARAM_INT);

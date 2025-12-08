@@ -29,6 +29,7 @@
 define('NO_OUTPUT_BUFFERING', true);
 
 require('../../../config.php');
+require_once($CFG->dirroot.'/course/lib.php');
 require_once($CFG->libdir.'/adminlib.php');
 
 admin_externalpage_setup('toolmultilangupgrade');
@@ -117,6 +118,11 @@ foreach ($tables as $table) {
 set_config('filter_multilang_converted', 1);
 
 echo $OUTPUT->box_end();
+
+/// Rebuild course cache which might be incorrect now
+echo $OUTPUT->notification('Rebuilding course cache...', 'notifysuccess');
+rebuild_course_cache(0, true);
+echo $OUTPUT->notification('...finished', 'notifysuccess');
 
 echo $OUTPUT->continue_button(new moodle_url('/admin/'));
 

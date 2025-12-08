@@ -64,6 +64,7 @@ class event_exporter extends event_exporter_base {
         $values = parent::get_other_values($output);
 
         global $CFG;
+        require_once($CFG->dirroot.'/course/lib.php');
 
         $event = $this->event;
         $context = $this->related['context'];

@@ -248,6 +248,7 @@ class phpunit_util extends testing_util {
         // TODO MDL-25290: add more resets here and probably refactor them to new core function.
 
         // Reset course and module caches.
+        core_courseformat\base::reset_course_cache(0);
         get_fast_modinfo(0, 0, true);
 
         // Reset other singletons.
@@ -256,6 +257,9 @@ class phpunit_util extends testing_util {
         }
         if (class_exists('\core\update\checker')) {
             \core\update\checker::reset_caches(true);
+        }
+        if (class_exists('\core_course\customfield\course_handler')) {
+            \core_course\customfield\course_handler::reset_caches();
         }
         if (class_exists('\core_reportbuilder\manager')) {
             \core_reportbuilder\manager::reset_caches();

@@ -82,6 +82,7 @@ abstract class testing_module_generator extends component_generator_base {
      */
     protected function precreate_course_module($courseid, array $options) {
         global $DB, $CFG;
+        require_once("$CFG->dirroot/course/lib.php");
 
         $modulename = $this->get_modulename();
         $sectionnum = isset($options['section']) ? $options['section'] : 0;

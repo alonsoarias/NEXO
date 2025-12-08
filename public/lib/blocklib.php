@@ -2752,16 +2752,22 @@ function blocks_add_default_course_blocks($course) {
         $blocknames = blocks_parse_default_blocks_list($CFG->{'defaultblocks_' . $course->format});
 
     } else {
-        // Use default blocks - course formats not available in NEXO.
-        $blocknames = blocks_get_default_site_course_blocks();
+        require_once($CFG->dirroot. '/course/lib.php');
+        $blocknames = course_get_format($course)->get_default_blocks();
+
     }
 
     $showinsubcontexts = false;
     if ($course->id == SITEID) {
         $pagetypepattern = 'site-index';
     } else {
-        // Default to course view pattern - course formats not available in NEXO.
-        $pagetypepattern = 'course-view-*';
+        $format = course_get_format($course);
+        if ($format->has_view_page()) {
+            $pagetypepattern = 'course-view-*';
+        } else {
+            $pagetypepattern = '*';
+            $showinsubcontexts = true;
+        }
     }
     $page = new moodle_page();
     $page->set_course($course);

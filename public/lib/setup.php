@@ -636,6 +636,7 @@ require_once($CFG->libdir .'/grouplib.php');        // Groups functions.
 require_once($CFG->libdir .'/sessionlib.php');      // All session and cookie related stuff.
 require_once($CFG->libdir .'/editorlib.php');       // All text editor related functions and classes.
 require_once($CFG->libdir .'/messagelib.php');      // Messagelib functions.
+require_once($CFG->libdir .'/modinfolib.php');      // Cached information on course-module instances.
 
 // Increase memory limits if possible.
 raise_memory_limit(MEMORY_STANDARD);
@@ -1002,6 +1003,7 @@ if (!isset($CFG->theme)) {
 if (isset($_GET['lang']) and ($lang = optional_param('lang', '', PARAM_SAFEDIR))) {
     if (get_string_manager()->translation_exists($lang, false)) {
         $SESSION->lang = $lang;
+        \core_courseformat\base::session_cache_reset_all();
     }
 }
 unset($lang);

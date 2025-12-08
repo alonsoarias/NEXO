@@ -356,6 +356,7 @@ EOD;
      */
     public function create_course($record=null, ?array $options=null) {
         global $DB, $CFG;
+        require_once("$CFG->dirroot/course/lib.php");
 
         $this->coursecount++;
         $i = $this->coursecount;

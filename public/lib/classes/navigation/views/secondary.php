@@ -93,6 +93,7 @@ class secondary extends view {
                 'communication' => 15,
             ],
             self::TYPE_CUSTOM => [
+                'contentbank' => 6,
                 'participants' => 1, // In site home, 'participants' is classified differently.
             ],
         ];
@@ -120,10 +121,14 @@ class secondary extends view {
                 'roleoverride' => 7,
                 'rolecheck' => 7.1,
                 'logreport' => 8,
+                'backup' => 9,
+                'restore' => 10,
                 'competencybreakdown' => 11,
+                'sendtomoodlenet' => 16,
             ],
             self::TYPE_CUSTOM => [
                 'advgrading' => 2,
+                'contentbank' => 12,
             ],
         ];
     }
@@ -154,7 +159,7 @@ class secondary extends view {
      * @return array
      */
     protected function get_default_category_more_menu_nodes(): array {
-        return ['addsubcat', 'roles', 'permissions', 'filters'];
+        return ['addsubcat', 'roles', 'permissions', 'contentbank', 'cohort', 'filters', 'restorecourse'];
     }
     /**
      * Define the keys of the course secondary nav nodes that should be forced into the "more" menu by default.
@@ -367,7 +372,7 @@ class secondary extends view {
             }
         }
         $othernodes = ['users', 'gradeadmin', 'coursereports', 'coursebadges'];
-        $leftovercourseadminnodes = [];
+        $leftovercourseadminnodes = ['backup', 'restore', 'import', 'copy', 'reset'];
         $expectednodes = array_merge($expectednodes, $othernodes);
         $expectednodes = array_merge($expectednodes, $leftovercourseadminnodes);
         return $expectednodes;
@@ -1104,9 +1109,14 @@ class secondary extends view {
         if ($page->context instanceof \context_course) {
             $this->page->set_secondary_active_tab($coursesecondarynode->key);
             // Get the currently used module in course.
-            $module = current(array_filter(get_course_mods($course->id), function ($module) {
-                return $module->visible == 1;
-            }));
+            $format = course_get_format($course);
+            if ($format instanceof \core_courseformat\main_activity_interface) {
+                $module = $format->get_main_activity();
+            } else {
+                $module = current(array_filter(get_course_mods($course->id), function ($module) {
+                    return $module->visible == 1;
+                }));
+            }
 
             // If the default module for the single course format has not been set yet, skip displaying the module
             // related navigation in the secondary navigation.

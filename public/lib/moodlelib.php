@@ -2581,6 +2581,41 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                     $USER->enrol['enrolled'][$course->id] = $until;
                     $access = true;
 
+                } else if (core_course_category::can_view_course_info($course)) {
+                    $params = array('courseid' => $course->id, 'status' => ENROL_INSTANCE_ENABLED);
+                    $instances = $DB->get_records('enrol', $params, 'sortorder, id ASC');
+                    $enrols = enrol_get_plugins(true);
+                    // First ask all enabled enrol instances in course if they want to auto enrol user.
+                    foreach ($instances as $instance) {
+                        if (!isset($enrols[$instance->enrol])) {
+                            continue;
+                        }
+                        // Get a duration for the enrolment, a timestamp in the future, 0 (always) or false.
+                        $until = $enrols[$instance->enrol]->try_autoenrol($instance);
+                        if ($until !== false) {
+                            if ($until == 0) {
+                                $until = ENROL_MAX_TIMESTAMP;
+                            }
+                            $USER->enrol['enrolled'][$course->id] = $until;
+                            $access = true;
+                            break;
+                        }
+                    }
+                    // If not enrolled yet try to gain temporary guest access.
+                    if (!$access) {
+                        foreach ($instances as $instance) {
+                            if (!isset($enrols[$instance->enrol])) {
+                                continue;
+                            }
+                            // Get a duration for the guest access, a timestamp in the future or false.
+                            $until = $enrols[$instance->enrol]->try_guestaccess($instance);
+                            if ($until !== false and $until > time()) {
+                                $USER->enrol['tempguest'][$course->id] = $until;
+                                $access = true;
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     // User is not enrolled and is not allowed to browse courses here.
                     if ($preventredirect) {
@@ -2606,8 +2641,32 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         }
     }
 
+    // Check whether the activity has been scheduled for deletion. If so, then deny access, even for admins.
+    if ($cm && $cm->deletioninprogress) {
+        if ($preventredirect) {
+            throw new moodle_exception('activityisscheduledfordeletion');
+        }
+        require_once($CFG->dirroot . '/course/lib.php');
+        redirect(course_get_url($course), get_string('activityisscheduledfordeletion', 'error'));
+    }
+
+    // Check visibility of activity to current user; includes visible flag, conditional availability, etc.
+    if ($cm && !$cm->uservisible) {
+        if ($preventredirect) {
+            throw new require_login_exception('Activity is hidden');
+        }
+        // Get the error message that activity is not available and why (if explanation can be shown to the user).
+        $PAGE->set_course($course);
+        $renderer = $PAGE->get_renderer('course');
+        $message = $renderer->course_section_cm_unavailable_error_message($cm);
+        redirect(course_get_url($course), $message, null, \core\output\notification::NOTIFY_ERROR);
+    }
+
     // Set the global $COURSE.
-    if (!empty($courseorid)) {
+    if ($cm) {
+        $PAGE->set_cm($cm, $course);
+        $PAGE->set_pagelayout('incourse');
+    } else if (!empty($courseorid)) {
         $PAGE->set_course($course);
     }
 
@@ -3599,6 +3658,9 @@ function delete_user(stdClass $user) {
     // Unenrol from all roles in all contexts.
     // This might be slow but it is really needed - modules might do some extra cleanup!
     role_unassign_all(array('userid' => $user->id));
+
+    // Notify the competency subsystem.
+    \core_competency\api::hook_user_deleted($user->id);
 
     // Now do a brute force cleanup.
 
@@ -4647,9 +4709,18 @@ function delete_course($courseorid, $showfeedback = true) {
         }
     }
 
+    // Dispatch the hook for pre course delete actions.
+    $hook = new \core_course\hook\before_course_deleted(
+        course: $course,
+    );
+    \core\di::get(\core\hook\manager::class)->dispatch($hook);
+
     // Tell the search manager we are about to delete a course. This prevents us sending updates
     // for each individual context being deleted.
     \core_search\manager::course_deleting_start($courseid);
+
+    $handler = core_course\customfield\course_handler::create();
+    $handler->delete_instance($courseid);
 
     // Make the course completely empty.
     remove_course_contents($courseid, $showfeedback);
@@ -4659,6 +4730,9 @@ function delete_course($courseorid, $showfeedback = true) {
 
     $DB->delete_records("course", array("id" => $courseid));
     $DB->delete_records("course_format_options", array("courseid" => $courseid));
+
+    // Reset all course related caches here.
+    core_courseformat\base::reset_course_cache($courseid);
 
     // Tell search that we have deleted the course so it can delete course data from the index.
     \core_search\manager::course_deleting_finish($courseid);
@@ -4799,6 +4873,8 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
                         // Delete all tag instances associated with the instance of this module.
                         core_tag_tag::delete_instances("mod_{$modname}", null, context_module::instance($cm->id)->id);
                         core_tag_tag::remove_all_item_tags('core', 'course_modules', $cm->id);
+                        // Notify the competency subsystem.
+                        \core_competency\api::hook_course_module_deleted($cm);
                         // Delete cm and its context - orphaned contexts are purged in cron in case of any race condition.
                         context_helper::delete_instance(CONTEXT_MODULE, $cm->id);
                         $DB->delete_records('course_modules_completion', ['coursemoduleid' => $cm->id]);
@@ -4849,6 +4925,13 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
         echo $OUTPUT->notification($strdeleted.get_string('type_mod_plural', 'plugin'), 'notifysuccess');
     }
 
+    // Delete content bank contents.
+    $cb = new \core_contentbank\contentbank();
+    $cbdeleted = $cb->delete_contents($coursecontext);
+    if ($showfeedback && $cbdeleted) {
+        echo $OUTPUT->notification($strdeleted.get_string('contentbank', 'contentbank'), 'notifysuccess');
+    }
+
     // Make sure there are no subcontexts left - all valid blocks and modules should be already gone.
     $childcontexts = $coursecontext->get_child_contexts(); // Returns all subcontexts since 2.2.
     foreach ($childcontexts as $childcontext) {
@@ -4892,6 +4975,13 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
 
     // Delete course tags.
     core_tag_tag::remove_all_item_tags('core', 'course', $course->id);
+
+    // Give the course format the opportunity to remove its obscure data.
+    $format = course_get_format($course);
+    $format->delete_format_data();
+
+    // Notify the competency subsystem.
+    \core_competency\api::hook_course_deleted($course);
 
     // Delete calendar events.
     $DB->delete_records('event', array('courseid' => $course->id));
@@ -5001,6 +5091,7 @@ function reset_course_userdata($data) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
     require_once($CFG->libdir.'/completionlib.php');
+    require_once($CFG->dirroot.'/completion/criteria/completion_criteria_date.php');
     require_once($CFG->dirroot.'/group/lib.php');
 
     $data->courseid = $data->id;
@@ -5060,6 +5151,9 @@ function reset_course_userdata($data) {
             if ($changed) {
                 rebuild_course_cache($data->courseid, true);
             }
+
+            // Update course date completion criteria.
+            \completion_criteria_date::update_date($data->courseid, $data->timeshift);
         }
 
         $status[] = ['component' => $componentstr, 'item' => get_string('date'), 'error' => false];
@@ -5085,6 +5179,12 @@ function reset_course_userdata($data) {
         $status[] = array('component' => $componentstr, 'item' => get_string('deletenotes', 'notes'), 'error' => false);
     }
 
+    if (!empty($data->delete_blog_associations)) {
+        require_once($CFG->dirroot.'/blog/lib.php');
+        blog_remove_associations_for_course($data->courseid);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteblogassociations', 'blog'), 'error' => false);
+    }
+
     if (!empty($data->reset_completion)) {
         // Delete course and activity completion information.
         $course = $DB->get_record('course', array('id' => $data->courseid));
@@ -5092,6 +5192,12 @@ function reset_course_userdata($data) {
         $cc->delete_all_completion_data();
         $status[] = array('component' => $componentstr,
                 'item' => get_string('deletecompletiondata', 'completion'), 'error' => false);
+    }
+
+    if (!empty($data->reset_competency_ratings)) {
+        \core_competency\api::hook_course_reset_competency_ratings($data->courseid);
+        $status[] = array('component' => $componentstr,
+            'item' => get_string('deletecompetencyratings', 'core_competency'), 'error' => false);
     }
 
     $componentstr = get_string('roles');

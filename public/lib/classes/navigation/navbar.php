@@ -18,6 +18,7 @@ namespace core\navigation;
 
 use core\context\course as context_course;
 use core\context_helper;
+use core_course_category;
 use core\context\coursecat as context_coursecat;
 use core\output\action_link;
 use core\output\pix_icon;
@@ -246,8 +247,30 @@ class navbar extends navigation_node {
      * @return array
      */
     private function get_course_categories() {
-        // Categories not available in NEXO - return empty array.
+        global $CFG;
+        require_once($CFG->dirroot . '/course/lib.php');
+
         $categories = [];
+        $cap = 'moodle/category:viewhiddencategories';
+        $showcategories = !core_course_category::is_simple_site();
+
+        if ($showcategories) {
+            foreach ($this->page->categories as $category) {
+                $context = context_coursecat::instance($category->id);
+                if (!core_course_category::can_view_category($category)) {
+                    continue;
+                }
+
+                $displaycontext = context_helper::get_navigation_filter_context($context);
+                $url = new url('/course/index.php', ['categoryid' => $category->id]);
+                $name = format_string($category->name, true, ['context' => $displaycontext]);
+                $categorynode = breadcrumb_navigation_node::create($name, $url, self::TYPE_CATEGORY, null, $category->id);
+                if (!$category->visible) {
+                    $categorynode->hidden = true;
+                }
+                $categories[] = $categorynode;
+            }
+        }
 
         // Don't show the 'course' node if enrolled in this course.
         $coursecontext = context_course::instance($this->page->course->id);

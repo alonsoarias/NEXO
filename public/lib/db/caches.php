@@ -182,7 +182,64 @@ $definitions = array(
         'simpledata' => true,
     ),
 
-    // Course caches removed - courses not available in NEXO
+    // Used to store the full tree of course categories.
+    'coursecattree' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'staticacceleration' => true,
+        'invalidationevents' => array(
+            'changesincoursecat',
+        )
+    ),
+    // Used to store data for course categories visible to current user. Helps to browse list of categories.
+    'coursecat' => array(
+        'mode' => cache_store::MODE_SESSION,
+        'invalidationevents' => array(
+            'changesincoursecat',
+            'changesincourse',
+        ),
+        'ttl' => 600,
+    ),
+    // Used to store data for course categories visible to current user. Helps to browse list of categories.
+    'coursecatrecords' => array(
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'invalidationevents' => array(
+            'changesincoursecat',
+        ),
+    ),
+    // Used to store state of sections in course (collapsed or not).
+    'coursesectionspreferences' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => false,
+        'staticacceleration' => true,
+    ],
+    // Cache course contacts for the courses.
+    'coursecontacts' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'staticacceleration' => true,
+        'simplekeys' => true,
+        'ttl' => 3600,
+    ),
+    // Course reactive state cache.
+    'courseeditorstate' => [
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'invalidationevents' => [
+            'changesincoursestate',
+        ],
+    ],
+    // Course actions instances cache.
+    'courseactionsinstances' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => false,
+        'staticacceleration' => true,
+        // Executing actions in more than 10 courses usually means executing the same action on each course
+        // so there is no need for caching individual course instances.
+        'staticaccelerationsize' => 10,
+    ],
     // Used to store data for repositories to avoid repetitive DB queries within one request.
     'repositories' => array(
         'mode' => cache_store::MODE_REQUEST,
@@ -193,7 +250,22 @@ $definitions = array(
         'simplekeys' => true,
         'ttl' => 3600,
     ),
-    // Course modinfo cache removed - courses not available in NEXO
+    // Accumulated information about course modules and sections used to print course view page (user-independent).
+    // Used in functions:
+    // - course_modinfo::build_course_section_cache()
+    // - course_modinfo::inner_build_course_cache()
+    // - get_array_of_activities()
+    // Reset/update in functions:
+    // - rebuild_course_cache()
+    // - course_modinfo::purge_module_cache()
+    // - course_modinfo::purge_section_cache()
+    // - remove_course_contents().
+    'coursemodinfo' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'canuselocalstore' => true,
+        'requirelockingbeforewrite' => true
+    ),
     // This is the session user selections cache.
     // It's a special cache that is used to record user selections that should persist for the lifetime of the session.
     // Things such as which categories the user has expanded can be stored here.
@@ -204,7 +276,43 @@ $definitions = array(
         'simpledata' => true
     ),
 
-    // Completion caches removed - courses not available in NEXO
+    // Used to cache activity completion status.
+    'completion' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'ttl' => 3600,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 2, // Should be current course and site course.
+    ),
+
+    // Used to cache course completion status.
+    'coursecompletion' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'ttl' => 3600,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 30, // Will be users list of current courses in nav.
+    ),
+
+    // A simple cache that stores whether a user can expand a course in the navigation.
+    // The key is the course ID and the value will either be 1 or 0 (cast to bool).
+    // The cache isn't always up to date, it should only ever be used to save a costly call to
+    // can_access_course on the first page request a user makes.
+    'navigation_expandcourse' => array(
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'simpledata' => true
+    ),
+
+    // Caches suspended userids by course.
+    // The key is the courseid, the value is an array of user ids.
+    'suspended_userids' => array(
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => true,
+    ),
 
     // Cache system-wide role definitions.
     'roledefs' => array(
@@ -233,7 +341,14 @@ $definitions = array(
         'staticacceleration' => true,
     ),
 
-    // Grade categories cache removed - grade system not used
+    // Grade categories. Stored at session level as invalidation is very aggressive.
+    'grade_categories' => array(
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'invalidationevents' => array(
+            'changesingradecategories',
+        )
+    ),
 
     // Store temporary tables information.
     'temp_tables' => array(
@@ -332,7 +447,13 @@ $definitions = array(
         'staticacceleration' => true
     ],
 
-    // Course user dates cache removed - courses not available in NEXO
+    // Cache the user dates for courses set to relative dates mode.
+    'course_user_dates' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true
+    ],
 
     // Information generated during the calculation of indicators.
     'calculablesinfo' => [
@@ -341,9 +462,66 @@ $definitions = array(
         'simpledata' => false,
     ],
 
-    // Course content items caches removed - course modules not used
-    // Contentbank caches removed - contentbank not used
-    // H5P caches removed - H5P not used
+    // The list of content items (activities, resources and their subtypes) that can be added to a course for a user.
+    'user_course_content_items' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+    ],
+
+    // The list of favourited content items (activities, resources and their subtypes) for a user.
+    'user_favourite_course_content_items' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+    ],
+
+    \core_course\local\service\content_item_service::RECOMMENDATION_CACHE => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+    ],
+
+    // Caches contentbank extensions management.
+    'contentbank_enabled_extensions' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+    ],
+    'contentbank_context_extensions' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+    ],
+
+    // Language strings for H5P content-type libraries.
+    // Key "{$libraryname}/{$language}"" contains translations for a given library and language.
+    // Key "$libraryname" has a list of all of the available languages for the library.
+    'h5p_content_type_translations' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simpledata' => true,
+    ],
+
+    // File cache for H5P Library ids.
+    'h5p_libraries' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'canuselocalstore' => true
+    ],
+
+    // File cache for H5P Library files.
+    'h5p_library_files' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'canuselocalstore' => true
+    ],
+
+    // Cache the grade letters for faster retrival.
+    'grade_letters' => [
+        'mode'                   => cache_store::MODE_REQUEST,
+        'simplekeys'             => true,
+        'staticacceleration'     => true,
+        'staticaccelerationsize' => 100
+    ],
 
     // Cache for licenses.
     'license' => [
@@ -352,10 +530,45 @@ $definitions = array(
         'simpledata' => false,
     ],
 
-    // Grade setting cache removed - grade system not used
-    // Course image cache removed - course system not used
+    // Cache the grade setting for faster retrieval.
+    'gradesetting' => [
+        'mode'                   => cache_store::MODE_REQUEST,
+        'simplekeys'             => true,
+        'staticacceleration'     => true,
+        'staticaccelerationsize' => 100
+    ],
 
-    // Content bank caches removed - contentbank not used
+    // Course image cache.
+    'course_image' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+        'datasource' => '\core_course\cache\course_image',
+    ],
+
+    // Cache the course categories where the user has access the content bank.
+    'contentbank_allowed_categories' => [
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'invalidationevents' => [
+            'changesincoursecat',
+            'changesincategoryenrolment',
+        ],
+    ],
+
+    // Cache the courses where the user has access the content bank.
+    'contentbank_allowed_courses' => [
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'invalidationevents' => [
+            'changesincoursecat',
+            'changesincategoryenrolment',
+            'changesincourse',
+        ],
+    ],
 
     // Users allowed reports according to audience.
     'reportbuilder_allowed_reports' => [
@@ -376,7 +589,18 @@ $definitions = array(
         'staticaccelerationsize' => 100,
     ],
 
-    // MoodleNet cache removed - MoodleNet not used
+    // Cache if a user has the capability to share to MoodleNet.
+    'moodlenet_usercanshare' => [
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'ttl' => 1800,
+        'invalidationevents' => [
+            'changesincoursecat',
+            'changesincategoryenrolment',
+            'changesincourse',
+        ],
+    ],
 
     // A theme has been used in context to override the default theme.
     // Applies to user, cohort, category and course.

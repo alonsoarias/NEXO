@@ -102,8 +102,16 @@ class format extends base {
      * @return array of plugintype classes, indexed by the plugin name
      */
     public static function get_plugins($type, $typerootdir, $typeclass, $pluginman) {
-        // Course formats not available in NEXO - return parent result directly.
-        return parent::get_plugins($type, $typerootdir, $typeclass, $pluginman);
+        global $CFG;
+        require_once($CFG->dirroot.'/course/lib.php');
+
+        $formats = parent::get_plugins($type, $typerootdir, $typeclass, $pluginman);
+        $order = get_sorted_course_formats();
+        $sortedformats = array();
+        foreach ($order as $formatname) {
+            $sortedformats[$formatname] = $formats[$formatname];
+        }
+        return $sortedformats;
     }
 
     public function get_settings_section_name() {

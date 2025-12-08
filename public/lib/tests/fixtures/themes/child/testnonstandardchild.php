@@ -24,6 +24,7 @@
 
 require_once("../../../../../config.php");
 global $CFG, $SITE, $PAGE, $OUTPUT;
+require_once($CFG->dirroot. '/course/lib.php');
 
 require_login();
 

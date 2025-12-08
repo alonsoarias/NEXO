@@ -301,6 +301,16 @@ $legacyclasses = [
         'dataformat_export_format.php',
     ],
 
+    // Course drag-and-drop upload system.
+    \dndupload_handler::class => [
+        'core_course',
+        'dndupload_handler.php',
+    ],
+    \dndupload_ajax_processor::class => [
+        'core_course',
+        'dndupload_ajax_processor.php',
+    ],
+
     // The progress_trace classes.
     \combined_progress_trace::class => 'output/progress_trace/combined_progress_trace.php',
     \error_log_progress_trace::class => 'output/progress_trace/error_log_progress_trace.php',
@@ -336,6 +346,22 @@ $legacyclasses = [
         'core_filters',
         'form/local_settings_form.php',
     ],
+    \course_modinfo::class => [
+        'core_course',
+        'modinfo.php',
+    ],
+    \cm_info::class => [
+        'core_course',
+        'cm_info.php',
+    ],
+    \cached_cm_info::class => [
+        'core_course',
+        'cached_cm_info.php',
+    ],
+    \section_info::class => [
+        'core_course',
+        'section_info.php',
+    ],
     \comment::class => [
         'core_comment',
         'manager.php',
@@ -343,5 +369,13 @@ $legacyclasses = [
     \comment_exception::class => [
         'core_comment',
         'comment_exception.php',
+    ],
+    \course_request::class => [
+        'core_course',
+        'course_request.php',
+    ],
+    \core_course\output\activitychooserbutton::class => [
+        'core_courseformat',
+        'output/local/content/activitychooserbutton.php',
     ],
 ];

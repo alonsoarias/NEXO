@@ -62,16 +62,69 @@ function xmldb_main_install() {
         throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new system context id!');
     }
 
-    // NEXO: Courses and categories not used - skipped site course and category creation
+
+    // Create site course
+    if ($DB->record_exists('course', array())) {
+        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create frontpage course, courses already exist.');
+    }
+    $newsite = new stdClass();
+    $newsite->fullname     = '';
+    $newsite->shortname    = '';
+    $newsite->summary      = NULL;
+    $newsite->newsitems    = 3;
+    $newsite->numsections  = 1;
+    $newsite->category     = 0;
+    $newsite->format       = 'site';  // Only for this course
+    $newsite->timecreated  = time();
+    $newsite->timemodified = $newsite->timecreated;
+
+    if (defined('SITEID')) {
+        $newsite->id = SITEID;
+        $DB->import_record('course', $newsite);
+        $DB->get_manager()->reset_sequence('course');
+    } else {
+        $newsite->id = $DB->insert_record('course', $newsite);
+        define('SITEID', $newsite->id);
+    }
+    // set the field 'numsections'. We can not use format_site::update_format_options() because
+    // the file is not loaded
+    $DB->insert_record('course_format_options', array('courseid' => SITEID, 'format' => 'site',
+        'sectionid' => 0, 'name' => 'numsections', 'value' => $newsite->numsections));
+    $SITE = get_site();
+    if ($newsite->id != $SITE->id) {
+        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new site course id!');
+    }
+    // Make sure site course context exists
+    context_course::instance($SITE->id);
+    // Update the global frontpage cache
+    $SITE = $DB->get_record('course', array('id'=>$newsite->id), '*', MUST_EXIST);
+
+
+    // Create default course category
+    if ($DB->record_exists('course_categories', array())) {
+        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default course category, categories already exist.');
+    }
+    $cat = new stdClass();
+    $cat->name         = get_string('defaultcategoryname');
+    $cat->descriptionformat = FORMAT_HTML;
+    $cat->depth        = 1;
+    $cat->sortorder    = get_max_courses_in_category();
+    $cat->timemodified = time();
+    $catid = $DB->insert_record('course_categories', $cat);
+    $DB->set_field('course_categories', 'path', '/'.$catid, array('id'=>$catid));
+    // Make sure category context exists
+    context_coursecat::instance($catid);
+
 
     $defaults = array(
         'rolesactive'           => '0', // marks fully set up system
         'auth'                  => 'email',
-        // enrol_plugins_enabled removed - enrolment system not used
+        'enrol_plugins_enabled' => 'manual,guest,self,cohort',
         'theme'                 => theme_config::DEFAULT_THEME,
         'filter_multilang_converted' => 1,
         'siteidentifier'        => random_string(32).get_host_from_url($CFG->wwwroot),
-        // backup_version and backup_release removed - backup system not used
+        'backup_version'        => 2008111700,
+        'backup_release'        => '2.0 dev',
         'mnet_dispatcher_mode'  => 'off',
         'sessiontimeout'        => 8 * 60 * 60, // Must be present during roles installation.
         'stringfilters'         => '', // These two are managed in a strange way by the filters.
@@ -79,8 +132,10 @@ function xmldb_main_install() {
         'texteditors'           => 'tiny,textarea',
         'antiviruses'           => '',
         'media_plugins_sortorder' => 'videojs,youtube',
-        // Grade-related upgrade steps not needed - grade system not used
-        // format_plugins_sortorder removed - course formats not used
+        'upgrade_extracreditweightsstepignored' => 1, // New installs should not run this upgrade step.
+        'upgrade_calculatedgradeitemsignored' => 1, // New installs should not run this upgrade step.
+        'upgrade_letterboundarycourses' => 1, // New installs should not run this upgrade step.
+        'format_plugins_sortorder' => 'topics,weeks,singleactivity,social', // Default order for course format plugins.
     );
     foreach($defaults as $key => $value) {
         set_config($key, $value);
@@ -274,6 +329,9 @@ function xmldb_main_install() {
     require_once($CFG->libdir . '/db/upgradelib.php');
     make_default_scale();
     make_competence_scale();
+
+    require_once($CFG->dirroot . '/badges/upgradelib.php'); // Core install and upgrade related functions only for badges.
+    badges_install_default_backpacks();
 
     // Create default core site admin presets.
     require_once($CFG->dirroot . '/admin/presets/classes/helper.php');

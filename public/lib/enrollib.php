@@ -1726,8 +1726,38 @@ function enrol_send_welcome_email_options() {
  * @return string
  */
 function enrol_output_fragment_user_enrolment_form($args) {
-    // Enrolment form editing not available - enrol subsystem removed.
-    return '';
+    global $CFG, $DB;
+
+    $args = (object) $args;
+    $context = $args->context;
+    require_capability('moodle/course:enrolreview', $context);
+
+    $ueid = $args->ueid;
+    $userenrolment = $DB->get_record('user_enrolments', ['id' => $ueid], '*', MUST_EXIST);
+    $instance = $DB->get_record('enrol', ['id' => $userenrolment->enrolid], '*', MUST_EXIST);
+    $plugin = enrol_get_plugin($instance->enrol);
+    $customdata = [
+        'ue' => $userenrolment,
+        'modal' => true,
+        'enrolinstancename' => $plugin->get_instance_name($instance)
+    ];
+
+    // Set the data if applicable.
+    $data = [];
+    if (isset($args->formdata)) {
+        $serialiseddata = json_decode($args->formdata);
+        parse_str($serialiseddata, $data);
+    }
+
+    require_once("$CFG->dirroot/enrol/editenrolment_form.php");
+    $mform = new \enrol_user_enrolment_form(null, $customdata, 'post', '', null, true, $data);
+
+    if (!empty($data)) {
+        $mform->set_data($data);
+        $mform->is_validated();
+    }
+
+    return $mform->render();
 }
 
 /**
@@ -2131,6 +2161,9 @@ abstract class enrol_plugin {
                         )
                     );
             $event->trigger();
+            // Check if course contacts cache needs to be cleared.
+            core_course_category::user_enrolment_changed($courseid, $ue->userid,
+                    $ue->status, $ue->timestart, $ue->timeend);
         }
 
         // Dispatch the hook for post enrol user actions.
@@ -2245,6 +2278,9 @@ abstract class enrol_plugin {
                     )
                 );
         $event->trigger();
+
+        core_course_category::user_enrolment_changed($instance->courseid, $ue->userid,
+                $ue->status, $ue->timestart, $ue->timeend);
     }
 
     /**
@@ -2332,6 +2368,9 @@ abstract class enrol_plugin {
         $event->trigger();
         // User enrolments have changed, so mark user as dirty.
         mark_user_dirty($userid);
+
+        // Check if courrse contacts cache needs to be cleared.
+        core_course_category::user_enrolment_changed($courseid, $ue->userid, ENROL_USER_SUSPENDED);
 
         // reset current user enrolment caching
         if ($userid == $USER->id) {
@@ -3610,6 +3649,7 @@ abstract class enrol_plugin {
         ?int $roleid = null,
     ): void {
         global $DB, $CFG;
+        require_once($CFG->dirroot . '/course/lib.php');
 
         $user = core_user::get_user($userid);
         $course = get_course($instance->courseid);

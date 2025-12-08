@@ -598,6 +598,10 @@ abstract class context extends stdClass implements IteratorAggregate {
         require_once($CFG->dirroot . '/repository/lib.php');
         \repository::delete_all_for_context($this->_id);
 
+        // Delete all advanced grading data attached to this context.
+        require_once($CFG->dirroot.'/grade/grading/lib.php');
+        \grading_manager::delete_all_for_context($this->_id);
+
         // Now delete stuff from role related tables, role_unassign_all
         // and unenrol should be called earlier to do proper cleanup.
         $DB->delete_records('role_assignments', array('contextid' => $this->_id));

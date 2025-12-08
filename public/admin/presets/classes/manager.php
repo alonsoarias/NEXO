@@ -517,8 +517,98 @@ class manager {
      * @return array List with the XML content (string) and a filename proposal based on the preset name (string).
      */
     public function download_preset(int $presetid): array {
-        // XML export classes removed - preset download not available.
-        throw new moodle_exception('error', 'core_adminpresets', '', 'Preset XML download not available');
+        global $DB;
+
+        if (!$preset = $DB->get_record('adminpresets', ['id' => $presetid])) {
+            throw new moodle_exception('errornopreset', 'core_adminpresets');
+        }
+
+        // Start.
+        $xmloutput = new memory_xml_output();
+        $xmlwriter = new xml_writer($xmloutput);
+        $xmlwriter->start();
+
+        // Preset data.
+        $xmlwriter->begin_tag('PRESET');
+        foreach (static::$dbxmlrelations as $dbname => $xmlname) {
+            $xmlwriter->full_tag($xmlname, $preset->$dbname);
+        }
+
+        // We ride through the settings array.
+        $items = $DB->get_records('adminpresets_it', ['adminpresetid' => $preset->id]);
+        $allsettings = $this->get_settings_from_db($items);
+        if ($allsettings) {
+            $xmlwriter->begin_tag('ADMIN_SETTINGS');
+
+            foreach ($allsettings as $plugin => $settings) {
+                $tagname = strtoupper($plugin);
+
+                // To aviod xml slash problems.
+                if (strstr($tagname, '/') != false) {
+                    $tagname = str_replace('/', '__', $tagname);
+                }
+
+                $xmlwriter->begin_tag($tagname);
+
+                // One tag for each plugin setting.
+                if (!empty($settings)) {
+                    $xmlwriter->begin_tag('SETTINGS');
+                    foreach ($settings as $setting) {
+                        // Unset the tag attributes string.
+                        $attributes = [];
+
+                        // Getting setting attributes, if present.
+                        $attrs = $DB->get_records('adminpresets_it_a', ['itemid' => $setting->itemid]);
+                        if ($attrs) {
+                            foreach ($attrs as $attr) {
+                                $attributes[$attr->name] = $attr->value;
+                            }
+                        }
+
+                        $xmlwriter->full_tag(strtoupper($setting->name), $setting->value, $attributes);
+                    }
+
+                    $xmlwriter->end_tag('SETTINGS');
+                }
+
+                $xmlwriter->end_tag(strtoupper($tagname));
+            }
+
+            $xmlwriter->end_tag('ADMIN_SETTINGS');
+        }
+
+        // We ride through the plugins array.
+        $data = $DB->get_records('adminpresets_plug', ['adminpresetid' => $preset->id]);
+        if ($data) {
+            $plugins = [];
+            foreach ($data as $plugin) {
+                $plugins[$plugin->plugin][] = $plugin;
+            }
+
+            $xmlwriter->begin_tag('PLUGINS');
+
+            foreach ($plugins as $plugintype => $plugintypes) {
+                $tagname = strtoupper($plugintype);
+                $xmlwriter->begin_tag($tagname);
+
+                foreach ($plugintypes as $plugin) {
+                    $xmlwriter->full_tag(strtoupper($plugin->name), $plugin->enabled);
+                }
+
+                $xmlwriter->end_tag(strtoupper($tagname));
+            }
+
+            $xmlwriter->end_tag('PLUGINS');
+        }
+
+        // End.
+        $xmlwriter->end_tag('PRESET');
+        $xmlwriter->stop();
+        $xmlstr = $xmloutput->get_allcontents();
+
+        $filename = addcslashes($preset->name, '"') . '.xml';
+
+        return [$xmlstr, $filename];
     }
 
     /**

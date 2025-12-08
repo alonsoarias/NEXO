@@ -696,8 +696,9 @@ function get_courses($categoryid="all", $sort="c.sortorder ASC", $fields="c.*") 
         // loop throught them
         foreach ($courses as $course) {
             context_helper::preload_from_record($course);
-            // Include all courses (course visibility check not available in NEXO).
-            $visiblecourses [$course->id] = $course;
+            if (core_course_category::can_view_course_info($course)) {
+                $visiblecourses [$course->id] = $course;
+            }
         }
     }
     return $visiblecourses;
@@ -796,7 +797,9 @@ function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$total
         // Preload contexts only for hidden courses or courses we need to return.
         context_helper::preload_from_record($course);
         $coursecontext = context_course::instance($course->id);
-        // Course visibility check not available in NEXO - include all courses.
+        if (!array_key_exists($course->id, $mycourses) && !core_course_category::can_view_course_info($course)) {
+            continue;
+        }
         if (!empty($requiredcapabilities)) {
             if (!has_all_capabilities($requiredcapabilities, $coursecontext)) {
                 continue;

@@ -24,6 +24,7 @@
 
 require_once('../config.php');
 require_once($CFG->dirroot.'/user/lib.php');
+require_once($CFG->dirroot.'/course/lib.php');
 require_once($CFG->dirroot.'/notes/lib.php');
 require_once($CFG->libdir.'/tablelib.php');
 require_once($CFG->libdir.'/filelib.php');

@@ -29,6 +29,8 @@ use core\exception\coding_exception;
 use core\output\action_link;
 use core\output\pix_icon;
 use core\url;
+use core\moodlenet\utilities;
+use core_contentbank\contentbank;
 use core_plugin_manager;
 use dml_missing_record_exception;
 use moodle_page;
@@ -410,8 +412,315 @@ class settings_navigation extends navigation_node {
      * @return navigation_node|false
      */
     protected function load_course_settings($forceopen = false) {
-        // Courses not available in NEXO.
-        return false;
+        global $CFG, $USER;
+        require_once($CFG->dirroot . '/course/lib.php');
+
+        $course = $this->page->course;
+        $coursecontext = context_course::instance($course->id);
+        $adminoptions = course_get_user_administration_options($course, $coursecontext);
+
+        // Note: Do not test if enrolled or viewing here because we need the enrol link in Course administration section.
+        $coursenode = $this->add(get_string('courseadministration'), null, self::TYPE_COURSE, null, 'courseadmin');
+        if ($forceopen) {
+            $coursenode->force_open();
+        }
+
+        // MoodleNet links.
+        if ($this->page->user_is_editing()) {
+            $this->page->requires->js_call_amd('core/moodlenet/mutations', 'init');
+        }
+        $usercanshare = utilities::can_user_share($coursecontext, $USER->id, 'course');
+        $issuerid = get_config('moodlenet', 'oauthservice');
+        try {
+            $issuer = \core\oauth2\api::get_issuer($issuerid);
+            $isvalidinstance = utilities::is_valid_instance($issuer);
+            if ($usercanshare && $isvalidinstance) {
+                $this->page->requires->js_call_amd('core/moodlenet/send_resource', 'init');
+                $action = new action_link(new url(''), '', null, [
+                    'data-action' => 'sendtomoodlenet',
+                    'data-type' => 'course',
+                ]);
+                // Share course to MoodleNet link.
+                $coursenode->add(
+                    get_string('moodlenet:sharetomoodlenet', 'moodle'),
+                    $action,
+                    self::TYPE_SETTING,
+                    null,
+                    'exportcoursetomoodlenet'
+                )->set_force_into_more_menu(true);
+                // MoodleNet share progress link.
+                $url = new url('/moodlenet/shareprogress.php');
+                $coursenode->add(
+                    get_string('moodlenet:shareprogress'),
+                    $url,
+                    self::TYPE_SETTING,
+                    null,
+                    'moodlenetshareprogress'
+                )->set_force_into_more_menu(true);
+            }
+        } catch (dml_missing_record_exception $e) {
+            debugging(
+                "Invalid MoodleNet OAuth 2 service set in site administration: 'moodlenet | oauthservice'. " .
+                "This must be a valid issuer."
+            );
+        }
+
+        if ($adminoptions->update) {
+            // Add the course settings link.
+            $url = new url('/course/edit.php', ['id' => $course->id]);
+            $coursenode->add(
+                get_string('settings'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'editsettings',
+                new pix_icon('i/settings', '')
+            );
+        }
+
+        if ($adminoptions->editcompletion) {
+            // Add the course completion settings link.
+            $url = new url('/course/completion.php', ['id' => $course->id]);
+            $coursenode->add(
+                get_string('coursecompletion', 'completion'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'coursecompletion',
+                new pix_icon('i/settings', '')
+            );
+        }
+
+        if (!$adminoptions->update && $adminoptions->tags) {
+            $url = \core\router\util::get_path_for_callable([
+                \core_course\route\controller\tags_controller::class,
+                'administer_tags',
+            ], ['course' => $course->id]);
+            $coursenode->add(
+                get_string('coursetags', 'tag'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'coursetags',
+                new pix_icon('i/settings', ''),
+            );
+            $coursenode->get('coursetags')->set_force_into_more_menu();
+        }
+
+        // Add enrol nodes.
+        enrol_add_course_navigation($coursenode, $course);
+
+        // Manage filters.
+        if ($adminoptions->filters) {
+            $url = new url('/filter/manage.php', ['contextid' => $coursecontext->id]);
+            $coursenode->add(
+                get_string('filters', 'admin'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'filtermanagement',
+                new pix_icon('i/filter', '')
+            );
+        }
+
+        // View course reports.
+        if ($adminoptions->reports) {
+            $reportnav = $coursenode->add(
+                get_string('reports'),
+                new url('/report/view.php', ['courseid' => $coursecontext->instanceid]),
+                self::TYPE_CONTAINER,
+                null,
+                'coursereports',
+                new pix_icon('i/stats', '')
+            );
+            $coursereports = component::get_plugin_list('coursereport');
+            foreach ($coursereports as $report => $dir) {
+                $libfile = $CFG->dirroot . '/course/report/' . $report . '/lib.php';
+                if (file_exists($libfile)) {
+                    require_once($libfile);
+                    $reportfunction = $report . '_report_extend_navigation';
+                    if (function_exists($report . '_report_extend_navigation')) {
+                        $reportfunction($reportnav, $course, $coursecontext);
+                    }
+                }
+            }
+
+            $reports = get_plugin_list_with_function('report', 'extend_navigation_course', 'lib.php');
+            foreach ($reports as $reportfunction) {
+                $reportfunction($reportnav, $course, $coursecontext);
+            }
+
+            if (!$reportnav->has_children()) {
+                $reportnav->remove();
+            }
+        }
+
+        // Grade penalty navigation.
+        \core_grades\penalty_manager::extend_navigation_course($coursenode, $course, $coursecontext);
+
+        // Check if we can view the gradebook's setup page.
+        if ($adminoptions->gradebook) {
+            $url = new url('/grade/edit/tree/index.php', ['id' => $course->id]);
+            $coursenode->add(
+                get_string('gradebooksetup', 'grades'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'gradebooksetup',
+                new pix_icon('i/settings', '')
+            );
+        }
+
+        // Add the context locking node.
+        $this->add_context_locking_node($coursenode, $coursecontext);
+
+        // Add outcome if permitted.
+        if ($adminoptions->outcomes) {
+            $url = new url('/grade/edit/outcome/course.php', ['id' => $course->id]);
+            $coursenode->add(
+                get_string('outcomes', 'grades'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'outcomes',
+                new pix_icon('i/outcomes', ''),
+            );
+        }
+
+        // Add badges navigation.
+        if ($adminoptions->badges) {
+            require_once($CFG->libdir . '/badgeslib.php');
+            badges_add_course_navigation($coursenode, $course);
+        }
+
+        // Questions.
+        require_once($CFG->libdir . '/questionlib.php');
+        $baseurl = \core_question\local\bank\question_bank_helper::get_url_for_qbank_list($course->id);
+        question_extend_settings_navigation($coursenode, $coursecontext, $baseurl);
+
+        if ($adminoptions->update) {
+            // Repository Instances.
+            if (!$this->cache->cached('contexthasrepos' . $coursecontext->id)) {
+                require_once($CFG->dirroot . '/repository/lib.php');
+                $editabletypes = repository::get_editable_types($coursecontext);
+                $haseditabletypes = !empty($editabletypes);
+                unset($editabletypes);
+                $this->cache->set('contexthasrepos' . $coursecontext->id, $haseditabletypes);
+            } else {
+                $haseditabletypes = $this->cache->{'contexthasrepos' . $coursecontext->id};
+            }
+            if ($haseditabletypes) {
+                $url = new url('/repository/manage_instances.php', ['contextid' => $coursecontext->id]);
+                $coursenode->add(
+                    get_string('repositories'),
+                    $url,
+                    self::TYPE_SETTING,
+                    null,
+                    null,
+                    new pix_icon('i/repository', ''),
+                );
+            }
+        }
+
+        // Manage files.
+        if ($adminoptions->files) {
+            // Hidden in new courses and courses where legacy files were turned off.
+            $url = new url('/files/index.php', ['contextid' => $coursecontext->id]);
+            $coursenode->add(
+                get_string('courselegacyfiles'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'coursefiles',
+                new pix_icon('i/folder', ''),
+            );
+        }
+
+        // Let plugins hook into course navigation.
+        $pluginsfunction = get_plugins_with_function('extend_navigation_course', 'lib.php');
+        foreach ($pluginsfunction as $plugintype => $plugins) {
+            // Ignore the report and gradepenalty plugins as they were already loaded above.
+            if ($plugintype == 'report' || $plugintype == 'gradepenalty') {
+                continue;
+            }
+            foreach ($plugins as $pluginfunction) {
+                $pluginfunction($coursenode, $course, $coursecontext);
+            }
+        }
+
+        // Prepare data for course content download functionality if it is enabled.
+        if (\core\content::can_export_context($coursecontext, $USER)) {
+            $linkattr = \core_course\output\content_export_link::get_attributes($coursecontext);
+            $actionlink = new action_link($linkattr->url, $linkattr->displaystring, null, $linkattr->elementattributes);
+
+            $coursenode->add(
+                $linkattr->displaystring,
+                $actionlink,
+                self::TYPE_SETTING,
+                null,
+                'download',
+                new pix_icon('t/download', '')
+            );
+            $coursenode->get('download')->set_force_into_more_menu(true);
+        }
+
+        // Course reuse options.
+        if (
+            $adminoptions->import
+                || $adminoptions->backup
+                || $adminoptions->restore
+                || $adminoptions->copy
+                || $adminoptions->reset
+        ) {
+            $coursereusenav = $coursenode->add(
+                get_string('coursereuse'),
+                new url('/backup/view.php', ['id' => $course->id]),
+                self::TYPE_CONTAINER,
+                null,
+                'coursereuse',
+                new pix_icon('t/edit', ''),
+            );
+
+            // Import data from other courses.
+            if ($adminoptions->import) {
+                $url = new url('/backup/import.php', ['id' => $course->id]);
+                $coursereusenav->add(get_string('import'), $url, self::TYPE_SETTING, null, 'import', new pix_icon('i/import', ''));
+            }
+
+            // Backup this course.
+            if ($adminoptions->backup) {
+                $url = new url('/backup/backup.php', ['id' => $course->id]);
+                $coursereusenav->add(get_string('backup'), $url, self::TYPE_SETTING, null, 'backup', new pix_icon('i/backup', ''));
+            }
+
+            // Restore to this course.
+            if ($adminoptions->restore) {
+                $url = new url('/backup/restorefile.php', ['contextid' => $coursecontext->id]);
+                $coursereusenav->add(
+                    get_string('restore'),
+                    $url,
+                    self::TYPE_SETTING,
+                    null,
+                    'restore',
+                    new pix_icon('i/restore', ''),
+                );
+            }
+
+            // Copy this course.
+            if ($adminoptions->copy) {
+                $url = new url('/backup/copy.php', ['id' => $course->id]);
+                $coursereusenav->add(get_string('copycourse'), $url, self::TYPE_SETTING, null, 'copy', new pix_icon('t/copy', ''));
+            }
+
+            // Reset this course.
+            if ($adminoptions->reset) {
+                $url = new url('/course/reset.php', ['id' => $course->id]);
+                $coursereusenav->add(get_string('reset'), $url, self::TYPE_SETTING, null, 'reset', new pix_icon('i/return', ''));
+            }
+        }
+
+        // Return we are done.
+        return $coursenode;
     }
 
     /**
@@ -530,10 +839,68 @@ class settings_navigation extends navigation_node {
         foreach ($reports as $reportfunction) {
             $reportfunction($modulenode, $this->page->cm);
         }
+        // Add a backup link.
+        $featuresfunc = $this->page->activityname . '_supports';
+        if (
+            function_exists($featuresfunc)
+            && $featuresfunc(FEATURE_BACKUP_MOODLE2)
+            && has_capability('moodle/backup:backupactivity', $this->page->cm->context)
+        ) {
+            $url = new url('/backup/backup.php', ['id' => $this->page->cm->course, 'cm' => $this->page->cm->id]);
+            $modulenode->add(get_string('backup'), $url, self::TYPE_SETTING, null, 'backup', new pix_icon('i/backup', ''));
+        }
+
+        // Restore this activity.
+        $featuresfunc = $this->page->activityname . '_supports';
+        if (
+            function_exists($featuresfunc) &&
+            $featuresfunc(FEATURE_BACKUP_MOODLE2) &&
+            has_capability('moodle/restore:restoreactivity', $this->page->cm->context)
+        ) {
+            $url = new url('/backup/restorefile.php', ['contextid' => $this->page->cm->context->id]);
+            $modulenode->add(get_string('restore'), $url, self::TYPE_SETTING, null, 'restore', new pix_icon('i/restore', ''));
+        }
+
+        // Allow the active advanced grading method plugin to append its settings.
+        $featuresfunc = $this->page->activityname . '_supports';
+        if (
+            function_exists($featuresfunc)
+            && $featuresfunc(FEATURE_ADVANCED_GRADING)
+            && has_capability('moodle/grade:managegradingforms', $this->page->cm->context)
+        ) {
+            require_once($CFG->dirroot . '/grade/grading/lib.php');
+            $gradingman = get_grading_manager($this->page->cm->context, 'mod_' . $this->page->activityname);
+            $gradingman->extend_settings_navigation($this, $modulenode);
+        }
 
         $function = $this->page->activityname . '_extend_settings_navigation';
         if (function_exists($function)) {
             $function($this, $modulenode);
+        }
+
+        // Send activity to MoodleNet.
+        $usercanshare = utilities::can_user_share($this->context->get_course_context(), $USER->id);
+        $issuerid = get_config('moodlenet', 'oauthservice');
+        try {
+            $issuer = \core\oauth2\api::get_issuer($issuerid);
+            $isvalidinstance = utilities::is_valid_instance($issuer);
+            if ($usercanshare && $isvalidinstance) {
+                $this->page->requires->js_call_amd('core/moodlenet/send_resource', 'init');
+                $action = new action_link(new url(''), '', null, [
+                    'data-action' => 'sendtomoodlenet',
+                    'data-type' => 'activity',
+                ]);
+                $modulenode->add(
+                    get_string('moodlenet:sharetomoodlenet', 'moodle'),
+                    $action,
+                    self::TYPE_SETTING,
+                    null,
+                    'exportmoodlenet'
+                )->set_force_into_more_menu(true);
+            }
+        } catch (dml_missing_record_exception $e) {
+            debugging("Invalid MoodleNet OAuth 2 service set in site administration: 'moodlenet | oauthservice'. " .
+                "This must be a valid issuer.");
         }
 
         // Remove the module node if there are no children.
@@ -741,6 +1108,36 @@ class settings_navigation extends navigation_node {
                 ['id' => $user->id]
             ), self::TYPE_SETTING, null, 'myprofile');
 
+            // Add blog nodes.
+            if (!empty($CFG->enableblogs)) {
+                if (!$this->cache->cached('userblogoptions' . $user->id)) {
+                    require_once($CFG->dirroot . '/blog/lib.php');
+                    // Get all options for the user.
+                    $options = blog_get_options_for_user($user);
+                    $this->cache->set('userblogoptions' . $user->id, $options);
+                } else {
+                    $options = $this->cache->{'userblogoptions' . $user->id};
+                }
+
+                if (count($options) > 0) {
+                    $blogs = $profilenode->add(get_string('blogs', 'blog'), null, navigation_node::TYPE_CONTAINER);
+                    foreach ($options as $type => $option) {
+                        if ($type == "rss") {
+                            $blogs->add(
+                                $option['string'],
+                                $option['link'],
+                                self::TYPE_SETTING,
+                                null,
+                                null,
+                                new pix_icon('i/rss', '')
+                            );
+                        } else {
+                            $blogs->add($option['string'], $option['link'], self::TYPE_SETTING, null, 'blog' . $type);
+                        }
+                    }
+                }
+            }
+
             // Add the messages link.
             // It is context based so can appear in the user's profile and in course participants information.
             if (!empty($CFG->messaging)) {
@@ -917,6 +1314,23 @@ class settings_navigation extends navigation_node {
                     self::TYPE_SETTING,
                     null,
                     'preferredcalendar',
+                );
+            }
+        }
+
+        // Add "Content bank preferences" link.
+        if (isloggedin() && !isguestuser($user)) {
+            if (
+                $currentuser && has_capability('moodle/user:editownprofile', $systemcontext) ||
+                has_capability('moodle/user:editprofile', $usercontext)
+            ) {
+                $url = new url('/user/contentbank.php', ['id' => $user->id]);
+                $useraccount->add(
+                    get_string('contentbankpreferences', 'core_contentbank'),
+                    $url,
+                    self::TYPE_SETTING,
+                    null,
+                    'contentbankpreferences'
                 );
             }
         }
@@ -1255,12 +1669,41 @@ class settings_navigation extends navigation_node {
             );
         }
 
+        // Restore.
+        if (has_capability('moodle/restore:restorecourse', $catcontext)) {
+            $url = new url('/backup/restorefile.php', ['contextid' => $catcontext->id]);
+            $categorynode->add(
+                get_string('restorecourse', 'admin'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'restorecourse',
+                new pix_icon('i/restore', ''),
+            );
+        }
+
         // Let plugins hook into category settings navigation.
         $pluginsfunction = get_plugins_with_function('extend_navigation_category_settings', 'lib.php');
         foreach ($pluginsfunction as $plugintype => $plugins) {
             foreach ($plugins as $pluginfunction) {
                 $pluginfunction($categorynode, $catcontext);
             }
+        }
+
+        $cb = new contentbank();
+        if (
+            $cb->is_context_allowed($catcontext)
+            && has_capability('moodle/contentbank:access', $catcontext)
+        ) {
+            $url = new url('/contentbank/index.php', ['contextid' => $catcontext->id]);
+            $categorynode->add(
+                get_string('contentbank'),
+                $url,
+                self::TYPE_CUSTOM,
+                null,
+                'contentbank',
+                new pix_icon('i/contentbank', '')
+            );
         }
 
         return $categorynode;
@@ -1299,6 +1742,11 @@ class settings_navigation extends navigation_node {
      */
     protected function load_front_page_settings($forceopen = false) {
         global $SITE, $CFG;
+        require_once($CFG->dirroot . '/course/lib.php');
+
+        $course = clone($SITE);
+        $coursecontext = context_course::instance($course->id);   // Course context.
+        $adminoptions = course_get_user_administration_options($course, $coursecontext);
 
         $frontpage = $this->add(get_string('frontpagesettings'), null, self::TYPE_SETTING, null, 'frontpage');
         if ($forceopen) {
@@ -1306,8 +1754,21 @@ class settings_navigation extends navigation_node {
         }
         $frontpage->id = 'frontpagesettings';
 
-        // Add the site settings link for admins.
-        if (has_capability('moodle/site:config', context_system::instance())) {
+        if ($this->page->user_allowed_editing() && !$this->page->theme->haseditswitch) {
+            // Add the turn on/off settings.
+            $url = new url('/course/view.php', ['id' => $course->id, 'sesskey' => sesskey()]);
+            if ($this->page->user_is_editing()) {
+                $url->param('edit', 'off');
+                $editstring = get_string('turneditingoff');
+            } else {
+                $url->param('edit', 'on');
+                $editstring = get_string('turneditingon');
+            }
+            $frontpage->add($editstring, $url, self::TYPE_SETTING, null, null, new pix_icon('i/edit', ''));
+        }
+
+        if ($adminoptions->update) {
+            // Add the course settings link.
             $url = new url('/admin/settings.php', ['section' => 'frontpagesettings']);
             $frontpage->add(
                 get_string('settings'),
@@ -1319,11 +1780,105 @@ class settings_navigation extends navigation_node {
             );
         }
 
+        // Add enrol nodes.
+        enrol_add_course_navigation($frontpage, $course);
+
+        // Manage filters.
+        if ($adminoptions->filters) {
+            $url = new url('/filter/manage.php', ['contextid' => $coursecontext->id]);
+            $frontpage->add(
+                get_string('filters', 'admin'),
+                $url,
+                self::TYPE_SETTING,
+                null,
+                'filtermanagement',
+                new pix_icon('i/filter', '')
+            );
+        }
+
+        // View course reports.
+        if ($adminoptions->reports) {
+            $frontpagenav = $frontpage->add(
+                get_string('reports'),
+                new url(
+                    '/report/view.php',
+                    ['courseid' => $coursecontext->instanceid]
+                ),
+                self::TYPE_CONTAINER,
+                null,
+                'coursereports',
+                new pix_icon('i/stats', '')
+            );
+            $coursereports = component::get_plugin_list('coursereport');
+            foreach ($coursereports as $report => $dir) {
+                $libfile = $CFG->dirroot . '/course/report/' . $report . '/lib.php';
+                if (file_exists($libfile)) {
+                    require_once($libfile);
+                    $reportfunction = $report . '_report_extend_navigation';
+                    if (function_exists($report . '_report_extend_navigation')) {
+                        $reportfunction($frontpagenav, $course, $coursecontext);
+                    }
+                }
+            }
+
+            $reports = get_plugin_list_with_function('report', 'extend_navigation_course', 'lib.php');
+            foreach ($reports as $reportfunction) {
+                $reportfunction($frontpagenav, $course, $coursecontext);
+            }
+
+            if (!$frontpagenav->has_children()) {
+                $frontpagenav->remove();
+            }
+        }
+
+        // Questions.
+        require_once($CFG->libdir . '/questionlib.php');
+        $baseurl = \core_question\local\bank\question_bank_helper::get_url_for_qbank_list($course->id);
+        question_extend_settings_navigation($frontpage, $coursecontext, $baseurl);
+
+        // Manage files.
+        if ($adminoptions->files) {
+            // Hide in new installs.
+            $url = new url('/files/index.php', ['contextid' => $coursecontext->id]);
+            $frontpage->add(get_string('sitelegacyfiles'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/folder', ''));
+        }
+
         // Let plugins hook into frontpage navigation.
         $pluginsfunction = get_plugins_with_function('extend_navigation_frontpage', 'lib.php');
         foreach ($pluginsfunction as $plugintype => $plugins) {
             foreach ($plugins as $pluginfunction) {
-                $pluginfunction($frontpage, $SITE, context_system::instance());
+                $pluginfunction($frontpage, $course, $coursecontext);
+            }
+        }
+
+        // Course reuse options.
+        if ($adminoptions->backup || $adminoptions->restore) {
+            $coursereusenav = $frontpage->add(
+                get_string('coursereuse'),
+                new url('/backup/view.php', ['id' => $course->id]),
+                self::TYPE_CONTAINER,
+                null,
+                'coursereuse',
+                new pix_icon('t/edit', ''),
+            );
+
+            // Backup this course.
+            if ($adminoptions->backup) {
+                $url = new url('/backup/backup.php', ['id' => $course->id]);
+                $coursereusenav->add(get_string('backup'), $url, self::TYPE_SETTING, null, 'backup', new pix_icon('i/backup', ''));
+            }
+
+            // Restore to this course.
+            if ($adminoptions->restore) {
+                $url = new url('/backup/restorefile.php', ['contextid' => $coursecontext->id]);
+                $coursereusenav->add(
+                    get_string('restore'),
+                    $url,
+                    self::TYPE_SETTING,
+                    null,
+                    'restore',
+                    new pix_icon('i/restore', ''),
+                );
             }
         }
 

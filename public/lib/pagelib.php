@@ -1171,9 +1171,12 @@ class moodle_page {
             $this->set_context(context_course::instance($this->_course->id));
         }
 
-        // Add body class for course format.
+        // Notify course format that this page is set for the course.
         if ($this->_course->id != $SITE->id) {
-            $this->add_body_class('format-'. $this->_course->format);
+            require_once($CFG->dirroot.'/course/lib.php');
+            $courseformat = course_get_format($this->_course);
+            $this->add_body_class('format-'. $courseformat->get_format());
+            $courseformat->page_set_course($this);
         } else {
             $this->add_body_class('format-site');
         }
@@ -1255,7 +1258,11 @@ class moodle_page {
             $this->set_activity_record($module);
         }
 
-        // Course format notification skipped - course formats not available in NEXO.
+        // Notify course format that this page is set for the course module.
+        if ($this->_course->id != $SITE->id) {
+            require_once($CFG->dirroot.'/course/lib.php');
+            course_get_format($this->_course)->page_set_cm($this);
+        }
     }
 
     /**

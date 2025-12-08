@@ -1447,6 +1447,7 @@ class core_user_external extends \core_external\external_api {
     public static function view_user_list($courseid) {
         global $CFG;
         require_once($CFG->dirroot . "/user/lib.php");
+        require_once($CFG->dirroot . '/course/lib.php');
 
         $params = self::validate_parameters(self::view_user_list_parameters(),
                                             array(

@@ -4628,7 +4628,7 @@ class admin_setting_sitesetselect extends admin_setting_configselect {
      * @return string The site name of the selected site
      */
     public function get_setting() {
-        $site = get_site();
+        $site = course_get_format(get_site())->get_course();
         return $site->{$this->name};
     }
 
@@ -4649,6 +4649,7 @@ class admin_setting_sitesetselect extends admin_setting_configselect {
         $record->$temp        = $data;
         $record->timemodified = time();
 
+        course_get_format($SITE)->update_course_format_options($record);
         $DB->update_record('course', $record);
 
         // Reset caches.
@@ -4656,6 +4657,7 @@ class admin_setting_sitesetselect extends admin_setting_configselect {
         if ($SITE->id == $COURSE->id) {
             $COURSE = $SITE;
         }
+        core_courseformat\base::reset_course_cache($SITE->id);
 
         return '';
 
@@ -4723,6 +4725,7 @@ class admin_setting_courselist_frontpage extends admin_setting {
      */
     public function __construct($loggedin) {
         global $CFG;
+        require_once($CFG->dirroot.'/course/lib.php');
         $name        = 'frontpage'.($loggedin ? 'loggedin' : '');
         $visiblename = get_string('frontpage'.($loggedin ? 'loggedin' : ''),'admin');
         $description = get_string('configfrontpage'.($loggedin ? 'loggedin' : ''),'admin');
@@ -4850,7 +4853,7 @@ class admin_setting_sitesetcheckbox extends admin_setting_configcheckbox {
      * @return string
      */
     public function get_setting() {
-        $site = get_site();
+        $site = course_get_format(get_site())->get_course();
         return $site->{$this->name};
     }
 
@@ -4867,6 +4870,7 @@ class admin_setting_sitesetcheckbox extends admin_setting_configcheckbox {
         $record->{$this->name} = ($data == '1' ? 1 : 0);
         $record->timemodified  = time();
 
+        course_get_format($SITE)->update_course_format_options($record);
         $DB->update_record('course', $record);
 
         // Reset caches.
@@ -4874,6 +4878,7 @@ class admin_setting_sitesetcheckbox extends admin_setting_configcheckbox {
         if ($SITE->id == $COURSE->id) {
             $COURSE = $SITE;
         }
+        core_courseformat\base::reset_course_cache($SITE->id);
 
         return '';
     }
@@ -4910,7 +4915,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
      * @return mixed string or null
      */
     public function get_setting() {
-        $site = get_site();
+        $site = course_get_format(get_site())->get_course();
         return $site->{$this->name} != '' ? $site->{$this->name} : NULL;
     }
 
@@ -4956,6 +4961,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         $record->{$this->name} = $data;
         $record->timemodified  = time();
 
+        course_get_format($SITE)->update_course_format_options($record);
         $DB->update_record('course', $record);
 
         // Reset caches.
@@ -4963,6 +4969,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         if ($SITE->id == $COURSE->id) {
             $COURSE = $SITE;
         }
+        core_courseformat\base::reset_course_cache($SITE->id);
 
         return '';
     }
@@ -5044,7 +5051,7 @@ class admin_setting_special_frontpagedesc extends admin_setting_confightmleditor
      * @return string The current setting
      */
     public function get_setting() {
-        $site = get_site();
+        $site = course_get_format(get_site())->get_course();
         return $site->{$this->name};
     }
 
@@ -5061,6 +5068,7 @@ class admin_setting_special_frontpagedesc extends admin_setting_confightmleditor
         $record->{$this->name} = $data;
         $record->timemodified  = time();
 
+        course_get_format($SITE)->update_course_format_options($record);
         $DB->update_record('course', $record);
 
         // Reset caches.
@@ -5068,6 +5076,7 @@ class admin_setting_special_frontpagedesc extends admin_setting_confightmleditor
         if ($SITE->id == $COURSE->id) {
             $COURSE = $SITE;
         }
+        core_courseformat\base::reset_course_cache($SITE->id);
 
         return '';
     }
@@ -5492,8 +5501,7 @@ class admin_settings_coursecat_select extends admin_setting_configselect_autocom
         if (is_array($this->choices)) {
             return true;
         }
-        // Categories not available in NEXO.
-        $this->choices = [];
+        $this->choices = core_course_category::make_categories_list('', 0, ' / ');
         return true;
     }
 }

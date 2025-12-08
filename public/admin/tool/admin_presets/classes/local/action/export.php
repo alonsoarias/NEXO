@@ -23,7 +23,9 @@ use moodle_exception;
 
 global $CFG;
 require_once($CFG->dirroot . '/lib/filelib.php');
-// Note: XML export classes removed - preset download not available.
+require_once($CFG->dirroot . '/backup/util/xml/xml_writer.class.php');
+require_once($CFG->dirroot . '/backup/util/xml/output/xml_output.class.php');
+require_once($CFG->dirroot . '/backup/util/xml/output/memory_xml_output.class.php');
 
 /**
  * This class extends base class and handles export function.

@@ -1059,6 +1059,7 @@ function upgrade_calendar_action_events_fix(stdClass $info, bool $output = true,
 function upgrade_calendar_override_events_fix(stdClass $info, bool $output = true, int $endtime = 0): bool {
     global $CFG, $DB;
 
+    include_once($CFG->dirroot. '/course/lib.php');
     include_once($CFG->dirroot. '/mod/assign/lib.php');
     include_once($CFG->dirroot. '/mod/assign/locallib.php');
     include_once($CFG->dirroot. '/mod/lesson/lib.php');
