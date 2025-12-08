@@ -837,22 +837,6 @@ class core_admin_renderer extends plugin_renderer_base {
      * @return string HTML to output.
      */
     protected function registration_warning($registered) {
-
-        if (!$registered && site_is_public()) {
-            if (has_capability('moodle/site:config', context_system::instance())) {
-                $registerbutton = $this->single_button(new moodle_url('/admin/registration/index.php'),
-                    get_string('register', 'admin'));
-                $str = 'registrationwarning';
-                $type = 'error alert alert-danger';
-            } else {
-                $registerbutton = '';
-                $str = 'registrationwarningcontactadmin';
-                $type = 'info';
-            }
-
-            return $this->warning( get_string($str, 'admin') . '&nbsp;' . $registerbutton , $type);
-        }
-
         return '';
     }
 

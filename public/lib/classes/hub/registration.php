@@ -109,14 +109,7 @@ class registration {
      * @throws \moodle_exception
      */
     public static function require_registration() {
-        if ($registration = self::get_registration()) {
-            return $registration;
-        }
-        if (has_capability('moodle/site:config', context_system::instance())) {
-            throw new moodle_exception('registrationwarning', 'admin', new moodle_url('/admin/registration/index.php'));
-        } else {
-            throw new moodle_exception('registrationwarningcontactadmin', 'admin');
-        }
+        return self::get_registration();
     }
 
     /**
@@ -125,7 +118,7 @@ class registration {
      * @return bool
      */
     public static function is_registered() {
-        return self::get_registration() ? true : false;
+        return true;
     }
 
     /**
@@ -391,7 +384,7 @@ class registration {
 
         $registration = self::get_registration(false);
         if (!$registration || $registration->token !== $token) {
-            throw new moodle_exception('wrongtoken', 'hub', new moodle_url('/admin/registration/index.php'));
+            throw new moodle_exception('wrongtoken', 'hub');
         }
 
         // Update hub information of the site.
@@ -577,8 +570,7 @@ class registration {
 
         $registration = self::get_registration(false);
         if (!$registration || $registration->token != $token) {
-            throw new moodle_exception('wrongtoken', 'hub',
-               new moodle_url('/admin/registration/index.php'));
+            throw new moodle_exception('wrongtoken', 'hub');
         }
 
         $DB->delete_records('registration_hubs', array('id' => $registration->id));
@@ -672,20 +664,7 @@ class registration {
      * @param string|moodle_url $url
      */
     public static function registration_reminder($url) {
-        if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
-            // No redirection during behat runs.
-            return;
-        }
-        if (!has_capability('moodle/site:config', context_system::instance())) {
-            return;
-        }
-        if (
-            site_is_public() &&
-            (self::show_after_install() || self::get_new_registration_fields())
-        ) {
-            $returnurl = new moodle_url($url);
-            redirect(new moodle_url('/admin/registration/index.php', ['returnurl' => $returnurl->out_as_local_url(false)]));
-        }
+        return;
     }
 
     /**
