@@ -42,7 +42,6 @@ $ADMIN->add('modules', new admin_category('searchplugins', new lang_string('sear
 $ADMIN->add('modules', new admin_category('tools', new lang_string('tools', 'admin')));
 $ADMIN->add('modules', new admin_category('cache', new lang_string('caching', 'cache')));
 $ADMIN->add('cache', new admin_category('cachestores', new lang_string('cachestores', 'cache')));
-$ADMIN->add('modules', new admin_category('communicationsettings', new lang_string('communication', 'core_communication')));
 $ADMIN->add('modules', new admin_category('sms', new lang_string('sms', 'core_sms')));
 $ADMIN->add('modules', new admin_category('localplugins', new lang_string('localplugins')));
 
@@ -597,19 +596,6 @@ if ($hassiteconfig) {
             include($settingspath);
             $ADMIN->add('cachestores', $settings);
         }
-    }
-}
-
-// Communication plugins.
-if ($hassiteconfig && core_communication\api::is_available()) {
-    $temp = new admin_settingpage('managecommunicationproviders',
-        new lang_string('managecommunicationproviders', 'core_communication'));
-    $temp->add(new \core_communication\admin\manage_communication_providers_page());
-    $ADMIN->add('communicationsettings', $temp);
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('communication');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\communication $plugin */
-        $plugin->load_settings($ADMIN, 'communicationsettings', $hassiteconfig);
     }
 }
 
