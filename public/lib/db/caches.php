@@ -79,17 +79,6 @@ $definitions = array(
         'simpledata' => true,
     ),
 
-    // Cache for question definitions. This is used by the question_bank class.
-    // Users probably do not need to know about this cache. They will just call
-    // question_bank::load_question.
-    'questiondata' => array(
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true, // The id of the question is used.
-        'requiredataguarantee' => false,
-        'datasource' => 'question_finder',
-        'datasourcefile' => 'question/engine/bank.php',
-    ),
-
     // HTML Purifier cache
     // This caches the html purifier cleaned text. This is done because the text is usually cleaned once for every user
     // and context combo. Text caching handles caching for the combination, this cache is responsible for caching the
@@ -244,12 +233,6 @@ $definitions = array(
     'repositories' => array(
         'mode' => cache_store::MODE_REQUEST,
     ),
-    // Used to store external badges.
-    'externalbadges' => array(
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'ttl' => 3600,
-    ),
     // Accumulated information about course modules and sections used to print course view page (user-independent).
     // Used in functions:
     // - course_modinfo::build_course_section_cache()
@@ -339,15 +322,6 @@ $definitions = array(
         'mode' => cache_store::MODE_REQUEST,
         'simplekeys' => true,
         'staticacceleration' => true,
-    ),
-
-    // Grade categories. Stored at session level as invalidation is very aggressive.
-    'grade_categories' => array(
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'invalidationevents' => array(
-            'changesingradecategories',
-        )
     ),
 
     // Store temporary tables information.
