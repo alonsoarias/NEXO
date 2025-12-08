@@ -64,12 +64,6 @@ class primary extends view {
                     self::TYPE_SETTING, null, 'myhome', new \pix_icon('i/dashboard', ''));
             }
 
-            // Add the mycourses link.
-            $showcoursesnode = empty($this->page->theme->removedprimarynavitems) ||
-                !in_array('courses', $this->page->theme->removedprimarynavitems);
-            if ($showcoursesnode) {
-                $this->add(get_string('mycourses'), new \moodle_url('/my/courses.php'), self::TYPE_ROOTNODE, null, 'mycourses');
-            }
         }
 
         // Add the calendar link only for guest users.
@@ -116,13 +110,10 @@ class primary extends view {
      * Find and set the active node. Initially searches based on URL/explicitly set active node.
      * If nothing is found, it checks the following:
      *      - If the node is a site page, set 'Home' as active
-     *      - If within a course context, set 'My courses' as active
-     *      - If within a course category context, set 'Site Admin' (if available) else set 'Home'
-     *      - Else if available set site admin as active
+     *      - If available set site admin as active
      *      - Fallback, set 'Home' as active
      */
     private function set_active_node(): void {
-        global $SITE;
         $activenode = $this->search_and_set_active_node($this);
         // If we haven't found an active node based on the standard search. Follow the criteria above.
         if (!$activenode) {
@@ -131,12 +122,8 @@ class primary extends view {
             $activekey = 'home';
             if (isset($navactivenode->parent) && $navactivenode->parent->text == get_string('sitepages')) {
                 $activekey = 'home';
-            } else if (in_array($this->context->contextlevel, [CONTEXT_COURSE, CONTEXT_MODULE])) {
-                if ($this->page->course->id != $SITE->id) {
-                    $activekey = 'courses';
-                }
             } else if (in_array('siteadminnode', $children) && $node = $this->get_site_admin_node()) {
-                if ($this->context->contextlevel == CONTEXT_COURSECAT || $node->search_for_active_node(URL_MATCH_EXACT)) {
+                if ($node->search_for_active_node(URL_MATCH_EXACT)) {
                     $activekey = 'siteadminnode';
                 }
             } else if (in_array('calendar', $children) && $node = $this->find('calendar', self::TYPE_ROOTNODE)) {
