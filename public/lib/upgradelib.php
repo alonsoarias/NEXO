@@ -1830,7 +1830,8 @@ function core_tables_exist() {
         return false;
 
     } else {                                 // Check for missing main tables
-        $mtables = array('config', 'course', 'groupings'); // some tables used in 1.9 and 2.0, preferable something from the start and end of install.xml
+        // NEXO: course table doesn't exist, check for user and context instead
+        $mtables = array('config', 'user', 'context');
         foreach ($mtables as $mtable) {
             if (!in_array($mtable, $tables)) {
                 return false;
