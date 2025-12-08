@@ -3048,12 +3048,6 @@ $functions = array(
         'ajax'          => true,
         'capabilities'  => '',
     ],
-    'core_payment_get_available_gateways' => [
-        'classname'   => 'core_payment\external\get_available_gateways',
-        'description' => 'Get the list of payment gateways that support the given component/area',
-        'type'        => 'read',
-        'ajax'        => true,
-    ],
     'core_reportbuilder_filters_reset' => [
         'classname'   => 'core_reportbuilder\external\filters\reset',
         'description' => 'Reset filters for given report',

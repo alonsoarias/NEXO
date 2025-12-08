@@ -33,7 +33,6 @@ $ADMIN->add('modules', new admin_category('mlbackendsettings', new lang_string('
 $ADMIN->add('modules', new admin_category('filtersettings', new lang_string('managefilters')));
 $ADMIN->add('modules', new admin_category('mediaplayers', new lang_string('type_media_plural', 'plugin')));
 $ADMIN->add('modules', new admin_category('fileconverterplugins', new lang_string('type_fileconverter_plural', 'plugin')));
-$ADMIN->add('modules', new admin_category('paymentgateways', new lang_string('type_paygw_plural', 'plugin')));
 $ADMIN->add('modules', new admin_category('dataformatsettings', new lang_string('dataformats')));
 $ADMIN->add('modules', new admin_category('repositorysettings', new lang_string('repositories', 'repository')));
 $ADMIN->add('modules', new admin_category('plagiarism', new lang_string('plagiarism', 'plagiarism')));
@@ -315,24 +314,6 @@ if ($hassiteconfig) {
     foreach ($plugins as $plugin) {
         /** @var \core\plugininfo\media $plugin */
         $plugin->load_settings($ADMIN, 'mediaplayers', $hassiteconfig);
-    }
-
-    // Payment gateway plugins.
-    $temp = new admin_settingpage('managepaymentgateways', new lang_string('type_paygwmanage', 'plugin'));
-    $temp->add(new \core_admin\local\settings\manage_payment_gateway_plugins());
-    $temp->add(new admin_setting_description(
-        'managepaymentgatewayspostfix',
-        '',
-        new lang_string('gotopaymentaccounts', 'payment',
-            html_writer::link(new moodle_url('/payment/accounts.php'), get_string('paymentaccounts', 'payment')))
-    ));
-    $ADMIN->add('paymentgateways', $temp);
-
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('paygw');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\paygw $plugin */
-        $plugin->load_settings($ADMIN, 'paymentgateways', $hassiteconfig);
     }
 
     // Data format settings.
