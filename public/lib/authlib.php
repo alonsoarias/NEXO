@@ -654,7 +654,7 @@ class auth_plugin_base {
         $username = trim(core_text::strtolower($username));
 
         // Get the current user record.
-        $user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id));
+        $user = $DB->get_record('user', array('username' => $username));
         if (empty($user)) { // Trouble.
             error_log($this->errorlogtag . get_string('auth_usernotexist', 'auth', $username));
             throw new \moodle_exception('auth_usernotexist', 'auth', '', $username);
@@ -903,9 +903,6 @@ class auth_plugin_base {
 function login_is_lockedout($user) {
     global $CFG;
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return false;
-    }
     if (isguestuser($user)) {
         return false;
     }
@@ -948,9 +945,6 @@ function login_attempt_valid($user) {
 
     // Note: user_loggedin event is triggered in complete_user_login().
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return;
-    }
     if (isguestuser($user)) {
         return;
     }
@@ -967,9 +961,6 @@ function login_attempt_valid($user) {
 function login_attempt_failed($user) {
     global $CFG;
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return;
-    }
     if (isguestuser($user)) {
         return;
     }
@@ -1032,9 +1023,6 @@ function login_attempt_failed($user) {
 function login_lock_account($user) {
     global $CFG;
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return;
-    }
     if (isguestuser($user)) {
         return;
     }
@@ -1164,7 +1152,7 @@ function signup_validate_data($data, $files) {
     $errors = array();
     $authplugin = get_auth_plugin($CFG->registerauth);
 
-    if ($DB->record_exists('user', array('username' => $data['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
+    if ($DB->record_exists('user', array('username' => $data['username']))) {
         $errors['username'] = get_string('usernameexists');
     } else {
         // Check allowed characters.
@@ -1196,13 +1184,11 @@ function signup_validate_data($data, $files) {
                  WHERE " . $DB->sql_equal('email', ':email1', false, true) . "
                    AND id IN (SELECT id
                                 FROM {user}
-                               WHERE " . $DB->sql_equal('email', ':email2', false, false) . "
-                                 AND mnethostid = :mnethostid)";
+                               WHERE " . $DB->sql_equal('email', ':email2', false, false) . ")";
 
         $params = array(
             'email1' => $data['email'],
             'email2' => $data['email'],
-            'mnethostid' => $CFG->mnet_localhost_id,
         );
 
         // If there are other user(s) that already have the same email, show an error.
@@ -1261,7 +1247,6 @@ function signup_setup_new_user($user) {
     $user->lang        = current_language();
     $user->firstaccess = 0;
     $user->timecreated = time();
-    $user->mnethostid  = $CFG->mnet_localhost_id;
     $user->secret      = random_string(15);
     $user->auth        = $CFG->registerauth;
     // Initialize alternate name fields to empty strings.

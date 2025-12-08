@@ -57,7 +57,7 @@ class send_new_user_passwords_task extends scheduled_task {
             $usernamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
             [$sort, $sortparams] = users_order_by_sql('u');
             $newusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, u.auth, u.deleted,
-                                                     u.suspended, u.emailstop, u.mnethostid, u.mailformat,
+                                                     u.suspended, u.emailstop, u.mailformat,
                                                      $usernamefields, u.username, u.lang,
                                                      p.id as prefid
                                                 FROM {user} u

@@ -195,14 +195,10 @@ EOD;
             $record['idnumber'] = '';
         }
 
-        if (!isset($record['mnethostid'])) {
-            $record['mnethostid'] = $CFG->mnet_localhost_id;
-        }
-
         if (!isset($record['username'])) {
             $record['username'] = 'username'.$i;
             $j = 2;
-            while ($DB->record_exists('user', array('username'=>$record['username'], 'mnethostid'=>$record['mnethostid']))) {
+            while ($DB->record_exists('user', array('username'=>$record['username']))) {
                 $record['username'] = 'username'.$i.'_'.$j;
                 $j++;
             }

@@ -90,7 +90,7 @@ if ($token === "$inttoken") {
 
     // Make sure that $CFG->siteguest is set.
     if (empty($CFG->siteguest)) {
-        if (!$guestid = $DB->get_field('user', 'id', array('username' => 'guest', 'mnethostid' => $CFG->mnet_localhost_id))) {
+        if (!$guestid = $DB->get_field('user', 'id', array('username' => 'guest'))) {
             // Guest does not exist yet, weird.
             rss_error();
         }

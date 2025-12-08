@@ -1051,7 +1051,7 @@ abstract class webservice_server implements webservice_server_interface {
                 throw new moodle_exception('wrongusernamepassword', 'webservice');
             }
 
-            $user = $DB->get_record('user', array('username'=>$this->username, 'mnethostid'=>$CFG->mnet_localhost_id), '*', MUST_EXIST);
+            $user = $DB->get_record('user', array('username'=>$this->username), '*', MUST_EXIST);
 
         } else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN){
             $user = $this->authenticate_by_token(EXTERNAL_TOKEN_PERMANENT);

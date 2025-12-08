@@ -54,10 +54,7 @@ class core_role_admins_potential_selector extends user_selector_base {
 
         $sql = " FROM {user} u
                       $this->userfieldsjoin
-                WHERE $wherecondition AND mnethostid = :localmnet";
-
-        // It could be dangerous to make remote users admins and also this could lead to other problems.
-        $params['localmnet'] = $CFG->mnet_localhost_id;
+                WHERE $wherecondition";
 
         [$sort, $sortparams] = users_order_by_sql('u', $search, $this->accesscontext, $this->userfieldsmappings);
         $order = ' ORDER BY ' . $sort;

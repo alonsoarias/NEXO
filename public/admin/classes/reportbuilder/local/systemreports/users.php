@@ -64,7 +64,7 @@ class users extends system_report {
 
         // Any columns required by actions should be defined here to ensure they're always available.
         $fullnamefields = array_map(fn($field) => "{$entityuseralias}.{$field}", fields::get_name_fields());
-        $this->add_base_fields("{$entityuseralias}.id, {$entityuseralias}.confirmed, {$entityuseralias}.mnethostid,
+        $this->add_base_fields("{$entityuseralias}.id, {$entityuseralias}.confirmed,
             {$entityuseralias}.suspended, {$entityuseralias}.username, " . implode(', ', $fullnamefields));
 
         if ($this->get_parameter('withcheckboxes', false, PARAM_BOOL)) {

@@ -78,7 +78,6 @@ class auth_plugin_webservice extends auth_plugin_base {
             'auth' => 'webservice',
             'deleted' => '0',
             'suspended' => '0',
-            'mnethostid' => $CFG->mnet_localhost_id,
         ]);
 
         if ($user) {

@@ -256,7 +256,6 @@ class api {
 
         $user = new stdClass();
         $user->auth = 'oauth2';
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->secret = random_string(15);
         $user->password = '';
         $user->confirmed = 1;  // Set the user to confirmed.
@@ -297,7 +296,6 @@ class api {
 
         $user = new stdClass();
         $user->auth = 'oauth2';
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->secret = random_string(15);
         $user->password = '';
         $user->confirmed = 0;  // The user is not yet confirmed.

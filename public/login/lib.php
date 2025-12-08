@@ -92,7 +92,7 @@ function core_login_process_password_reset($username, $email) {
     if (!empty($username)) {
         // Username has been specified - load the user record based on that.
         $username = core_text::strtolower($username); // Mimic the login page process.
-        $userparams = array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0, 'suspended' => 0);
+        $userparams = array('username' => $username, 'deleted' => 0, 'suspended' => 0);
         $user = $DB->get_record('user', $userparams);
     } else {
         // Try to load the user record based on email address.
@@ -109,15 +109,13 @@ function core_login_process_password_reset($username, $email) {
                  WHERE " . $DB->sql_equal('email', ':email1', false, true) . "
                    AND id IN (SELECT id
                                 FROM {user}
-                               WHERE mnethostid = :mnethostid
-                                 AND deleted = 0
+                               WHERE deleted = 0
                                  AND suspended = 0
                                  AND " . $DB->sql_equal('email', ':email2', false, false) . ")";
 
         $params = array(
             'email1' => $email,
             'email2' => $email,
-            'mnethostid' => $CFG->mnet_localhost_id,
         );
 
         $user = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE);

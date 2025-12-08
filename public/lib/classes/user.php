@@ -140,23 +140,17 @@ class user {
      *
      * @param string $email The email of the user searched.
      * @param string $fields A comma separated list of user fields to be returned, support and noreply user.
-     * @param int $mnethostid The id of the remote host.
+     * @param int $unused Unused parameter, kept for backward compatibility.
      * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug message if more found;
      *                        IGNORE_MULTIPLE means return first user, ignore multiple user records found(not recommended);
      *                        MUST_EXIST means throw an exception if no user record or multiple records found.
      * @return stdClass|bool user record if found, else false.
      * @throws dml_exception if user record not found and respective $strictness is set.
      */
-    public static function get_user_by_email($email, $fields = '*', $mnethostid = null, $strictness = IGNORE_MISSING) {
-        global $DB, $CFG;
+    public static function get_user_by_email($email, $fields = '*', $unused = null, $strictness = IGNORE_MISSING) {
+        global $DB;
 
-        // Because we use the username as the search criteria, we must also restrict our search based on mnet host.
-        if (empty($mnethostid)) {
-            // If empty, we restrict to local users.
-            $mnethostid = $CFG->mnet_localhost_id;
-        }
-
-        return $DB->get_record('user', ['email' => $email, 'mnethostid' => $mnethostid], $fields, $strictness);
+        return $DB->get_record('user', ['email' => $email], $fields, $strictness);
     }
 
     /**

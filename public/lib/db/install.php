@@ -68,7 +68,6 @@ function xmldb_main_install() {
     $guest->lastname    = ' ';
     $guest->email       = 'root@localhost';
     $guest->description = get_string('guestuserinfo');
-    $guest->mnethostid  = $CFG->mnet_localhost_id;
     $guest->confirmed   = 1;
     $guest->lang        = $CFG->lang;
     $guest->timemodified= time();
@@ -88,7 +87,6 @@ function xmldb_main_install() {
     $admin->password     = 'adminsetuppending';
     $admin->email        = '';
     $admin->confirmed    = 1;
-    $admin->mnethostid   = $CFG->mnet_localhost_id;
     $admin->lang         = $CFG->lang;
     $admin->maildisplay  = 1;
     $admin->timemodified = time();
