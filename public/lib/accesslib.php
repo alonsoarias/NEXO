@@ -4445,7 +4445,11 @@ function role_switch($roleid, context $context) {
  */
 function is_role_switched($courseid) {
     global $USER;
-    $context = context_course::instance($courseid, MUST_EXIST);
+    // NEXO: Use IGNORE_MISSING since course table doesn't exist
+    $context = context_course::instance($courseid, IGNORE_MISSING);
+    if (!$context) {
+        return false;
+    }
     return (!empty($USER->access['rsw'][$context->path]));
 }
 

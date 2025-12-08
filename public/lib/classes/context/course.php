@@ -197,13 +197,11 @@ class course extends context {
         }
 
         if (!$record = $DB->get_record('context', array('contextlevel' => self::LEVEL, 'instanceid' => $courseid))) {
-            if ($course = $DB->get_record('course', array('id' => $courseid), 'id,category', $strictness)) {
-                if ($course->category) {
-                    $parentcontext = coursecat::instance($course->category);
-                    $record = context::insert_context_record(self::LEVEL, $course->id, $parentcontext->path);
-                } else {
-                    $record = context::insert_context_record(self::LEVEL, $course->id, '/'.SYSCONTEXTID, 0);
-                }
+            // NEXO: Course table doesn't exist, create context for SITEID only
+            if ($courseid == SITEID) {
+                $record = context::insert_context_record(self::LEVEL, $courseid, '/'.SYSCONTEXTID, 0);
+            } else if ($strictness == MUST_EXIST) {
+                throw new \dml_exception('invalidcourseid');
             }
         }
 
@@ -218,20 +216,15 @@ class course extends context {
 
     /**
      * Create missing context instances at course context level
+     * NEXO: Course table doesn't exist, only create context for SITEID
      */
     protected static function create_level_instances() {
         global $DB;
 
-        $sql = "SELECT ".self::LEVEL.", c.id
-                  FROM {course} c
-                 WHERE NOT EXISTS (SELECT 'x'
-                                     FROM {context} cx
-                                    WHERE c.id = cx.instanceid AND cx.contextlevel=".self::LEVEL.")";
-        $contextdata = $DB->get_recordset_sql($sql);
-        foreach ($contextdata as $context) {
-            context::insert_context_record(self::LEVEL, $context->id, null);
+        // NEXO: Only ensure SITEID context exists
+        if (!$DB->record_exists('context', ['contextlevel' => self::LEVEL, 'instanceid' => SITEID])) {
+            context::insert_context_record(self::LEVEL, SITEID, '/'.SYSCONTEXTID, 0);
         }
-        $contextdata->close();
     }
 
     /**

@@ -32,12 +32,13 @@ require_once($CFG->dirroot.'/user/lib.php');
 require_once($CFG->dirroot.'/webservice/lib.php');
 
 $id     = optional_param('id', $USER->id, PARAM_INT);    // User id; -1 if creating new user.
-$course = optional_param('course', SITEID, PARAM_INT);   // Course id (defaults to Site).
+$courseid = optional_param('course', SITEID, PARAM_INT);   // Course id (defaults to Site).
 $returnto = optional_param('returnto', null, PARAM_ALPHA);  // Code determining where to return to after save.
 
-$PAGE->set_url('/user/editadvanced.php', array('course' => $course, 'id' => $id));
+$PAGE->set_url('/user/editadvanced.php', array('course' => $courseid, 'id' => $id));
 
-$course = $DB->get_record('course', array('id' => $course), '*', MUST_EXIST);
+// NEXO: Use simulated site object instead of querying course table
+$course = get_site();
 
 if (!empty($USER->newadminuser)) {
     // Ignore double clicks, we must finish all operations before cancelling request.
@@ -46,21 +47,13 @@ if (!empty($USER->newadminuser)) {
     $PAGE->set_course($SITE);
     $PAGE->set_pagelayout('maintenance');
 } else {
-    if ($course->id == SITEID) {
-        require_login();
-        $PAGE->set_context(context_system::instance());
-    } else {
-        require_login($course);
-    }
+    require_login();
+    $PAGE->set_context(context_system::instance());
     $PAGE->set_pagelayout('admin');
     $PAGE->add_body_class('limitedwidth');
 }
 
-if ($course->id == SITEID) {
-    $coursecontext = context_system::instance();   // SYSTEM context.
-} else {
-    $coursecontext = context_course::instance($course->id);   // Course context.
-}
+$coursecontext = context_system::instance();   // SYSTEM context.
 $systemcontext = context_system::instance();
 
 if ($id == -1) {
