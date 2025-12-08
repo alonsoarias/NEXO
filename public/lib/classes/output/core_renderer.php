@@ -17,11 +17,9 @@
 namespace core\output;
 
 use breadcrumb_navigation_node;
-use cm_info;
 use core\hook\output\after_http_headers;
 use core_block\output\block_contents;
 use core_block\output\block_move_target;
-use core_completion\cm_completion_details;
 use core\context;
 use core_tag\output\taglist;
 use core_text;
