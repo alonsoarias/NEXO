@@ -110,7 +110,7 @@ class preview extends \html_table {
                     $rowcols['status'][] = get_string('invalidusernameupload');
                 }
                 if ($userid = $DB->get_field('user', 'id',
-                        ['username' => $stdusername, 'mnethostid' => $CFG->mnet_localhost_id])) {
+                        ['username' => $stdusername, 'mnethostid' => 1])) {
                     $rowcols['username'] = \html_writer::link(
                         new \moodle_url('/user/profile.php', ['id' => $userid]), $rowcols['username']);
                 }

@@ -167,11 +167,6 @@ class core_webservice_external extends \core_external\external_api {
                 );
             }
         }
-        // Special case mnet_dispatcher_mode.
-        $siteinfo['advancedfeatures'][] = array(
-            'name' => 'mnet_dispatcher_mode',
-            'value' => ($CFG->mnet_dispatcher_mode == 'strict') ? 1 : 0
-        );
         // Competencies.
         $enablecompetencies = get_config('core_competency', 'enabled');
         $siteinfo['advancedfeatures'][] = [

@@ -158,7 +158,7 @@ class user {
      *
      * @param string $username The username of the user searched.
      * @param string $fields A comma separated list of user fields to be returned, support and noreply user.
-     * @param int $mnethostid The id of the remote host.
+     * @param int $mnethostid The id of the host (always 1 for local users).
      * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug message if more found;
      *                        IGNORE_MULTIPLE means return first user, ignore multiple user records found(not recommended);
      *                        MUST_EXIST means throw an exception if no user record or multiple records found.
@@ -166,12 +166,11 @@ class user {
      * @throws dml_exception if user record not found and respective $strictness is set.
      */
     public static function get_user_by_username($username, $fields = '*', $mnethostid = null, $strictness = IGNORE_MISSING) {
-        global $DB, $CFG;
+        global $DB;
 
-        // Because we use the username as the search criteria, we must also restrict our search based on mnet host.
+        // All users are local, use mnethostid = 1.
         if (empty($mnethostid)) {
-            // If empty, we restrict to local users.
-            $mnethostid = $CFG->mnet_localhost_id;
+            $mnethostid = 1;
         }
 
         return $DB->get_record('user', ['username' => $username, 'mnethostid' => $mnethostid], $fields, $strictness);
@@ -182,7 +181,7 @@ class user {
      *
      * @param string $idnumber The idnumber of the user searched.
      * @param string $fields A comma separated list of user fields to be returned, support and noreply user.
-     * @param null|int $mnethostid The id of the remote host.
+     * @param null|int $mnethostid The id of the host (always 1 for local users).
      * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug message if more found;
      *                        IGNORE_MULTIPLE means return first user, ignore multiple user records found(not recommended);
      *                        MUST_EXIST means throw an exception if no user record or multiple records found.
@@ -194,12 +193,11 @@ class user {
         ?int $mnethostid = null,
         int $strictness = IGNORE_MISSING,
     ): stdClass|bool {
-        global $DB, $CFG;
+        global $DB;
 
-        // Because we use the username as the search criteria, we must also restrict our search based on mnet host.
+        // All users are local, use mnethostid = 1.
         if (empty($mnethostid)) {
-            // If empty, we restrict to local users.
-            $mnethostid = $CFG->mnet_localhost_id;
+            $mnethostid = 1;
         }
 
         return $DB->get_record('user', [

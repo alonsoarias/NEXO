@@ -440,7 +440,7 @@ class process {
         }
 
         if (empty($user->mnethostid)) {
-            $user->mnethostid = $CFG->mnet_localhost_id;
+            $user->mnethostid = 1; // All users are local.
         }
 
         return $user;
@@ -487,43 +487,13 @@ class process {
             $this->upt->track('id', $existinguser->id, 'normal', false);
         }
 
-        if ($user->mnethostid == $CFG->mnet_localhost_id) {
-            $remoteuser = false;
+        // All users are local (mnethostid = 1).
+        $remoteuser = false;
 
-            // Find out if username incrementing required.
-            if ($existinguser and $this->get_operation_type() == UU_USER_ADDINC) {
-                $user->username = uu_increment_username($user->username);
-                $existinguser = false;
-            }
-
-        } else {
-            if (!$existinguser or $this->get_operation_type() == UU_USER_ADDINC) {
-                $this->upt->track('status', get_string('errormnetadd', 'tool_uploaduser'), 'error');
-                $this->userserrors++;
-                return;
-            }
-
-            $remoteuser = true;
-
-            // Make sure there are no changes of existing fields except the suspended status.
-            foreach ((array)$existinguser as $k => $v) {
-                if ($k === 'suspended') {
-                    continue;
-                }
-                if (property_exists($user, $k)) {
-                    $user->$k = $v;
-                }
-                if (in_array($k, $this->upt->columns)) {
-                    if ($k === 'password' or $k === 'oldusername' or $k === 'deleted') {
-                        $this->upt->track($k, '', 'normal', false);
-                    } else {
-                        $this->upt->track($k, s($v), 'normal', false);
-                    }
-                }
-            }
-            unset($user->oldusername);
-            unset($user->password);
-            $user->auth = $existinguser->auth;
+        // Find out if username incrementing required.
+        if ($existinguser and $this->get_operation_type() == UU_USER_ADDINC) {
+            $user->username = uu_increment_username($user->username);
+            $existinguser = false;
         }
 
         // Notify about nay username changes.
@@ -646,7 +616,7 @@ class process {
 
             // No guessing when looking for old username, it must be exact match.
             if ($olduser = $DB->get_record('user',
-                    ['username' => $oldusername, 'mnethostid' => $CFG->mnet_localhost_id])) {
+                    ['username' => $oldusername, 'mnethostid' => 1])) {
                 $this->upt->track('id', $olduser->id, 'normal', false);
                 if (is_siteadmin($olduser->id)) {
                     $this->upt->track('status', get_string('usernotrenamedadmin', 'error'), 'error');
@@ -939,7 +909,7 @@ class process {
             $user->confirmed    = 1;
             $user->timemodified = time();
             $user->timecreated  = time();
-            $user->mnethostid   = $CFG->mnet_localhost_id; // We support ONLY local accounts here, sorry.
+            $user->mnethostid   = 1; // We support ONLY local accounts.
 
             if (!isset($user->suspended) or $user->suspended === '') {
                 $user->suspended = 0;

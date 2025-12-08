@@ -1528,26 +1528,6 @@ function upgrade_add_foreign_key_and_indexes() {
     // Launch add key questionid.
     $dbman->add_key($table, $key);
 
-    // Define index last_log_id (not unique) to be added to mnet_host.
-    $table = new xmldb_table('mnet_host');
-    $index = new xmldb_index('last_log_id', XMLDB_INDEX_NOTUNIQUE, ['last_log_id']);
-    // Conditionally launch add index last_log_id.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
-    // Define key userid (foreign) to be added to mnet_session.
-    $table = new xmldb_table('mnet_session');
-    $key = new xmldb_key('userid', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
-    // Launch add key userid.
-    $dbman->add_key($table, $key);
-
-    // Define key mnethostid (foreign) to be added to mnet_session.
-    $table = new xmldb_table('mnet_session');
-    $key = new xmldb_key('mnethostid', XMLDB_KEY_FOREIGN, ['mnethostid'], 'mnet_host', ['id']);
-    // Launch add key mnethostid.
-    $dbman->add_key($table, $key);
-
     // Define key userid (foreign) to be added to grade_import_values.
     $table = new xmldb_table('grade_import_values');
     $key = new xmldb_key('userid', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);

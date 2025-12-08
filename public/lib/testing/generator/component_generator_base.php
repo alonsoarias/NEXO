@@ -72,7 +72,7 @@ abstract class component_generator_base {
         if ($user === null) {
             $user = (object) [
                 'id' => 0,
-                'mnethostid' => $CFG->mnet_localhost_id,
+                'mnethostid' => 1,
             ];
         } else {
             $user = clone($user);

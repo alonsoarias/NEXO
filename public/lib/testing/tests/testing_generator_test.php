@@ -86,7 +86,7 @@ final class testing_generator_test extends \advanced_testcase {
             'middlename' => 'Hopper',
             'alternatename' => 'horse',
             'idnumber' => 'abc1',
-            'mnethostid' => (string)$CFG->mnet_localhost_id,
+            'mnethostid' => '1',
             'username' => 'konic666',
             'password' => 'password1',
             'email' => 'email@example.com',

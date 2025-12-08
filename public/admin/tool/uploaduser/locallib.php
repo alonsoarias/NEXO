@@ -269,7 +269,7 @@ function uu_increment_username($username) {
         $username = $matches[1][0].($matches[2][0]+1);
     }
 
-    if ($DB->record_exists('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+    if ($DB->record_exists('user', array('username'=>$username, 'mnethostid'=>1))) {
         return uu_increment_username($username);
     } else {
         return $username;
