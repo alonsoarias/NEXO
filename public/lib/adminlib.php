@@ -4888,7 +4888,8 @@ class admin_setting_sitesetcheckbox extends admin_setting_configcheckbox {
 }
 
 /**
- * Special text for frontpage - stores data in course table.
+ * Special text for frontpage - stores data in config table.
+ * NEXO: Modified to use config instead of course table since courses are removed.
  * Empty string means not set here. Manual setting is required.
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -4909,8 +4910,10 @@ class admin_setting_sitesettext extends admin_setting_configtext {
      * @return mixed string or null
      */
     public function get_setting() {
-        $site = get_site();
-        return $site->{$this->name} != '' ? $site->{$this->name} : NULL;
+        global $CFG;
+        // NEXO: Get from config instead of course table.
+        $configname = 'site' . $this->name;
+        return !empty($CFG->$configname) ? $CFG->$configname : NULL;
     }
 
     /**
@@ -4920,15 +4923,11 @@ class admin_setting_sitesettext extends admin_setting_configtext {
      * @return mixed true or message string
      */
     public function validate($data) {
-        global $DB, $SITE;
         $cleaned = clean_param($data, PARAM_TEXT);
         if ($cleaned === '') {
             return get_string('required');
         }
-        if ($this->name ==='shortname' &&
-                $DB->record_exists_sql('SELECT id from {course} WHERE shortname = ? AND id <> ?', array($data, $SITE->id))) {
-            return get_string('shortnametaken', 'error', $data);
-        }
+        // NEXO: Removed course shortname uniqueness check since no course table.
         if ("$data" == "$cleaned") { // implicit conversion to string is needed to do exact comparison
             return true;
         } else {
@@ -4943,26 +4942,19 @@ class admin_setting_sitesettext extends admin_setting_configtext {
      * @return string empty or error message
      */
     public function write_setting($data) {
-        global $DB, $SITE, $COURSE;
+        global $CFG;
         $data = trim($data);
         $validated = $this->validate($data);
         if ($validated !== true) {
             return $validated;
         }
 
-        $record = new stdClass();
-        $record->id            = $SITE->id;
-        $record->{$this->name} = $data;
-        $record->timemodified  = time();
+        // NEXO: Store in config instead of course table.
+        $configname = 'site' . $this->name;
+        set_config($configname, $data);
 
-        $DB->update_record('course', $record);
-
-        // Reset caches.
-        $SITE = $DB->get_record('course', array('id'=>$SITE->id), '*', MUST_EXIST);
-        if ($SITE->id == $COURSE->id) {
-            $COURSE = $SITE;
-        }
-        cache_helper::purge_by_event('changesincourse');
+        // Purge caches.
+        purge_all_caches();
 
         return '';
     }
