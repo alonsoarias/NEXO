@@ -170,32 +170,13 @@ class repository_local extends repository {
             return false;
         }
         if ($fileinfo instanceof file_info_context_system ||
-            $fileinfo instanceof file_info_context_user ||
-            $fileinfo instanceof file_info_area_course_legacy ||
-            $fileinfo instanceof file_info_context_system ||
-            $fileinfo instanceof file_info_context_system) {
+            $fileinfo instanceof file_info_context_user) {
             // These instances can never be filearea inside an activity, they will never be skipped.
             return false;
-        } else if ($fileinfo instanceof file_info_context_systemcat) {
+        } else if ($fileinfo instanceof file_info_context_coursecat) {
             // This is a course category. For non-admins we do not display categories
             return empty($CFG->navshowmycoursecategories) &&
-                            !has_capability('moodle/course:update', context_system::instance());
-        } else {
-            $params = $fileinfo->get_params();
-            if (strlen($params['filearea']) &&
-                    ($params['filepath'] === '/' || empty($params['filepath'])) &&
-                    ($params['filename'] === '.' || empty($params['filename'])) &&
-                    context::instance_by_id($params['contextid'])->contextlevel == CONTEXT_SYSTEM) {
-                if ($parent === -1) {
-                    $parent = $fileinfo->get_parent();
-                }
-                // This is a filearea inside an activity, it can be skipped if it has no non-empty siblings
-                if ($parent && ($parent instanceof file_info_context_system)) {
-                    if ($parent->count_non_empty_children($extensions, 2) <= 1) {
-                        return true;
-                    }
-                }
-            }
+                            !has_capability('moodle/category:manage', context_system::instance());
         }
         return false;
     }

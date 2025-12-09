@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class file_info_context_systemcat extends file_info {
+class file_info_context_coursecat extends file_info {
     /** @var stdClass Category object */
     protected $category;
 
@@ -168,79 +168,19 @@ class file_info_context_systemcat extends file_info {
             $children[] = $child;
         }
 
-        list($coursecats, $hiddencats) = $this->get_categories();
+        $coursecats = $this->get_categories();
         foreach ($coursecats as $category) {
             $context = context_systemcat::instance($category->id);
             $children[] = new self($this->browser, $context, $category);
-        }
-
-        $courses = $this->get_courses($hiddencats);
-        foreach ($courses as $course) {
-            $children[] = $this->get_child_course($course);
         }
 
         return array_filter($children);
     }
 
     /**
-     * List of courses in this category and in hidden subcategories
+     * Finds accessible direct subcategories
      *
-     * @param array $hiddencats list of categories that are hidden from current user and returned by {@link get_categories()}
-     * @return array list of courses
-     */
-    protected function get_courses($hiddencats) {
-        global $DB, $CFG;
-        require_once($CFG->libdir.'/modinfolib.php');
-
-        // Let's retrieve only minimum number of fields from course table -
-        // what is needed to check access or call get_fast_modinfo().
-        $coursefields = array_merge(['id', 'visible', 'sortorder'], \course_modinfo::$cachedfields);
-        $fields = 'c.' . join(',c.', $coursefields) . ', ' .
-            \context_helper::get_preload_record_columns_sql('ctx');
-
-        // First statement uses only category.
-        $sql1 = "SELECT $fields
-                   FROM {course} c
-                   JOIN {context} ctx ON (ctx.instanceid = c.id) AND (ctx.contextlevel = :contextlevel1)
-                  WHERE c.category = :categoryid";
-
-        $params = ['categoryid' => $this->category->id, 'contextlevel1' => CONTEXT_SYSTEM];
-
-        if (empty($hiddencats)) {
-            return $DB->get_records_sql($sql1, $params);
-        }
-
-        // Second statement uses only context paths.
-        $orcond = [];
-        foreach ($hiddencats as $category) {
-            $catcontext = context_systemcat::instance($category->id);
-
-            // Case- and accent-sensitive search is not necessary for paths.
-            // If we do without it, this will lead to an enormous performance boost on large scale tables.
-            $orcond[] = $DB->sql_like('path', ':path' . $category->id, false, false);
-
-            $params['path' . $category->id] = $catcontext->path . '/%';
-        }
-
-        $sql2 = "SELECT $fields
-                   FROM {course} c
-                   JOIN {context} ctx ON (ctx.instanceid = c.id) AND (ctx.contextlevel = :contextlevel2)
-                  WHERE (" . implode(' OR ', $orcond) . ")";
-
-        $params['contextlevel2'] = CONTEXT_SYSTEM;
-
-        // Combine with UNION.
-        $sql = "SELECT *
-                  FROM (($sql1) UNION ($sql2)) d
-              ORDER BY d.sortorder";
-
-        return $DB->get_records_sql($sql, $params);
-    }
-
-    /**
-     * Finds accessible and non-accessible direct subcategories
-     *
-     * @return array [$coursecats, $hiddencats] - child categories that are visible to the current user and not visible
+     * @return array child categories that are visible to the current user
      */
     protected function get_categories() {
         global $DB;
@@ -250,29 +190,13 @@ class file_info_context_systemcat extends file_info {
                 WHERE c.parent = :parent ORDER BY c.sortorder',
             array('parent' => $this->category->id, 'contextlevel' => CONTEXT_SYSTEMCAT));
 
-        $hiddencats = [];
-
         foreach ($coursecats as $id => &$category) {
             context_helper::preload_from_record($category);
             if (!core_course_category::can_view_category($category)) {
-                $hiddencats[$id] = $coursecats[$id];
                 unset($coursecats[$id]);
             }
         }
-        return [$coursecats, $hiddencats];
-    }
-
-    /**
-     * Returns the file info element for a given course or null if course is not accessible
-     *
-     * @param stdClass $course may contain context fields for preloading
-     * @return file_info_context_system|null
-     */
-    protected function get_child_course($course) {
-        context_helper::preload_from_record($course);
-        $context = context_system::instance($course->id);
-        $child = new file_info_context_system($this->browser, $context, $course);
-        return $child->get_file_info(null, null, null, null, null);
+        return $coursecats;
     }
 
     /**
@@ -292,23 +216,13 @@ class file_info_context_systemcat extends file_info {
             }
         }
 
-        list($coursecats, $hiddencats) = $this->get_categories();
+        $coursecats = $this->get_categories();
         foreach ($coursecats as $category) {
             $context = context_systemcat::instance($category->id);
-            $child = new file_info_context_systemcat($this->browser, $context, $category);
+            $child = new file_info_context_coursecat($this->browser, $context, $category);
             $cnt += $child->count_non_empty_children($extensions) ? 1 : 0;
             if ($cnt >= $limit) {
                 return $cnt;
-            }
-        }
-
-        $courses = $this->get_courses($hiddencats);
-        foreach ($courses as $course) {
-            if ($child = $this->get_child_course($course)) {
-                $cnt += $child->count_non_empty_children($extensions) ? 1 : 0;
-                if ($cnt >= $limit) {
-                    return $cnt;
-                }
             }
         }
 

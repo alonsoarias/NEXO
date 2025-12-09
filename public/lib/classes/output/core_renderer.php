@@ -27,7 +27,6 @@ use core_useragent;
 use core\check\check as check_check;
 use core\check\result as check_result;
 use core\context\system as context_system;
-use core\context\course as context_system;
 use core\di;
 use core\exception\coding_exception;
 use core\hook\manager as hook_manager;
