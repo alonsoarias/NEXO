@@ -215,12 +215,13 @@ function useredit_update_trackforums($user, $usernew) {
 /**
  * Updates a users interests.
  *
+ * NEXO: Tags system is not available.
+ *
  * @param stdClass $user
  * @param array $interests
  */
 function useredit_update_interests($user, $interests) {
-    core_tag_tag::set_item_tags('core', 'user', $user->id,
-            context_user::instance($user->id), $interests);
+    // NEXO: Tags system is not available, interests are not stored.
 }
 
 /**

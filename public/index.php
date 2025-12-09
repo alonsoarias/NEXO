@@ -50,10 +50,7 @@ if ($hassiteconfig && moodle_needs_upgrading()) {
     redirect($CFG->wwwroot .'/'. $CFG->admin .'/index.php');
 }
 
-// Redirect to dashboard if logged in.
-if (isloggedin() && !isguestuser()) {
-    redirect($CFG->wwwroot .'/my/');
-}
+// NEXO: Dashboard (/my/) has been removed, all users see the homepage.
 
 $PAGE->set_pagetype('site-index');
 $PAGE->set_docs_path('');
@@ -62,7 +59,7 @@ $PAGE->set_heading($SITE->fullname);
 
 echo $OUTPUT->header();
 
-// Front page content for guests.
+// Front page content.
 echo html_writer::start_div('frontpage-container');
 
 // Site summary if available.
@@ -70,8 +67,8 @@ if (!empty($SITE->summary)) {
     echo html_writer::div(format_text($SITE->summary, FORMAT_HTML), 'site-summary mb-4');
 }
 
-// Login prompt for guests.
-if (!isloggedin() || isguestuser()) {
+// Login prompt for non-logged users.
+if (!isloggedin()) {
     echo html_writer::start_div('login-prompt text-center my-5');
     echo html_writer::tag('h2', get_string('loginto', 'moodle', $SITE->fullname), ['class' => 'mb-4']);
     echo html_writer::start_div('login-buttons');
