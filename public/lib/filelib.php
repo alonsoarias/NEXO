@@ -348,6 +348,30 @@ function file_get_unused_draft_itemid() {
 }
 
 /**
+ * Initialise file picker options.
+ *
+ * NEXO: Simplified version without repository integration.
+ * Original function was in repository/lib.php.
+ *
+ * @param stdClass $args Options for the file picker
+ * @return stdClass File picker options
+ */
+function initialise_filepicker($args) {
+    $options = new stdClass();
+    $options->accepted_types = $args->accepted_types ?? '*';
+    $options->return_types = $args->return_types ?? FILE_INTERNAL;
+    $options->context = $args->context ?? context_system::instance();
+    $options->env = $args->env ?? 'filepicker';
+    $options->client_id = uniqid();
+    $options->itemid = $args->itemid ?? 0;
+    $options->maxbytes = $args->maxbytes ?? -1;
+    $options->maxfiles = $args->maxfiles ?? 1;
+    $options->buttonname = $args->buttonname ?? false;
+    $options->repositories = []; // NEXO: No repositories available.
+    return $options;
+}
+
+/**
  * Initialise a draft file area from a real one by copying the files. A draft
  * area will be created if one does not already exist. Normally you should
  * get $draftitemid by calling file_get_submitted_draft_itemid('elementname');
