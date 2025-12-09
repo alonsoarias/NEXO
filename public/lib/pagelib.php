@@ -1152,11 +1152,7 @@ class moodle_page {
 
         if (!$this->_context) {
             // NEXO: Use system context since courses don't exist.
-            if ($this->_course->id == $SITE->id) {
-                $this->set_context(context_system::instance());
-            } else {
-                $this->set_context(context_system::instance($this->_course->id));
-            }
+            $this->set_context(context_system::instance());
         }
 
         // NEXO: Course format removed - always set format-site.
@@ -1198,6 +1194,8 @@ class moodle_page {
     /**
      * The course module that this page belongs to (if it does belong to one).
      *
+     * NEXO: Course modules are not supported in this installation.
+     *
      * @param stdClass|cm_info $cm a record from course_modules table or cm_info from get_fast_modinfo().
      * @param stdClass $course
      * @param stdClass $module
@@ -1205,45 +1203,8 @@ class moodle_page {
      * @throws coding_exception
      */
     public function set_cm($cm, $course = null, $module = null) {
-        global $DB, $CFG, $SITE;
-
-        if (!isset($cm->id) || !isset($cm->course)) {
-            throw new coding_exception('Invalid $cm. It has to be instance of cm_info or record from the course_modules table.');
-        }
-
-        if (!$this->_course || $this->_course->id != $cm->course) {
-            if (!$course) {
-                $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-            }
-            if ($course->id != $cm->course) {
-                throw new coding_exception('The course you passed to $PAGE->set_cm does not correspond to the $cm.');
-            }
-            $this->set_course($course);
-        }
-
-        // Make sure we have a $cm from get_fast_modinfo as this contains activity access details.
-        if (!($cm instanceof cm_info)) {
-            $modinfo = get_fast_modinfo($this->_course);
-            $cm = $modinfo->get_cm($cm->id);
-        }
-        $this->_cm = $cm;
-
-        // Unfortunately the context setting is a mess.
-        // Let's try to work around some common block problems and show some debug messages.
-        if (empty($this->_context) or $this->_context->contextlevel != CONTEXT_BLOCK) {
-            $context = context_system::instance($cm->id);
-            $this->set_context($context);
-        }
-
-        if ($module) {
-            $this->set_activity_record($module);
-        }
-
-        // Notify course format that this page is set for the course module.
-        if ($this->_course->id != $SITE->id) {
-            require_once($CFG->dirroot.'/course/lib.php');
-            course_get_format($this->_course)->page_set_cm($this);
-        }
+        // NEXO: Course modules are not supported.
+        throw new coding_exception('Course modules are not supported in this installation.');
     }
 
     /**
