@@ -146,7 +146,7 @@ class MoodleQuickForm_course extends MoodleQuickForm_autocomplete {
                 FROM {course} c
                 JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :contextcourse
                 WHERE c.id ". $whereclause." ORDER BY c.sortorder";
-        $list = $DB->get_records_sql($sql, array('contextcourse' => CONTEXT_COURSE) + $params);
+        $list = $DB->get_records_sql($sql, array('contextcourse' => CONTEXT_SYSTEM) + $params);
 
         $mycourses = enrol_get_my_courses(null, null, 0, array_keys($list));
         $coursestoselect = array();

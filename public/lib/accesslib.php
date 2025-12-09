@@ -118,7 +118,7 @@ define('CONTEXT_SYSTEM', 10);
 /** User context level -  one instance for each user describing what others can do to user */
 define('CONTEXT_USER', 30);
 /** Course category context level - one instance for each category */
-define('CONTEXT_COURSECAT', 40);
+define('CONTEXT_SYSTEMCAT', 40);
 /**
  * Block context level - one instance for each block, sticky blocks are tricky
  * because ppl think they should be able to override them at lower contexts.
@@ -3936,7 +3936,7 @@ function get_user_capability_contexts(string $capability, bool $getcategories, $
               FROM {course_categories} c
                JOIN {context} x ON c.id = x.instanceid AND x.contextlevel = ?
             $contextlimitsql
-            $categoryorderby", array_merge([CONTEXT_COURSECAT], $contextlimitparams));
+            $categoryorderby", array_merge([CONTEXT_SYSTEMCAT], $contextlimitparams));
         $basedlimit = $limit;
         foreach ($rs as $category) {
             $categories[] = $category;
@@ -4677,7 +4677,7 @@ function get_sorted_contexts($select, $params = array()) {
             SELECT ctx.*
               FROM {context} ctx
               LEFT JOIN {user} u ON ctx.contextlevel = " . CONTEXT_USER . " AND u.id = ctx.instanceid
-              LEFT JOIN {course_categories} cat ON ctx.contextlevel = " . CONTEXT_COURSECAT . " AND cat.id = ctx.instanceid
+              LEFT JOIN {course_categories} cat ON ctx.contextlevel = " . CONTEXT_SYSTEMCAT . " AND cat.id = ctx.instanceid
               LEFT JOIN {block_instances} bi ON ctx.contextlevel = " . CONTEXT_BLOCK . " AND bi.id = ctx.instanceid
            $select
           ORDER BY ctx.contextlevel, bi.defaultregion, COALESCE(cat.sortorder, bi.defaultweight), u.lastname, u.firstname

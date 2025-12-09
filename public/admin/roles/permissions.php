@@ -107,17 +107,17 @@ switch ($context->contextlevel) {
         $PAGE->set_heading($fullname);
         $showroles = 1;
         break;
-    case CONTEXT_COURSECAT:
+    case CONTEXT_SYSTEMCAT:
         core_course_category::page_setup();
         break;
-    case CONTEXT_COURSE:
+    case CONTEXT_SYSTEM:
         if ($isfrontpage) {
             $PAGE->set_heading(get_string('frontpage', 'admin'));
         } else {
             $PAGE->set_heading($course->fullname);
         }
         break;
-    case CONTEXT_MODULE:
+    case CONTEXT_SYSTEM:
         $PAGE->set_heading($context->get_context_name(false));
         $PAGE->set_cacheable(false);
         break;
@@ -207,7 +207,7 @@ if ($capability && ($allowoverrides || ($allowsafeoverrides && is_safe_capabilit
 $PAGE->set_navigation_overflow_state(false);
 
 echo $OUTPUT->header();
-if (in_array($context->contextlevel, [CONTEXT_COURSE, CONTEXT_MODULE, CONTEXT_COURSECAT])) {
+if (in_array($context->contextlevel, [CONTEXT_SYSTEM, CONTEXT_SYSTEM, CONTEXT_SYSTEMCAT])) {
     echo $OUTPUT->render_participants_tertiary_nav($course);
 }
 

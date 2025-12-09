@@ -185,7 +185,7 @@ class repository_local extends repository {
             if (strlen($params['filearea']) &&
                     ($params['filepath'] === '/' || empty($params['filepath'])) &&
                     ($params['filename'] === '.' || empty($params['filename'])) &&
-                    context::instance_by_id($params['contextid'])->contextlevel == CONTEXT_MODULE) {
+                    context::instance_by_id($params['contextid'])->contextlevel == CONTEXT_SYSTEM) {
                 if ($parent === -1) {
                     $parent = $fileinfo->get_parent();
                 }

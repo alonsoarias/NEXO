@@ -143,7 +143,7 @@ class testing_repository_generator extends component_generator_base {
 
             $context = context::instance_by_id($record['contextid']);
             unset($record['contextid']);
-            if (!in_array($context->contextlevel, array(CONTEXT_SYSTEM, CONTEXT_COURSE, CONTEXT_USER))) {
+            if (!in_array($context->contextlevel, array(CONTEXT_SYSTEM, CONTEXT_SYSTEM, CONTEXT_USER))) {
                 throw new coding_exception('Wrong contextid passed in testing_repository_generator::create_instance() $record');
             }
 

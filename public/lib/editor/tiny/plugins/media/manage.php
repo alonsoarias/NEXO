@@ -37,7 +37,7 @@ $elementid = optional_param('elementid', '', PARAM_TEXT);
 $removeorphaneddrafts = optional_param('removeorphaneddrafts', 0, PARAM_INT);
 
 $context = context::instance_by_id($contextid);
-if ($context->contextlevel == CONTEXT_MODULE) {
+if ($context->contextlevel == CONTEXT_SYSTEM) {
     // Module context.
     $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
     require_login($cm->course, true, $cm);

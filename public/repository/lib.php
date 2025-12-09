@@ -101,7 +101,7 @@ class repository_type implements cacheable_object {
     public function get_contextvisibility($context) {
         global $USER;
 
-        if ($context->contextlevel == CONTEXT_COURSE) {
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
             return $this->_options['enablecourseinstances'];
         }
 
@@ -777,9 +777,9 @@ abstract class repository implements cacheable_object {
                 if ($repocontext->instanceid != $USER->id) {
                     $can = false;
                 }
-            } else if ($repocontext->contextlevel == CONTEXT_COURSE) {
+            } else if ($repocontext->contextlevel == CONTEXT_SYSTEM) {
                 // The repository is a course one. Let's check that we are on the right course.
-                if (in_array($currentcontext->contextlevel, array(CONTEXT_COURSE, CONTEXT_MODULE, CONTEXT_BLOCK))) {
+                if (in_array($currentcontext->contextlevel, array(CONTEXT_SYSTEM, CONTEXT_SYSTEM, CONTEXT_BLOCK))) {
                     $coursecontext = $currentcontext->get_course_context();
                     if ($coursecontext->instanceid != $repocontext->instanceid) {
                         $can = false;
@@ -1839,7 +1839,7 @@ abstract class repository implements cacheable_object {
         if ($repocontext->contextlevel == CONTEXT_USER && $repocontext->instanceid != $USER->id) {
             // If the context of this instance is a user context, we need to be this user.
             return false;
-        } else if ($repocontext->contextlevel == CONTEXT_MODULE && !has_capability('moodle/course:update', $repocontext)) {
+        } else if ($repocontext->contextlevel == CONTEXT_SYSTEM && !has_capability('moodle/course:update', $repocontext)) {
             // We need to have permissions on the course to edit the instance.
             return false;
         } else if ($repocontext->contextlevel == CONTEXT_SYSTEM && !has_capability('moodle/site:config', $repocontext)) {

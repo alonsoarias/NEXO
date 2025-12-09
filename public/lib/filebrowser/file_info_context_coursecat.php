@@ -204,7 +204,7 @@ class file_info_context_coursecat extends file_info {
                    JOIN {context} ctx ON (ctx.instanceid = c.id) AND (ctx.contextlevel = :contextlevel1)
                   WHERE c.category = :categoryid";
 
-        $params = ['categoryid' => $this->category->id, 'contextlevel1' => CONTEXT_COURSE];
+        $params = ['categoryid' => $this->category->id, 'contextlevel1' => CONTEXT_SYSTEM];
 
         if (empty($hiddencats)) {
             return $DB->get_records_sql($sql1, $params);
@@ -227,7 +227,7 @@ class file_info_context_coursecat extends file_info {
                    JOIN {context} ctx ON (ctx.instanceid = c.id) AND (ctx.contextlevel = :contextlevel2)
                   WHERE (" . implode(' OR ', $orcond) . ")";
 
-        $params['contextlevel2'] = CONTEXT_COURSE;
+        $params['contextlevel2'] = CONTEXT_SYSTEM;
 
         // Combine with UNION.
         $sql = "SELECT *
@@ -248,7 +248,7 @@ class file_info_context_coursecat extends file_info {
         $coursecats = $DB->get_records_sql('SELECT ' . $fields . ' FROM {course_categories} c
                 LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)
                 WHERE c.parent = :parent ORDER BY c.sortorder',
-            array('parent' => $this->category->id, 'contextlevel' => CONTEXT_COURSECAT));
+            array('parent' => $this->category->id, 'contextlevel' => CONTEXT_SYSTEMCAT));
 
         $hiddencats = [];
 

@@ -56,7 +56,7 @@ class content {
 
         $canexport = false;
 
-        if ($currentcontext->contextlevel == CONTEXT_COURSE) {
+        if ($currentcontext->contextlevel == CONTEXT_SYSTEM) {
             if ($CFG->downloadcoursecontentallowed &&
                     has_capability('moodle/course:downloadcoursecontent', $currentcontext, $user)) {
 
@@ -70,7 +70,7 @@ class content {
                 }
 
             }
-        } else if ($currentcontext->contextlevel == CONTEXT_MODULE) {
+        } else if ($currentcontext->contextlevel == CONTEXT_SYSTEM) {
             $cm = get_fast_modinfo($currentcontext->get_course_context()->instanceid)->cms[$currentcontext->instanceid];
 
             // Do not export course content if disabled at activity level.
@@ -95,7 +95,7 @@ class content {
     public static function export_context(context $requestedcontext, stdClass $user, zipwriter $archive): void {
         global $USER;
 
-        if ($requestedcontext->contextlevel != CONTEXT_COURSE) {
+        if ($requestedcontext->contextlevel != CONTEXT_SYSTEM) {
             throw new coding_exception('The Content Export API currently only supports the export of courses');
         }
 
@@ -122,11 +122,11 @@ class content {
 
         // Filter out any context which cannot be exported.
         $contextlist = array_filter($contextlist, function($context) use ($user, $modinfo): bool {
-            if ($context->contextlevel == CONTEXT_COURSE) {
+            if ($context->contextlevel == CONTEXT_SYSTEM) {
                 return self::can_export_context($context, $user);
             }
 
-            if ($context->contextlevel == CONTEXT_MODULE) {
+            if ($context->contextlevel == CONTEXT_SYSTEM) {
                 if (empty($modinfo->cms[$context->instanceid])) {
                     // Unknown coursemodule in the course.
                     return false;
@@ -151,7 +151,7 @@ class content {
         $exportedcontexts = [];
         $coursecontroller = new course_exporter($requestedcontext->get_course_context(), $user, $archive);
         foreach ($contextlist as $context) {
-            if ($context->contextlevel === CONTEXT_MODULE) {
+            if ($context->contextlevel === CONTEXT_SYSTEM) {
                 $cm = $modinfo->cms[$context->instanceid];
                 $component = "mod_{$cm->modname}";
 
@@ -169,7 +169,7 @@ class content {
                 $coursecontroller->export_mod_content($context, $exportables);
 
                 $exportedcontexts[$context->id] = $context;
-            } else if ($context->contextlevel === CONTEXT_COURSE) {
+            } else if ($context->contextlevel === CONTEXT_SYSTEM) {
                 // Export the course content.
                 $coursecontroller->export_course($exportedcontexts);
             }

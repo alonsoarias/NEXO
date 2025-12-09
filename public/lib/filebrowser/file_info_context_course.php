@@ -529,7 +529,7 @@ class file_info_context_course extends file_info {
 
         $params1 = ['contextid' => $this->context->id,
             'emptyfilename' => '.',
-            'contextlevel' => CONTEXT_MODULE,
+            'contextlevel' => CONTEXT_SYSTEM,
             'course' => $this->course->id];
         $ctxfieldsas = context_helper::get_preload_record_columns_sql('ctx');
         $ctxfields = implode(', ', array_keys(context_helper::get_preload_record_columns('ctx')));

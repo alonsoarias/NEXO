@@ -104,7 +104,7 @@ class core_renderer extends \core_renderer {
             // When checking user_can_view_profile(), either:
             // If the page context is course, check the course context (from the page object) or;
             // If page context is NOT course, then check across all courses.
-            $course = ($this->page->context->contextlevel == CONTEXT_COURSE) ? $this->page->course : null;
+            $course = ($this->page->context->contextlevel == CONTEXT_SYSTEM) ? $this->page->course : null;
 
             if (user_can_view_profile($user, $course)) {
                 // Use the user's full name if the heading isn't set.
@@ -194,7 +194,7 @@ class core_renderer extends \core_renderer {
         }
 
         $prefix = null;
-        if ($context->contextlevel == CONTEXT_MODULE) {
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
             if ($this->page->course->format === 'singleactivity') {
                 $heading = format_string($this->page->course->fullname, true, ['context' => $context]);
             } else {

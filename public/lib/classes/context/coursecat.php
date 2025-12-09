@@ -30,7 +30,7 @@ use coding_exception, moodle_url;
  * @since     Moodle 4.2
  */
 class coursecat extends context {
-    /** @var int numeric context level value matching legacy CONTEXT_COURSECAT */
+    /** @var int numeric context level value matching legacy CONTEXT_SYSTEMCAT */
     public const LEVEL = 40;
 
     /**

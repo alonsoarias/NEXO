@@ -188,7 +188,7 @@ final class provider_test extends provider_testcase {
             /** @var \core_privacy\tests\request\content_writer $writer */
             $writer = writer::with_context($context);
             $this->assertTrue($writer->has_any_data());
-            if ($context->contextlevel == CONTEXT_MODULE) {
+            if ($context->contextlevel == CONTEXT_SYSTEM) {
                 if ($data = (array)$writer->get_data($subcontextstudent)) {
                     $this->assertEquals($user->id, reset($data)->userid);
                 }
@@ -197,7 +197,7 @@ final class provider_test extends provider_testcase {
                     $this->assertEquals($strpermissions[CAP_ALLOW], reset($data)->permission);
                 }
             }
-            if ($context->contextlevel == CONTEXT_COURSE) {
+            if ($context->contextlevel == CONTEXT_SYSTEM) {
                 if ($data = (array)$writer->get_data($subcontextstudent)) {
                     $this->assertEquals($user->id, reset($data)->userid);
                 }
@@ -205,7 +205,7 @@ final class provider_test extends provider_testcase {
                     $this->assertEquals('moodle/backup:backupcourse', reset($data)->capability);
                 }
             }
-            if ($context->contextlevel == CONTEXT_COURSECAT) {
+            if ($context->contextlevel == CONTEXT_SYSTEMCAT) {
                 if ($data = (array)$writer->get_data($subcontextmanager)) {
                     $this->assertEquals($user->id, reset($data)->modifierid);
                 }
@@ -264,13 +264,13 @@ final class provider_test extends provider_testcase {
         $block = $this->getDataGenerator()->create_block('online_users');
         $blockcontext = \context_block::instance($block->id);
 
-        // Role assignments CONTEXT_COURSE.
+        // Role assignments CONTEXT_SYSTEM.
         role_assign($student->id, $user->id, $coursecontext->id);
         role_assign($student->id, $user2->id, $coursecontext->id);
         role_assign($student->id, $user3->id, $coursecontext->id);
         $count = $DB->count_records('role_assignments', ['contextid' => $coursecontext->id]);
         $this->assertEquals(3, $count);
-        // Role assignments CONTEXT_COURSECAT.
+        // Role assignments CONTEXT_SYSTEMCAT.
         role_assign($student->id, $user2->id, $coursecatcontext->id);
         role_assign($student->id, $user3->id, $coursecatcontext->id);
         $count = $DB->count_records('role_assignments', ['contextid' => $coursecatcontext->id]);
@@ -279,7 +279,7 @@ final class provider_test extends provider_testcase {
         role_assign($student->id, $user->id, $systemcontext->id);
         $count = $DB->count_records('role_assignments', ['contextid' => $systemcontext->id]);
         $this->assertEquals(1, $count);
-        // Role assignments CONTEXT_MODULE.
+        // Role assignments CONTEXT_SYSTEM.
         role_assign($student->id, $user->id, $cmcontext->id);
         $count = $DB->count_records('role_assignments', ['contextid' => $cmcontext->id]);
         $this->assertEquals(1, $count);
@@ -292,7 +292,7 @@ final class provider_test extends provider_testcase {
         $count = $DB->count_records('role_assignments', ['contextid' => $usercontext2->id]);
         $this->assertEquals(1, $count);
 
-        // Delete data based on CONTEXT_COURSE context.
+        // Delete data based on CONTEXT_SYSTEM context.
         provider::delete_data_for_all_users_in_context($coursecontext);
         // After deletion, the role_assignments entries for this context should have been deleted.
         $count = $DB->count_records('role_assignments', ['contextid' => $coursecontext->id]);
@@ -304,7 +304,7 @@ final class provider_test extends provider_testcase {
         $this->assertEquals(1, $count);
         $count = $DB->count_records('role_assignments', ['contextid' => $cmcontext->id]);
         $this->assertEquals(1, $count);
-        // Delete data based on CONTEXT_COURSECAT context.
+        // Delete data based on CONTEXT_SYSTEMCAT context.
         provider::delete_data_for_all_users_in_context($coursecatcontext);
         // After deletion, the role_assignments entries for this context should have been deleted.
         $count = $DB->count_records('role_assignments', ['contextid' => $coursecatcontext->id]);
@@ -314,7 +314,7 @@ final class provider_test extends provider_testcase {
         // After deletion, the role_assignments entries for this context should have been deleted.
         $count = $DB->count_records('role_assignments', ['contextid' => $systemcontext->id]);
         $this->assertEquals(0, $count);
-        // Delete data based on CONTEXT_MODULE context.
+        // Delete data based on CONTEXT_SYSTEM context.
         provider::delete_data_for_all_users_in_context($cmcontext);
         // After deletion, the role_assignments entries for this context should have been deleted.
         $count = $DB->count_records('role_assignments', ['contextid' => $cmcontext->id]);
@@ -511,14 +511,14 @@ final class provider_test extends provider_testcase {
         $studentrole = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);
         $managerrole = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
 
-        // Role assignments CONTEXT_COURSE.
+        // Role assignments CONTEXT_SYSTEM.
         role_assign($studentrole->id, $user1->id, $coursecontext1->id);
         role_assign($studentrole->id, $user2->id, $coursecontext1->id);
-        // Role assignments CONTEXT_COURSECAT.
+        // Role assignments CONTEXT_SYSTEMCAT.
         role_assign($studentrole->id, $user2->id, $coursecatcontext->id);
         // Role assignments CONTEXT_SYSTEM.
         role_assign($studentrole->id, $user1->id, $systemcontext->id);
-        // Role assignments CONTEXT_MODULE.
+        // Role assignments CONTEXT_SYSTEM.
         role_assign($studentrole->id, $user2->id, $cmcontext->id);
         // Role assigments CONTEXT_BLOCK.
         role_assign($studentrole->id, $user1->id, $blockcontext->id);
@@ -631,14 +631,14 @@ final class provider_test extends provider_testcase {
         $studentrole = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);
         $managerrole = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
 
-        // Role assignments CONTEXT_COURSE.
+        // Role assignments CONTEXT_SYSTEM.
         role_assign($studentrole->id, $user1->id, $coursecontext1->id);
         role_assign($studentrole->id, $user2->id, $coursecontext1->id);
-        // Role assignments CONTEXT_COURSECAT.
+        // Role assignments CONTEXT_SYSTEMCAT.
         role_assign($studentrole->id, $user2->id, $coursecatcontext->id);
         // Role assignments CONTEXT_SYSTEM.
         role_assign($studentrole->id, $user1->id, $systemcontext->id);
-        // Role assignments CONTEXT_MODULE.
+        // Role assignments CONTEXT_SYSTEM.
         role_assign($studentrole->id, $user2->id, $cmcontext->id);
         // Role assigments CONTEXT_BLOCK.
         role_assign($studentrole->id, $user1->id, $blockcontext->id);

@@ -173,11 +173,11 @@ final class roles_test extends core_reportbuilder_testcase {
             // Context.
             'Filter context level' => ['context:level', [
                 'context:level_operator' => select::EQUAL_TO,
-                'context:level_value' => CONTEXT_COURSE,
+                'context:level_value' => CONTEXT_SYSTEM,
             ], true],
             'Filter context level (no match)' => ['context:level', [
                 'context:level_operator' => select::EQUAL_TO,
-                'context:level_value' => CONTEXT_COURSECAT,
+                'context:level_value' => CONTEXT_SYSTEMCAT,
             ], false],
 
             // User.

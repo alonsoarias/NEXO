@@ -88,9 +88,9 @@ class defaults_page implements renderable, templatable {
         $data = new stdClass();
 
         // Set tab URLs.
-        $coursecaturl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_COURSECAT]);
-        $courseurl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_COURSE]);
-        $moduleurl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_MODULE]);
+        $coursecaturl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_SYSTEMCAT]);
+        $courseurl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_SYSTEM]);
+        $moduleurl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_SYSTEM]);
         $blockurl = new moodle_url('/admin/tool/dataprivacy/defaults.php', ['mode' => CONTEXT_BLOCK]);
         $data->coursecaturl = $coursecaturl;
         $data->courseurl = $courseurl;
@@ -99,13 +99,13 @@ class defaults_page implements renderable, templatable {
 
         // Set display mode.
         switch ($this->mode) {
-            case CONTEXT_COURSECAT:
+            case CONTEXT_SYSTEMCAT:
                 $data->modecoursecat = true;
                 break;
-            case CONTEXT_COURSE:
+            case CONTEXT_SYSTEM:
                 $data->modecourse = true;
                 break;
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
                 $data->modemodule = true;
                 break;
             case CONTEXT_BLOCK:

@@ -1557,11 +1557,11 @@ class external extends external_api {
         $modoptions = [];
 
         // Get the module-level defaults. data_registry::get_defaults falls back to this when there are no activity defaults.
-        list($levelpurpose, $levelcategory) = data_registry::get_defaults(CONTEXT_MODULE);
+        list($levelpurpose, $levelcategory) = data_registry::get_defaults(CONTEXT_SYSTEM);
         foreach ($modplugins as $name) {
             // Check if we have default purpose and category for this module if we want don't want to fetch everything.
             if ($nodefaults) {
-                list($purpose, $category) = data_registry::get_defaults(CONTEXT_MODULE, $name);
+                list($purpose, $category) = data_registry::get_defaults(CONTEXT_SYSTEM, $name);
                 // Compare this with the module-level defaults.
                 if ($purpose !== $levelpurpose || $category !== $levelcategory) {
                     // If the defaults for this activity has been already set, there's no need to add this in the list of options.

@@ -165,9 +165,9 @@ abstract class base_message extends \core_search\base {
             $context = \context_system::instance();
         }
         switch ($context->contextlevel) {
-            case CONTEXT_COURSECAT:
-            case CONTEXT_COURSE:
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEMCAT:
+            case CONTEXT_SYSTEM:
+            case CONTEXT_SYSTEM:
             case CONTEXT_BLOCK:
                 // There are no messages in any of these contexts so nothing can be found.
                 return null;

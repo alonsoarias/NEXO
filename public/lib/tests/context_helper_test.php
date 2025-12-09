@@ -41,16 +41,16 @@ final class context_helper_test extends \advanced_testcase {
         $this->assertSame(context\user::class, context_helper::parse_external_level((string)CONTEXT_USER));
 
         $this->assertSame(context\coursecat::class, context_helper::parse_external_level('coursecat'));
-        $this->assertSame(context\coursecat::class, context_helper::parse_external_level(CONTEXT_COURSECAT));
-        $this->assertSame(context\coursecat::class, context_helper::parse_external_level((string)CONTEXT_COURSECAT));
+        $this->assertSame(context\coursecat::class, context_helper::parse_external_level(CONTEXT_SYSTEMCAT));
+        $this->assertSame(context\coursecat::class, context_helper::parse_external_level((string)CONTEXT_SYSTEMCAT));
 
         $this->assertSame(context\course::class, context_helper::parse_external_level('course'));
-        $this->assertSame(context\course::class, context_helper::parse_external_level(CONTEXT_COURSE));
-        $this->assertSame(context\course::class, context_helper::parse_external_level((string)CONTEXT_COURSE));
+        $this->assertSame(context\course::class, context_helper::parse_external_level(CONTEXT_SYSTEM));
+        $this->assertSame(context\course::class, context_helper::parse_external_level((string)CONTEXT_SYSTEM));
 
         $this->assertSame(context\module::class, context_helper::parse_external_level('module'));
-        $this->assertSame(context\module::class, context_helper::parse_external_level(CONTEXT_MODULE));
-        $this->assertSame(context\module::class, context_helper::parse_external_level((string)CONTEXT_MODULE));
+        $this->assertSame(context\module::class, context_helper::parse_external_level(CONTEXT_SYSTEM));
+        $this->assertSame(context\module::class, context_helper::parse_external_level((string)CONTEXT_SYSTEM));
 
         $this->assertSame(context\block::class, context_helper::parse_external_level('block'));
         $this->assertSame(context\block::class, context_helper::parse_external_level(CONTEXT_BLOCK));
@@ -93,14 +93,14 @@ final class context_helper_test extends \advanced_testcase {
         $this->assertSame(context\user::class, context_helper::get_class_for_level(CONTEXT_USER));
         $this->assertSame(context\user::class, context_helper::get_class_for_level((string)CONTEXT_USER));
 
-        $this->assertSame(context\coursecat::class, context_helper::get_class_for_level(CONTEXT_COURSECAT));
-        $this->assertSame(context\coursecat::class, context_helper::get_class_for_level((string)CONTEXT_COURSECAT));
+        $this->assertSame(context\coursecat::class, context_helper::get_class_for_level(CONTEXT_SYSTEMCAT));
+        $this->assertSame(context\coursecat::class, context_helper::get_class_for_level((string)CONTEXT_SYSTEMCAT));
 
-        $this->assertSame(context\course::class, context_helper::get_class_for_level(CONTEXT_COURSE));
-        $this->assertSame(context\course::class, context_helper::get_class_for_level((string)CONTEXT_COURSE));
+        $this->assertSame(context\course::class, context_helper::get_class_for_level(CONTEXT_SYSTEM));
+        $this->assertSame(context\course::class, context_helper::get_class_for_level((string)CONTEXT_SYSTEM));
 
-        $this->assertSame(context\module::class, context_helper::get_class_for_level(CONTEXT_MODULE));
-        $this->assertSame(context\module::class, context_helper::get_class_for_level((string)CONTEXT_MODULE));
+        $this->assertSame(context\module::class, context_helper::get_class_for_level(CONTEXT_SYSTEM));
+        $this->assertSame(context\module::class, context_helper::get_class_for_level((string)CONTEXT_SYSTEM));
 
         $this->assertSame(context\block::class, context_helper::get_class_for_level(CONTEXT_BLOCK));
         $this->assertSame(context\block::class, context_helper::get_class_for_level((string)CONTEXT_BLOCK));
@@ -128,14 +128,14 @@ final class context_helper_test extends \advanced_testcase {
         $this->assertArrayHasKey(CONTEXT_USER, $levels);
         $this->assertSame(context\user::class, $levels[CONTEXT_USER]);
 
-        $this->assertArrayHasKey(CONTEXT_COURSECAT, $levels);
-        $this->assertSame(context\coursecat::class, $levels[CONTEXT_COURSECAT]);
+        $this->assertArrayHasKey(CONTEXT_SYSTEMCAT, $levels);
+        $this->assertSame(context\coursecat::class, $levels[CONTEXT_SYSTEMCAT]);
 
-        $this->assertArrayHasKey(CONTEXT_COURSE, $levels);
-        $this->assertSame(context\course::class, $levels[CONTEXT_COURSE]);
+        $this->assertArrayHasKey(CONTEXT_SYSTEM, $levels);
+        $this->assertSame(context\course::class, $levels[CONTEXT_SYSTEM]);
 
-        $this->assertArrayHasKey(CONTEXT_MODULE, $levels);
-        $this->assertSame(context\module::class, $levels[CONTEXT_MODULE]);
+        $this->assertArrayHasKey(CONTEXT_SYSTEM, $levels);
+        $this->assertSame(context\module::class, $levels[CONTEXT_SYSTEM]);
 
         $this->assertArrayHasKey(CONTEXT_BLOCK, $levels);
         $this->assertSame(context\block::class, $levels[CONTEXT_BLOCK]);
@@ -169,33 +169,33 @@ final class context_helper_test extends \advanced_testcase {
         $childlevels = context_helper::get_child_levels(CONTEXT_USER);
         $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertNotContains(CONTEXT_USER, $childlevels);
-        $this->assertNotContains(CONTEXT_COURSECAT, $childlevels);
-        $this->assertNotContains(CONTEXT_COURSE, $childlevels);
-        $this->assertNotContains(CONTEXT_MODULE, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEMCAT, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertContains(CONTEXT_BLOCK, $childlevels);
 
-        $childlevels = context_helper::get_child_levels(CONTEXT_COURSECAT);
+        $childlevels = context_helper::get_child_levels(CONTEXT_SYSTEMCAT);
         $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertNotContains(CONTEXT_USER, $childlevels);
-        $this->assertContains(CONTEXT_COURSECAT, $childlevels);
-        $this->assertContains(CONTEXT_COURSE, $childlevels);
-        $this->assertContains(CONTEXT_MODULE, $childlevels);
+        $this->assertContains(CONTEXT_SYSTEMCAT, $childlevels);
+        $this->assertContains(CONTEXT_SYSTEM, $childlevels);
+        $this->assertContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertContains(CONTEXT_BLOCK, $childlevels);
 
-        $childlevels = context_helper::get_child_levels(CONTEXT_COURSE);
+        $childlevels = context_helper::get_child_levels(CONTEXT_SYSTEM);
         $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertNotContains(CONTEXT_USER, $childlevels);
-        $this->assertNotContains(CONTEXT_COURSECAT, $childlevels);
-        $this->assertNotContains(CONTEXT_COURSE, $childlevels);
-        $this->assertContains(CONTEXT_MODULE, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEMCAT, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
+        $this->assertContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertContains(CONTEXT_BLOCK, $childlevels);
 
-        $childlevels = context_helper::get_child_levels(CONTEXT_MODULE);
+        $childlevels = context_helper::get_child_levels(CONTEXT_SYSTEM);
         $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertNotContains(CONTEXT_USER, $childlevels);
-        $this->assertNotContains(CONTEXT_COURSECAT, $childlevels);
-        $this->assertNotContains(CONTEXT_COURSE, $childlevels);
-        $this->assertNotContains(CONTEXT_MODULE, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEMCAT, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $childlevels);
         $this->assertContains(CONTEXT_BLOCK, $childlevels);
 
         $childlevels = context_helper::get_child_levels(CONTEXT_BLOCK);
@@ -210,41 +210,41 @@ final class context_helper_test extends \advanced_testcase {
         $levels = context_helper::get_compatible_levels('manager');
         $this->assertContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_USER, $levels);
-        $this->assertContains(CONTEXT_COURSECAT, $levels);
-        $this->assertContains(CONTEXT_COURSE, $levels);
-        $this->assertNotContains(CONTEXT_MODULE, $levels);
+        $this->assertContains(CONTEXT_SYSTEMCAT, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_BLOCK, $levels);
 
         $levels = context_helper::get_compatible_levels('coursecreator');
         $this->assertContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_USER, $levels);
-        $this->assertContains(CONTEXT_COURSECAT, $levels);
-        $this->assertNotContains(CONTEXT_COURSE, $levels);
-        $this->assertNotContains(CONTEXT_MODULE, $levels);
+        $this->assertContains(CONTEXT_SYSTEMCAT, $levels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $levels);
+        $this->assertNotContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_BLOCK, $levels);
 
         $levels = context_helper::get_compatible_levels('editingteacher');
         $this->assertNotContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_USER, $levels);
-        $this->assertNotContains(CONTEXT_COURSECAT, $levels);
-        $this->assertContains(CONTEXT_COURSE, $levels);
-        $this->assertContains(CONTEXT_MODULE, $levels);
+        $this->assertNotContains(CONTEXT_SYSTEMCAT, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_BLOCK, $levels);
 
         $levels = context_helper::get_compatible_levels('teacher');
         $this->assertNotContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_USER, $levels);
-        $this->assertNotContains(CONTEXT_COURSECAT, $levels);
-        $this->assertContains(CONTEXT_COURSE, $levels);
-        $this->assertContains(CONTEXT_MODULE, $levels);
+        $this->assertNotContains(CONTEXT_SYSTEMCAT, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_BLOCK, $levels);
 
         $levels = context_helper::get_compatible_levels('student');
         $this->assertNotContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_USER, $levels);
-        $this->assertNotContains(CONTEXT_COURSECAT, $levels);
-        $this->assertContains(CONTEXT_COURSE, $levels);
-        $this->assertContains(CONTEXT_MODULE, $levels);
+        $this->assertNotContains(CONTEXT_SYSTEMCAT, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
+        $this->assertContains(CONTEXT_SYSTEM, $levels);
         $this->assertNotContains(CONTEXT_BLOCK, $levels);
 
         $levels = context_helper::get_compatible_levels('user');
@@ -441,9 +441,9 @@ final class context_helper_test extends \advanced_testcase {
         // This is a bit silly test, it might start failing in the future
         // because the instances are not deleted before deleting the contexts.
         context_helper::delete_instance(CONTEXT_USER, $user->id);
-        context_helper::delete_instance(CONTEXT_COURSECAT, $category->id);
-        context_helper::delete_instance(CONTEXT_COURSE, $course->id);
-        context_helper::delete_instance(CONTEXT_MODULE, $page->cmid);
+        context_helper::delete_instance(CONTEXT_SYSTEMCAT, $category->id);
+        context_helper::delete_instance(CONTEXT_SYSTEM, $course->id);
+        context_helper::delete_instance(CONTEXT_SYSTEM, $page->cmid);
     }
 
     /**
@@ -459,9 +459,9 @@ final class context_helper_test extends \advanced_testcase {
 
         $this->assertSame('System', context_helper::get_level_name(CONTEXT_SYSTEM));
         $this->assertSame('User', context_helper::get_level_name(CONTEXT_USER));
-        $this->assertSame('Category', context_helper::get_level_name(CONTEXT_COURSECAT));
-        $this->assertSame('Course', context_helper::get_level_name(CONTEXT_COURSE));
-        $this->assertSame('Activity module', context_helper::get_level_name(CONTEXT_MODULE));
+        $this->assertSame('Category', context_helper::get_level_name(CONTEXT_SYSTEMCAT));
+        $this->assertSame('Course', context_helper::get_level_name(CONTEXT_SYSTEM));
+        $this->assertSame('Activity module', context_helper::get_level_name(CONTEXT_SYSTEM));
         $this->assertSame('Block', context_helper::get_level_name(CONTEXT_BLOCK));
     }
 

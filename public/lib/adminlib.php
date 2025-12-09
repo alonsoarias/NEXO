@@ -9642,7 +9642,7 @@ class admin_setting_managerepository extends admin_setting {
 
                         foreach ($instances as $instance) {
                             $repocontext = context::instance_by_id($instance->instance->contextid);
-                            if ($repocontext->contextlevel == CONTEXT_COURSE) {
+                            if ($repocontext->contextlevel == CONTEXT_SYSTEM) {
                                 $courseinstances[] = $instance;
                             } else if ($repocontext->contextlevel == CONTEXT_USER) {
                                 $userinstances[] = $instance;

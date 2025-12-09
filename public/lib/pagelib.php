@@ -1180,9 +1180,9 @@ class moodle_page {
         // Ideally we should set context only once.
         if (isset($this->_context) && $context->id !== $this->_context->id) {
             $current = $this->_context->contextlevel;
-            if ($current == CONTEXT_SYSTEM or $current == CONTEXT_COURSE) {
+            if ($current == CONTEXT_SYSTEM or $current == CONTEXT_SYSTEM) {
                 // Hmm - not ideal, but it might produce too many warnings due to the design of require_login.
-            } else if ($current == CONTEXT_MODULE and ($parentcontext = $context->get_parent_context()) and
+            } else if ($current == CONTEXT_SYSTEM and ($parentcontext = $context->get_parent_context()) and
                 $this->_context->id == $parentcontext->id) {
                 // Hmm - most probably somebody did require_login() and after that set the block context.
             } else {
@@ -2282,7 +2282,7 @@ class moodle_page {
         $reportnode = null;
         $navigationnodeerror =
                 'Could not find the navigation node requested. Please check that the node you are looking for exists.';
-        if ($userid != $USER->id  || $this->context->contextlevel == CONTEXT_COURSE) {
+        if ($userid != $USER->id  || $this->context->contextlevel == CONTEXT_SYSTEM) {
             // Within a course context we need to properly indicate how we have come to the page,
             // regardless of whether it's currently logged in user or not.
             // Check that we have a valid node.

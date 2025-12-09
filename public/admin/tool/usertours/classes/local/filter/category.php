@@ -66,7 +66,7 @@ class category extends base {
             return !static::check_contexts($context, $excludevalues);
         }
 
-        if ($context->contextlevel < CONTEXT_COURSECAT) {
+        if ($context->contextlevel < CONTEXT_SYSTEMCAT) {
             return false;
         }
         return self::check_contexts($context, $includevalues) && !self::check_contexts($context, $excludevalues);
@@ -84,9 +84,9 @@ class category extends base {
             return false;
         }
 
-        if ($context->contextlevel > CONTEXT_COURSECAT) {
+        if ($context->contextlevel > CONTEXT_SYSTEMCAT) {
             return self::check_contexts($context->get_parent_context(), $values);
-        } else if ($context->contextlevel == CONTEXT_COURSECAT) {
+        } else if ($context->contextlevel == CONTEXT_SYSTEMCAT) {
             if (in_array($context->instanceid, $values)) {
                 return true;
             } else {

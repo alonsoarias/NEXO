@@ -79,8 +79,8 @@ class section_viewed extends base {
     protected function validate_data() {
         parent::validate_data();
 
-        if ($this->contextlevel != CONTEXT_COURSE) {
-            throw new \coding_exception('Context level must be CONTEXT_COURSE.');
+        if ($this->contextlevel != CONTEXT_SYSTEM) {
+            throw new \coding_exception('Context level must be CONTEXT_SYSTEM.');
         }
     }
 

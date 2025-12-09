@@ -32,14 +32,14 @@ $title = get_string('setdefaults', 'tool_dataprivacy');
 
 \tool_dataprivacy\page_helper::setup($url, $title, 'dataregistry');
 
-$mode = optional_param('mode', CONTEXT_COURSECAT, PARAM_INT);
+$mode = optional_param('mode', CONTEXT_SYSTEMCAT, PARAM_INT);
 $classname = context_helper::get_class_for_level($mode);
 list($purposevar, $categoryvar) = \tool_dataprivacy\data_registry::var_names_from_context($classname);
 $purpose = get_config('tool_dataprivacy', $purposevar);
 $category = get_config('tool_dataprivacy', $categoryvar);
 
 $otherdefaults = [];
-if ($mode == CONTEXT_MODULE) {
+if ($mode == CONTEXT_SYSTEM) {
     // Get activity module plugin info.
     $pluginmanager = core_plugin_manager::instance();
     $modplugins = $pluginmanager->get_enabled_plugins('mod');

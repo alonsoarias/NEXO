@@ -4511,7 +4511,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea == GRADE_FEEDBACK_FILEAREA || $filearea == GRADE_HISTORY_FEEDBACK_FILEAREA) {
-            if ($context->contextlevel != CONTEXT_MODULE) {
+            if ($context->contextlevel != CONTEXT_SYSTEM) {
                 send_file_not_found();
             }
 
@@ -4652,7 +4652,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 0, 0, true, $sendfileoptions);
 
-        } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSECAT) {
+        } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_SYSTEMCAT) {
             if ($CFG->forcelogin) {
                 require_login();
             }
@@ -4683,7 +4683,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             // Unlock session during file serving.
             \core\session\manager::write_close();
             send_stored_file($file, HOURSECS, 0, $forcedownload, $sendfileoptions);
-        } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSE) {
+        } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_SYSTEM) {
 
             // Respect forcelogin and require login unless this is the site.... it probably
             // should NEVER be the site
@@ -4838,7 +4838,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 0, 0, true, $sendfileoptions); // must force download - security!
 
-        } else if ($filearea === 'profile' and $context->contextlevel == CONTEXT_COURSE) {
+        } else if ($filearea === 'profile' and $context->contextlevel == CONTEXT_SYSTEM) {
             $userid = (int)array_shift($args);
             $usercontext = context_user::instance($userid);
 
@@ -4894,7 +4894,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
 
     // ========================================================================================================================
     } else if ($component === 'coursecat') {
-        if ($context->contextlevel != CONTEXT_COURSECAT) {
+        if ($context->contextlevel != CONTEXT_SYSTEMCAT) {
             send_file_not_found();
         }
 
@@ -4923,7 +4923,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
 
     // ========================================================================================================================
     } else if ($component === 'course') {
-        if ($context->contextlevel != CONTEXT_COURSE) {
+        if ($context->contextlevel != CONTEXT_SYSTEM) {
             send_file_not_found();
         }
 
@@ -4987,7 +4987,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
 
         // The context in the file URL must be either cohort context or context of the course underneath the cohort's context.
         if ($context->id != $cohort->contextid &&
-            ($context->contextlevel != CONTEXT_COURSE || !in_array($cohort->contextid, $context->get_parent_context_ids()))) {
+            ($context->contextlevel != CONTEXT_SYSTEM || !in_array($cohort->contextid, $context->get_parent_context_ids()))) {
             send_file_not_found();
         }
 
@@ -5009,7 +5009,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
         send_file_not_found();
 
     } else if ($component === 'group') {
-        if ($context->contextlevel != CONTEXT_COURSE) {
+        if ($context->contextlevel != CONTEXT_SYSTEM) {
             send_file_not_found();
         }
 
@@ -5068,7 +5068,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
         }
 
     } else if ($component === 'grouping') {
-        if ($context->contextlevel != CONTEXT_COURSE) {
+        if ($context->contextlevel != CONTEXT_SYSTEM) {
             send_file_not_found();
         }
 
@@ -5094,7 +5094,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
 
     // ========================================================================================================================
     } else if ($component === 'backup') {
-        if ($filearea === 'course' and $context->contextlevel == CONTEXT_COURSE) {
+        if ($filearea === 'course' and $context->contextlevel == CONTEXT_SYSTEM) {
             require_login($course);
             require_capability('moodle/backup:downloadfile', $context);
 
@@ -5107,7 +5107,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 0, 0, $forcedownload, $sendfileoptions);
 
-        } else if ($filearea === 'section' and $context->contextlevel == CONTEXT_COURSE) {
+        } else if ($filearea === 'section' and $context->contextlevel == CONTEXT_SYSTEM) {
             require_login($course);
             require_capability('moodle/backup:downloadfile', $context);
 
@@ -5122,7 +5122,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             \core\session\manager::write_close();
             send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
-        } else if ($filearea === 'activity' and $context->contextlevel == CONTEXT_MODULE) {
+        } else if ($filearea === 'activity' and $context->contextlevel == CONTEXT_SYSTEM) {
             require_login($course, false, $cm);
             require_capability('moodle/backup:downloadfile', $context);
 
@@ -5135,7 +5135,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             \core\session\manager::write_close();
             send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
-        } else if ($filearea === 'automated' and $context->contextlevel == CONTEXT_COURSE) {
+        } else if ($filearea === 'automated' and $context->contextlevel == CONTEXT_SYSTEM) {
             // Backup files that were generated by the automated backup systems.
 
             require_login($course);
@@ -5169,7 +5169,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             if ($context->contextlevel == CONTEXT_SYSTEM) {
                 require_login();
 
-            } else if ($context->contextlevel >= CONTEXT_COURSE) {
+            } else if ($context->contextlevel >= CONTEXT_SYSTEM) {
                 require_login($course, false, $cm);
 
             } else {
@@ -5202,9 +5202,9 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             send_file_not_found();
         }
 
-        if ($context->contextlevel == CONTEXT_SYSTEM || $context->contextlevel == CONTEXT_COURSECAT) {
+        if ($context->contextlevel == CONTEXT_SYSTEM || $context->contextlevel == CONTEXT_SYSTEMCAT) {
             require_login();
-        } else if ($context->contextlevel == CONTEXT_COURSE) {
+        } else if ($context->contextlevel == CONTEXT_SYSTEM) {
             require_login($course);
         } else {
             send_file_not_found();
@@ -5237,7 +5237,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
         }
         require_once("$CFG->dirroot/mod/$modname/lib.php");
 
-        if ($context->contextlevel == CONTEXT_MODULE) {
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
             if ($cm->modname !== $modname) {
                 // somebody tries to gain illegal access, cm type must match the component!
                 send_file_not_found();

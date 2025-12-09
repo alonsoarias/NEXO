@@ -61,7 +61,7 @@ abstract class assessable_submitted extends base {
      */
     protected function validate_data() {
         parent::validate_data();
-        if ($this->contextlevel != CONTEXT_MODULE) {
+        if ($this->contextlevel != CONTEXT_SYSTEM) {
             throw new \coding_exception('Context passed must be module context.');
         }
     }

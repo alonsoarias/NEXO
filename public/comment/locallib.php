@@ -155,7 +155,7 @@ class comment_manager {
                     return false;
                 }
                 break;
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
                 $this->plugintype = 'mod';
                 $this->cm = get_coursemodule_from_id('', $this->context->instanceid);
                 $this->setup_course($this->cm->course);

@@ -68,8 +68,8 @@ abstract class assessable_uploaded extends base {
      */
     protected function validate_data() {
         parent::validate_data();
-        if ($this->contextlevel != CONTEXT_MODULE) {
-            throw new \coding_exception('Context level must be CONTEXT_MODULE.');
+        if ($this->contextlevel != CONTEXT_SYSTEM) {
+            throw new \coding_exception('Context level must be CONTEXT_SYSTEM.');
         } else if (!isset($this->other['pathnamehashes']) || !is_array($this->other['pathnamehashes'])) {
             throw new \coding_exception('The \'pathnamehashes\' value must be set in other and must be an array.');
         } else if (!isset($this->other['content']) || !is_string($this->other['content'])) {

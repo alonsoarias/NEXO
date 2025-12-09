@@ -1286,7 +1286,7 @@ class api {
             // Based on this context level.
             $params = ['contextlevel' => $contextlevel];
 
-            if ($contextlevel == CONTEXT_MODULE) {
+            if ($contextlevel == CONTEXT_SYSTEM) {
                 // If we're deleting module context instances, we need to make sure the instance ID is in the course modules table.
                 $statements[] = "JOIN {course_modules} cm ON cm.id = c.instanceid";
                 // And that the module is listed on the modules table.
@@ -1530,14 +1530,14 @@ class api {
         $listidstoapprove = [];
         $listidstoreject = [];
         foreach ($items as $item) {
-            if (in_array($item->contextid, $coursecontextids) && ($item->contextlevel == CONTEXT_COURSE)
+            if (in_array($item->contextid, $coursecontextids) && ($item->contextlevel == CONTEXT_SYSTEM)
                 && !in_array($item->contextid, $acceptcourses)) {
                 $acceptcourses[$item->contextid] = $item;
             }
         }
 
         foreach ($items as $item) {
-            if ($item->contextlevel >= CONTEXT_COURSE) {
+            if ($item->contextlevel >= CONTEXT_SYSTEM) {
                 $approve = false;
                 foreach ($acceptcourses as $acceptcourse) {
                     if (strpos($item->path, $acceptcourse->path) === 0) {
@@ -1621,7 +1621,7 @@ class api {
                    WHERE rcl.requestid = ? AND c.contextlevel = ?
                 ORDER BY c.path ASC";
 
-        $result = $DB->get_records_sql($query, [$requestid, CONTEXT_COURSE]);
+        $result = $DB->get_records_sql($query, [$requestid, CONTEXT_SYSTEM]);
         foreach ($result as $item) {
             $ctxid = $item->ctxid;
             context_helper::preload_from_record($item);

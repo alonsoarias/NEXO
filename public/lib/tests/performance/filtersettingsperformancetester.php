@@ -166,7 +166,7 @@ function populate_test_database($syscontext, $numcategories, $numcourses, $nummo
     $categoryparents = array($syscontext);
     $categories = array();
     for ($i = 0; $i < $numcategories; $i++) {
-        $context = insert_context(CONTEXT_COURSECAT, $i, $categoryparents[array_rand($categoryparents)]);
+        $context = insert_context(CONTEXT_SYSTEMCAT, $i, $categoryparents[array_rand($categoryparents)]);
         $categoryparents[] = $context;
         $categories[$context->id] = $context;
     }
@@ -175,7 +175,7 @@ function populate_test_database($syscontext, $numcategories, $numcourses, $nummo
     // Course contexts.
     $courses = array();
     for ($i = 0; $i < $numcourses; $i++) {
-        $context = insert_context(CONTEXT_COURSE, $i, $categories[array_rand($categories)]);
+        $context = insert_context(CONTEXT_SYSTEM, $i, $categories[array_rand($categories)]);
         $courses[$context->id] = $context;
     }
     echo $OUTPUT->notification('Created ' . $numcourses . ' course contexts.', 'notifysuccess'); flush();
@@ -185,7 +185,7 @@ function populate_test_database($syscontext, $numcategories, $numcourses, $nummo
     $prog = new progress_bar('modbar', 500, true);
     $transaction = $DB->start_delegated_transaction();
     for ($i = 0; $i < $nummodules; $i++) {
-        $context = insert_context(CONTEXT_MODULE, $i, $courses[array_rand($courses)]);
+        $context = insert_context(CONTEXT_SYSTEM, $i, $courses[array_rand($courses)]);
         $mods[$context->id] = $context;
         if ($i % 50) {
             $prog->update($i, $nummodules, '');

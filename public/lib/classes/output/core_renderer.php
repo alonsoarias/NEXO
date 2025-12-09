@@ -469,7 +469,7 @@ class core_renderer extends renderer_base {
         $context = $this->page->context;
         if (
             ($this->page->pagelayout !== 'incourse' && $this->page->pagelayout !== 'frametop')
-            || $context->contextlevel != CONTEXT_MODULE
+            || $context->contextlevel != CONTEXT_SYSTEM
         ) {
             return '';
         }
@@ -4108,7 +4108,7 @@ EOD;
             // When checking user_can_view_profile(), either:
             // If the page context is course, check the course context (from the page object) or;
             // If page context is NOT course, then check across all courses.
-            $course = ($this->page->context->contextlevel == CONTEXT_COURSE) ? $this->page->course : null;
+            $course = ($this->page->context->contextlevel == CONTEXT_SYSTEM) ? $this->page->course : null;
 
             if (user_can_view_profile($user, $course)) {
                 // Use the user's full name if the heading isn't set.
@@ -4379,7 +4379,7 @@ EOD;
         $context = $this->page->context;
         $menu = new action_menu();
 
-        if ($context->contextlevel == CONTEXT_MODULE) {
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
             $this->page->navigation->initialise();
             $node = $this->page->navigation->find_active_node();
             $buildmenu = false;
@@ -4406,7 +4406,7 @@ EOD;
                     $this->build_action_menu_from_navigation($menu, $node);
                 }
             }
-        } else if ($context->contextlevel == CONTEXT_COURSECAT) {
+        } else if ($context->contextlevel == CONTEXT_SYSTEMCAT) {
             // For course category context, show category settings menu, if we're on the course category page.
             if ($this->page->pagetype === 'course-index-category') {
                 $node = $this->page->settingsnav->find('categorysettings', navigation_node::TYPE_CONTAINER);

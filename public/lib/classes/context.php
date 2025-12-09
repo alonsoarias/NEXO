@@ -36,7 +36,7 @@ use coding_exception, moodle_url;
  * @since     Moodle 4.2
  *
  * @property-read int $id context id
- * @property-read int $contextlevel CONTEXT_SYSTEM, CONTEXT_COURSE, etc.
+ * @property-read int $contextlevel CONTEXT_SYSTEM, CONTEXT_SYSTEM, etc.
  * @property-read int $instanceid id of related instance in each context
  * @property-read string $path path to context, starts with system context
  * @property-read int $depth
@@ -57,7 +57,7 @@ abstract class context extends stdClass implements IteratorAggregate {
     /**
      * The context level
      * Can be accessed publicly through $context->contextlevel
-     * @var int One of CONTEXT_* e.g. CONTEXT_COURSE, CONTEXT_MODULE
+     * @var int One of CONTEXT_* e.g. CONTEXT_SYSTEM, CONTEXT_SYSTEM
      */
     protected $_contextlevel;
 

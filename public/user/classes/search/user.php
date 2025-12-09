@@ -56,10 +56,10 @@ class user extends \core_search\base {
             $context = \context_system::instance();
         }
         switch ($context->contextlevel) {
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
             case CONTEXT_BLOCK:
-            case CONTEXT_COURSE:
-            case CONTEXT_COURSECAT:
+            case CONTEXT_SYSTEM:
+            case CONTEXT_SYSTEMCAT:
                 // These contexts cannot contain any users.
                 return null;
 

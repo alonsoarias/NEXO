@@ -139,7 +139,7 @@ function get_admins() {
  * @global object
  * @uses SITEID
  * @uses SQL_PARAMS_NAMED
- * @uses CONTEXT_COURSE
+ * @uses CONTEXT_SYSTEM
  * @param int $courseid The course in question.
  * @param int $groupid The group in question.
  * @param string $searchtext The string to search for
@@ -657,7 +657,7 @@ function get_course($courseid, $clone = true) {
  * @global object
  * @global object
  * @global object
- * @uses CONTEXT_COURSE
+ * @uses CONTEXT_SYSTEM
  * @param string|int $categoryid Either a category id or 'all' for everything
  * @param string $sort A field and direction to sort by
  * @param string $fields The additional fields to return (note that "id, category, visible" are always present)
@@ -686,7 +686,7 @@ function get_courses($categoryid="all", $sort="c.sortorder ASC", $fields="c.*") 
 
     $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
     $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
-    $params['contextlevel'] = CONTEXT_COURSE;
+    $params['contextlevel'] = CONTEXT_SYSTEM;
 
     // The fields "id, category, visible" are required in the subsequent loop and must always be present.
     if ($fields !== 'c.*') {
@@ -800,7 +800,7 @@ function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$total
 
     $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
     $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
-    $params['contextlevel'] = CONTEXT_COURSE;
+    $params['contextlevel'] = CONTEXT_SYSTEM;
 
     $sql = "SELECT c.* $ccselect
               FROM {course} c
@@ -846,7 +846,7 @@ function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$total
  * @global object
  * @uses MAX_COURSE_CATEGORIES
  * @uses SITEID
- * @uses CONTEXT_COURSE
+ * @uses CONTEXT_SYSTEM
  * @return void
  */
 function fix_course_sortorder() {
@@ -1056,7 +1056,7 @@ function fix_course_sortorder() {
  * @todo Document the arguments of this function better
  *
  * @global object
- * @uses CONTEXT_COURSECAT
+ * @uses CONTEXT_SYSTEMCAT
  * @param array $children
  * @param int $sortorder
  * @param string $parent
@@ -1984,7 +1984,7 @@ function xmldb_debug($message, $object) {
 
 /**
  * @global object
- * @uses CONTEXT_COURSECAT
+ * @uses CONTEXT_SYSTEMCAT
  * @return boolean Whether the user can create courses in any category in the system.
  */
 function user_can_create_courses() {

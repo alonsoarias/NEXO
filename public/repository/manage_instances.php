@@ -70,7 +70,7 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 
 /// Security: make sure we're allowed to do this operation
-if ($context->contextlevel == CONTEXT_COURSE) {
+if ($context->contextlevel == CONTEXT_SYSTEM) {
     $pagename = get_string("repositorycourse",'repository');
 
     if ( !$course = $DB->get_record('course', array('id'=>$context->instanceid))) {

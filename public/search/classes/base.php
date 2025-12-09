@@ -490,7 +490,7 @@ abstract class base {
                 $sql = '';
                 break;
 
-            case CONTEXT_COURSECAT:
+            case CONTEXT_SYSTEMCAT:
                 // Find all courses within the specified category or any sub-category.
                 $pathmatch = $DB->sql_like('gclcrscc2.path',
                         $DB->sql_concat('gclcrscc1.path', $param2));
@@ -504,7 +504,7 @@ abstract class base {
                 $params[$key2] = '/%';
                 break;
 
-            case CONTEXT_COURSE:
+            case CONTEXT_SYSTEM:
                 // We just join again against the same course entry and confirm that it has the
                 // same id as the context.
                 $sql = " JOIN {course} gclcrsc ON gclcrsc.id = $coursetable.id
@@ -513,7 +513,7 @@ abstract class base {
                 break;
 
             case CONTEXT_BLOCK:
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
             case CONTEXT_USER:
                 // Context cannot contain any courses.
                 return [null, null];

@@ -814,7 +814,7 @@ class rating_manager {
                  LEFT JOIN {{$modulename}} m ON m.id = cm.instance $ctxjoin
                      WHERE mo.name=:modulename AND
                            m.id=:moduleid";
-            $params = array('modulename' => $modulename, 'moduleid' => $moduleid, 'contextlevel' => CONTEXT_MODULE);
+            $params = array('modulename' => $modulename, 'moduleid' => $moduleid, 'contextlevel' => CONTEXT_SYSTEM);
             $contextrecord = $DB->get_record_sql($sql, $params, '*', MUST_EXIST);
             $contextid = $contextrecord->ctxid;
         }
@@ -1132,7 +1132,7 @@ class rating_manager {
 
         // Future possible enhancement: add a setting to turn grade updating off for those who don't want them in gradebook.
         // Note that this would need to be done in both rate.php and rate_ajax.php.
-        if ($context->contextlevel == CONTEXT_MODULE) {
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
             // Tell the module that its grades have changed (note that 'cmidnumber' is required in order to update grades).
             $modinstance = $DB->get_record($cm->modname, array('id' => $cm->instance));
             if ($modinstance) {

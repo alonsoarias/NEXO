@@ -1940,7 +1940,7 @@ class block_manager {
 
         $bits = explode('-', $bi->pagetypepattern);
         // Hacks for some contexts.
-        if (($parentcontext->contextlevel == CONTEXT_COURSE) && ($parentcontext->instanceid != SITEID)) {
+        if (($parentcontext->contextlevel == CONTEXT_SYSTEM) && ($parentcontext->instanceid != SITEID)) {
             // For course context
             // is page type pattern is mod-*, change showinsubcontext to 1.
             if ($bits[0] == 'mod' || $bi->pagetypepattern == '*') {

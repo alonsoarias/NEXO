@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = [
     'tiny/h5p:addembed' => [
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
         ],
@@ -35,7 +35,7 @@ $capabilities = [
     ],
     'tiny/h5p:use' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
         ],

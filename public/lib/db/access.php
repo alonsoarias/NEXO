@@ -142,7 +142,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -153,7 +153,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -167,7 +167,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -181,7 +181,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -195,7 +195,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -209,7 +209,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -223,7 +223,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -235,7 +235,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -246,7 +246,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -257,7 +257,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -271,7 +271,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -285,7 +285,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -299,7 +299,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -311,7 +311,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -325,7 +325,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -339,7 +339,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -349,7 +349,7 @@ $capabilities = array(
     'moodle/restore:rolldates' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'coursecreator' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -361,7 +361,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS | RISK_CONFIG,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -393,7 +393,7 @@ $capabilities = array(
     'moodle/site:accessallgroups' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -405,7 +405,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
         )
@@ -414,7 +414,7 @@ $capabilities = array(
     'moodle/site:viewfullnames' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -428,7 +428,7 @@ $capabilities = array(
     'moodle/site:viewuseridentity' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -441,7 +441,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -454,7 +454,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -476,7 +476,7 @@ $capabilities = array(
     'moodle/filter:manage' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
@@ -519,7 +519,7 @@ $capabilities = array(
     'moodle/user:viewdetails' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'guest' => CAP_ALLOW,
             'student' => CAP_ALLOW,
@@ -563,7 +563,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -576,7 +576,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS | RISK_CONFIG,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -653,7 +653,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -665,7 +665,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -679,7 +679,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL | RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -692,7 +692,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW
         )
@@ -714,7 +714,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS | RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -730,7 +730,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
@@ -740,7 +740,7 @@ $capabilities = array(
     'moodle/category:viewcourselist' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'guest' => CAP_ALLOW,
             'user' => CAP_ALLOW,
@@ -750,7 +750,7 @@ $capabilities = array(
     'moodle/category:viewhiddencategories' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'coursecreator' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -763,7 +763,7 @@ $capabilities = array(
     'moodle/cohort:manage' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -773,7 +773,7 @@ $capabilities = array(
     'moodle/cohort:assign' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -783,7 +783,7 @@ $capabilities = array(
     'moodle/cohort:view' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -809,7 +809,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'coursecreator' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -819,7 +819,7 @@ $capabilities = array(
     'moodle/course:creategroupconversations' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -828,7 +828,7 @@ $capabilities = array(
 
     'moodle/course:request' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
     ),
 
     'moodle/course:delete' => array(
@@ -836,7 +836,7 @@ $capabilities = array(
         'riskbitmask' => RISK_DATALOSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
@@ -847,7 +847,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -857,7 +857,7 @@ $capabilities = array(
     'moodle/course:view' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
         )
@@ -869,7 +869,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
@@ -882,7 +882,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
@@ -892,7 +892,7 @@ $capabilities = array(
     'moodle/course:reviewotherusers' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
@@ -905,7 +905,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -918,7 +918,7 @@ $capabilities = array(
         'riskbitmask' => RISK_PERSONAL,
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -929,7 +929,7 @@ $capabilities = array(
     'moodle/course:viewhiddencourses' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'coursecreator' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -941,7 +941,7 @@ $capabilities = array(
     'moodle/course:visibility' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -953,7 +953,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -962,7 +962,7 @@ $capabilities = array(
 
     'moodle/course:ignoreavailabilityrestrictions' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -975,7 +975,7 @@ $capabilities = array(
     'moodle/course:ignorefilesizelimits' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
         )
     ),
@@ -985,7 +985,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -995,7 +995,7 @@ $capabilities = array(
     'moodle/course:activityvisibility' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1005,7 +1005,7 @@ $capabilities = array(
     'moodle/course:viewhiddenactivities' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1016,7 +1016,7 @@ $capabilities = array(
     'moodle/course:viewparticipants' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -1027,7 +1027,7 @@ $capabilities = array(
 
     'moodle/course:viewoverview' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -1041,7 +1041,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1054,7 +1054,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1067,7 +1067,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
@@ -1084,7 +1084,7 @@ $capabilities = array(
 
     'moodle/course:renameroles' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1097,7 +1097,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1108,7 +1108,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1120,7 +1120,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1131,7 +1131,7 @@ $capabilities = array(
     // Ability to set a forced language for a course or activity.
     'moodle/course:setforcedlanguage' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1151,7 +1151,7 @@ $capabilities = array(
 
     'moodle/course:isincompletionreports' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW,
         ),
@@ -1160,7 +1160,7 @@ $capabilities = array(
     'moodle/course:viewscales' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -1172,7 +1172,7 @@ $capabilities = array(
     'moodle/course:managescales' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1183,7 +1183,7 @@ $capabilities = array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1193,7 +1193,7 @@ $capabilities = array(
     'moodle/course:viewhiddengroups' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'READ',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1206,7 +1206,7 @@ $capabilities = array(
         'riskbitmask' => RISK_DATALOSS,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1216,7 +1216,7 @@ $capabilities = array(
     'moodle/course:viewsuspendedusers' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1226,7 +1226,7 @@ $capabilities = array(
     'moodle/course:tag' => array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1316,7 +1316,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1328,7 +1328,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1341,7 +1341,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1446,7 +1446,7 @@ $capabilities = array(
     'moodle/question:managecategory' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1457,7 +1457,7 @@ $capabilities = array(
     'moodle/question:add' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1467,7 +1467,7 @@ $capabilities = array(
     'moodle/question:editmine' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1477,7 +1477,7 @@ $capabilities = array(
     'moodle/question:editall' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1486,7 +1486,7 @@ $capabilities = array(
     ),
     'moodle/question:viewmine' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1495,7 +1495,7 @@ $capabilities = array(
     ),
     'moodle/question:viewall' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1504,7 +1504,7 @@ $capabilities = array(
     ),
     'moodle/question:usemine' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1514,7 +1514,7 @@ $capabilities = array(
     ),
     'moodle/question:useall' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1524,7 +1524,7 @@ $capabilities = array(
     ),
     'moodle/question:movemine' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1533,7 +1533,7 @@ $capabilities = array(
     ),
     'moodle/question:moveall' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1555,7 +1555,7 @@ $capabilities = array(
     // While attempting questions, the ability to flag particular questions for later reference.
     'moodle/question:flag' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -1567,7 +1567,7 @@ $capabilities = array(
     // Controls whether the user can tag his own questions.
     'moodle/question:tagmine' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1578,7 +1578,7 @@ $capabilities = array(
     // Controls whether the user can tag all questions.
     'moodle/question:tagall' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1599,7 +1599,7 @@ $capabilities = array(
     'moodle/course:sectionvisibility' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1609,7 +1609,7 @@ $capabilities = array(
     'moodle/course:useremail' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1619,7 +1619,7 @@ $capabilities = array(
     'moodle/course:viewhiddensections' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1629,7 +1629,7 @@ $capabilities = array(
     'moodle/course:setcurrentsection' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1639,7 +1639,7 @@ $capabilities = array(
     'moodle/course:movesections' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1650,7 +1650,7 @@ $capabilities = array(
     'moodle/grade:viewall' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE, // and CONTEXT_USER
+        'contextlevel' => CONTEXT_SYSTEM, // and CONTEXT_USER
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1661,7 +1661,7 @@ $capabilities = array(
 
     'moodle/grade:view' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW
         )
@@ -1670,7 +1670,7 @@ $capabilities = array(
     'moodle/grade:viewhidden' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1682,7 +1682,7 @@ $capabilities = array(
     'moodle/grade:import' => array(
         'riskbitmask' => RISK_PERSONAL | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1693,7 +1693,7 @@ $capabilities = array(
     'moodle/grade:export' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1705,7 +1705,7 @@ $capabilities = array(
     'moodle/grade:manage' => array(
         'riskbitmask' => RISK_PERSONAL | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1716,7 +1716,7 @@ $capabilities = array(
     'moodle/grade:edit' => array(
         'riskbitmask' => RISK_PERSONAL | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1729,7 +1729,7 @@ $capabilities = array(
     'moodle/grade:managegradingforms' => array(
         'riskbitmask' => RISK_PERSONAL | RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1761,7 +1761,7 @@ $capabilities = array(
 
     'moodle/grade:manageoutcomes' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1771,7 +1771,7 @@ $capabilities = array(
 
     'moodle/grade:manageletters' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1781,7 +1781,7 @@ $capabilities = array(
 
     'moodle/grade:hide' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1790,7 +1790,7 @@ $capabilities = array(
 
     'moodle/grade:lock' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1799,7 +1799,7 @@ $capabilities = array(
 
     'moodle/grade:unlock' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1816,7 +1816,7 @@ $capabilities = array(
 
     'moodle/notes:view' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1828,7 +1828,7 @@ $capabilities = array(
         'riskbitmask' => RISK_SPAM,
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -1911,7 +1911,7 @@ $capabilities = array(
     ),
     'moodle/comment:view' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'frontpage' => CAP_ALLOW,
             'guest' => CAP_ALLOW,
@@ -1926,7 +1926,7 @@ $capabilities = array(
 
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW,
             'student' => CAP_ALLOW,
@@ -1939,7 +1939,7 @@ $capabilities = array(
 
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -1973,7 +1973,7 @@ $capabilities = array(
     'moodle/rating:view' => array(
 
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW,
             'student' => CAP_ALLOW,
@@ -1986,7 +1986,7 @@ $capabilities = array(
 
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW,
             'student' => CAP_ALLOW,
@@ -1999,7 +1999,7 @@ $capabilities = array(
 
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW,
             'student' => CAP_ALLOW,
@@ -2011,7 +2011,7 @@ $capabilities = array(
     'moodle/rating:rate' => array(
 
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW,
             'student' => CAP_ALLOW,
@@ -2022,7 +2022,7 @@ $capabilities = array(
     ),
     'moodle/course:markcomplete' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2031,7 +2031,7 @@ $capabilities = array(
     ),
     'moodle/course:overridecompletion' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2052,7 +2052,7 @@ $capabilities = array(
     // View available badges without earning them.
     'moodle/badges:viewbadges' => array(
         'captype'       => 'read',
-        'contextlevel'  => CONTEXT_COURSE,
+        'contextlevel'  => CONTEXT_SYSTEM,
         'archetypes'    => array(
             'user'          => CAP_ALLOW,
         )
@@ -2081,7 +2081,7 @@ $capabilities = array(
     // Earn badge.
     'moodle/badges:earnbadge' => array(
         'captype'       => 'write',
-        'contextlevel'  => CONTEXT_COURSE,
+        'contextlevel'  => CONTEXT_SYSTEM,
         'archetypes'    => array(
             'user'           => CAP_ALLOW,
         )
@@ -2091,7 +2091,7 @@ $capabilities = array(
     'moodle/badges:createbadge' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2102,7 +2102,7 @@ $capabilities = array(
     'moodle/badges:deletebadge' => array(
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2113,7 +2113,7 @@ $capabilities = array(
     'moodle/badges:configuredetails' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2124,7 +2124,7 @@ $capabilities = array(
     'moodle/badges:configurecriteria' => array(
         'riskbitmask'  => RISK_XSS,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2135,7 +2135,7 @@ $capabilities = array(
     'moodle/badges:configuremessages' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2146,7 +2146,7 @@ $capabilities = array(
     'moodle/badges:awardbadge' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'teacher'        => CAP_ALLOW,
@@ -2158,7 +2158,7 @@ $capabilities = array(
     'moodle/badges:revokebadge' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
             'manager'        => CAP_ALLOW,
             'teacher'        => CAP_ALLOW,
@@ -2170,7 +2170,7 @@ $capabilities = array(
     'moodle/badges:viewawarded' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => array(
                 'manager'        => CAP_ALLOW,
                 'teacher'        => CAP_ALLOW,
@@ -2202,21 +2202,21 @@ $capabilities = array(
     // Competencies.
     'moodle/competency:competencymanage' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         )
     ),
     'moodle/competency:competencyview' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'user' => CAP_ALLOW
         ),
     ),
     'moodle/competency:competencygrade' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE, // And CONTEXT_USER.
+        'contextlevel' => CONTEXT_SYSTEM, // And CONTEXT_USER.
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -2226,7 +2226,7 @@ $capabilities = array(
     // Course competencies.
     'moodle/competency:coursecompetencymanage' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -2234,14 +2234,14 @@ $capabilities = array(
     ),
     'moodle/competency:coursecompetencyconfigure' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
     ),
     'moodle/competency:coursecompetencygradable' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW
         ),
@@ -2249,7 +2249,7 @@ $capabilities = array(
     ),
     'moodle/competency:coursecompetencyview' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'user' => CAP_ALLOW
         ),
@@ -2354,7 +2354,7 @@ $capabilities = array(
     // User competencies.
     'moodle/competency:usercompetencyview' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_USER,     // And CONTEXT_COURSE.
+        'contextlevel' => CONTEXT_USER,     // And CONTEXT_SYSTEM.
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2399,7 +2399,7 @@ $capabilities = array(
     // Template.
     'moodle/competency:templatemanage' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
@@ -2407,7 +2407,7 @@ $capabilities = array(
     'moodle/analytics:listinsights' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2424,7 +2424,7 @@ $capabilities = array(
     ),
     'moodle/competency:templateview' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSECAT,
+        'contextlevel' => CONTEXT_SYSTEMCAT,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
@@ -2472,7 +2472,7 @@ $capabilities = array(
     // Context locking/unlocking.
     'moodle/site:managecontextlocks' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
         ],
     ],
@@ -2480,7 +2480,7 @@ $capabilities = array(
     // Manual completion toggling.
     'moodle/course:togglecompletion' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'user' => CAP_ALLOW,
         ],
@@ -2497,7 +2497,7 @@ $capabilities = array(
     // Set display option buttons to an H5P content.
     'moodle/h5p:setdisplayoptions' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
         )
@@ -2507,7 +2507,7 @@ $capabilities = array(
     'moodle/h5p:deploy' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
@@ -2518,7 +2518,7 @@ $capabilities = array(
     'moodle/h5p:updatelibraries' => [
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
         ]
@@ -2536,7 +2536,7 @@ $capabilities = array(
     // Content bank capabilities.
     'moodle/contentbank:access' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2547,7 +2547,7 @@ $capabilities = array(
     'moodle/contentbank:upload' => array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2559,7 +2559,7 @@ $capabilities = array(
     'moodle/contentbank:deleteanycontent' => [
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2569,7 +2569,7 @@ $capabilities = array(
     // Delete content created by yourself.
     'moodle/contentbank:deleteowncontent' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'user' => CAP_ALLOW,
         ]
@@ -2579,7 +2579,7 @@ $capabilities = array(
     'moodle/contentbank:manageanycontent' => [
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2589,7 +2589,7 @@ $capabilities = array(
     // Manage (rename, move, publish, share, etc.) content created by yourself.
     'moodle/contentbank:manageowncontent' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2601,7 +2601,7 @@ $capabilities = array(
     'moodle/contentbank:useeditor' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2612,7 +2612,7 @@ $capabilities = array(
     // Allow users to download content.
     'moodle/contentbank:downloadcontent' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2624,7 +2624,7 @@ $capabilities = array(
     'moodle/contentbank:copyanycontent' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2635,7 +2635,7 @@ $capabilities = array(
     'moodle/contentbank:copycontent' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2646,7 +2646,7 @@ $capabilities = array(
     'moodle/contentbank:configurecustomfields' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
         ],
@@ -2655,7 +2655,7 @@ $capabilities = array(
     'moodle/contentbank:changelockedcustomfields' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
         ],
@@ -2664,7 +2664,7 @@ $capabilities = array(
     // Allow users to download course content.
     'moodle/course:downloadcoursecontent' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
@@ -2676,7 +2676,7 @@ $capabilities = array(
     // Allow users to configure download course content functionality within a course, if the feature is available.
     'moodle/course:configuredownloadcontent' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
@@ -2686,7 +2686,7 @@ $capabilities = array(
     // Allow users to view hidden content.
     'moodle/contentbank:viewunlistedcontent' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
@@ -2747,7 +2747,7 @@ $capabilities = array(
     // Allow users to edit course welcome messages.
     'moodle/course:editcoursewelcomemessage' => [
         'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,

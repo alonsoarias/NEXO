@@ -109,9 +109,9 @@ class provider implements
         $contexts = [
             CONTEXT_SYSTEM,
             CONTEXT_USER,
-            CONTEXT_COURSECAT,
-            CONTEXT_COURSE,
-            CONTEXT_MODULE,
+            CONTEXT_SYSTEMCAT,
+            CONTEXT_SYSTEM,
+            CONTEXT_SYSTEM,
             CONTEXT_BLOCK
         ];
         list($insql, $inparams) = $DB->get_in_or_equal($contexts, SQL_PARAMS_NAMED);
@@ -134,9 +134,9 @@ class provider implements
         $contexts = [
             CONTEXT_SYSTEM,
             CONTEXT_USER,
-            CONTEXT_COURSECAT,
-            CONTEXT_COURSE,
-            CONTEXT_MODULE,
+            CONTEXT_SYSTEMCAT,
+            CONTEXT_SYSTEM,
+            CONTEXT_SYSTEM,
             CONTEXT_BLOCK
         ];
         list($insql, $inparams) = $DB->get_in_or_equal($contexts, SQL_PARAMS_NAMED);
@@ -222,9 +222,9 @@ class provider implements
         $contexts = [
             CONTEXT_SYSTEM,
             CONTEXT_USER,
-            CONTEXT_COURSECAT,
-            CONTEXT_COURSE,
-            CONTEXT_MODULE,
+            CONTEXT_SYSTEMCAT,
+            CONTEXT_SYSTEM,
+            CONTEXT_SYSTEM,
             CONTEXT_BLOCK
         ];
         list($inctxsql, $ctxparams) = $DB->get_in_or_equal($contexts, SQL_PARAMS_NAMED);
@@ -268,9 +268,9 @@ class provider implements
         $contexts = [
             CONTEXT_SYSTEM,
             CONTEXT_USER,
-            CONTEXT_COURSECAT,
-            CONTEXT_COURSE,
-            CONTEXT_MODULE,
+            CONTEXT_SYSTEMCAT,
+            CONTEXT_SYSTEM,
+            CONTEXT_SYSTEM,
             CONTEXT_BLOCK
         ];
         list($inctxsql, $ctxparams) = $DB->get_in_or_equal($contexts, SQL_PARAMS_NAMED);

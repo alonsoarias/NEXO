@@ -307,7 +307,7 @@ function stats_cron_daily($maxdays=1) {
 
                     SELECT DISTINCT course FROM {temp_log2})";
 
-        if ($logspresent && !stats_run_query($sql, array('courselevel'=>CONTEXT_COURSE))) {
+        if ($logspresent && !stats_run_query($sql, array('courselevel'=>CONTEXT_SYSTEM))) {
             $failed = true;
             break;
         }
@@ -470,7 +470,7 @@ function stats_cron_daily($maxdays=1) {
               GROUP BY courseid, roleid
                 HAVING SUM(statsreads) > 0 OR SUM(statswrites) > 0";
 
-        if ($logspresent && !stats_run_query($sql, array('courselevel'=>CONTEXT_COURSE))) {
+        if ($logspresent && !stats_run_query($sql, array('courselevel'=>CONTEXT_SYSTEM))) {
             $failed = true;
             break;
         }
@@ -1711,7 +1711,7 @@ function stats_temp_table_setup() {
                 JOIN {enrol} e ON e.courseid = c.instanceid
                 JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = ra.userid)";
 
-    return stats_run_query($sql, array('courselevel' => CONTEXT_COURSE));
+    return stats_run_query($sql, array('courselevel' => CONTEXT_SYSTEM));
 }
 
 /**

@@ -84,8 +84,8 @@ class riskbackup_result extends \core\check\result {
         $params = [
             'capability' => 'moodle/backup:userinfo',
             'permission' => CAP_ALLOW,
-            'context1' => CONTEXT_COURSE,
-            'context2' => CONTEXT_COURSE,
+            'context1' => CONTEXT_SYSTEM,
+            'context2' => CONTEXT_SYSTEM,
         ];
 
         $this->sqluserinfo = "
@@ -166,8 +166,8 @@ class riskbackup_result extends \core\check\result {
         $params = [
             'capability' => 'moodle/backup:userinfo',
             'permission' => CAP_ALLOW,
-            'context1' => CONTEXT_COURSE,
-            'context2' => CONTEXT_COURSE,
+            'context1' => CONTEXT_SYSTEM,
+            'context2' => CONTEXT_SYSTEM,
         ];
         $userfieldsapi = \core_user\fields::for_userpic();
         $userfields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;

@@ -201,7 +201,7 @@ class data_registry {
             $parentcontextids = $context->get_parent_context_ids(true);
         }
         list($insql, $inparams) = $DB->get_in_or_equal($parentcontextids, SQL_PARAMS_NAMED);
-        $inparams['contextmodule'] = CONTEXT_MODULE;
+        $inparams['contextmodule'] = CONTEXT_SYSTEM;
 
         if ('purpose' === $element) {
              $elementjoin = 'LEFT JOIN {tool_dataprivacy_purpose} ele ON ctxins.purposeid = ele.id';

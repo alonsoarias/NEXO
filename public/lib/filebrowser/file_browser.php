@@ -83,11 +83,11 @@ class file_browser {
                 return $this->get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename);
             case CONTEXT_USER:
                 return $this->get_file_info_context_user($context, $component, $filearea, $itemid, $filepath, $filename);
-            case CONTEXT_COURSECAT:
+            case CONTEXT_SYSTEMCAT:
                 return $this->get_file_info_context_coursecat($context, $component, $filearea, $itemid, $filepath, $filename);
-            case CONTEXT_COURSE:
+            case CONTEXT_SYSTEM:
                 return $this->get_file_info_context_course($context, $component, $filearea, $itemid, $filepath, $filename);
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
                 return $this->get_file_info_context_module($context, $component, $filearea, $itemid, $filepath, $filename);
         }
 

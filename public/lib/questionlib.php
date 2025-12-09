@@ -454,7 +454,7 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
     global $DB;
 
     $newcontext = context::instance_by_id($newcontextid);
-    if ($newcontext->contextlevel !== CONTEXT_MODULE) {
+    if ($newcontext->contextlevel !== CONTEXT_SYSTEM) {
         throw new moodle_exception("Invalid contextlevel: {$newcontext->contextlevel} for \$newcontextid {$newcontextid}");
     }
 
@@ -502,7 +502,7 @@ function question_delete_activity($cm, $notused = false, bool $coursedeletion = 
  */
 function question_move_question_tags_to_new_context(array $questions, context $newcontext): void {
 
-    if ($newcontext->contextlevel !== CONTEXT_MODULE) {
+    if ($newcontext->contextlevel !== CONTEXT_SYSTEM) {
         debugging("Invalid contextlevel: {$newcontext->contextlevel}", DEBUG_DEVELOPER);
     }
 
@@ -697,8 +697,8 @@ function question_move_category_to_context($categoryid, $oldcontextid, $newconte
     global $DB;
 
     $newcontext = context::instance_by_id($newcontextid);
-    if ($newcontext->contextlevel !== CONTEXT_MODULE) {
-        debugging("Invalid contextlevel: {$newcontext->contextlevel}, must use CONTEXT_MODULE", DEBUG_DEVELOPER);
+    if ($newcontext->contextlevel !== CONTEXT_SYSTEM) {
+        debugging("Invalid contextlevel: {$newcontext->contextlevel}, must use CONTEXT_SYSTEM", DEBUG_DEVELOPER);
     }
 
     $questions = [];
@@ -1062,9 +1062,9 @@ function question_get_default_category($contextid, bool $createifnotexists = fal
     global $DB;
 
     $context = \core\context::instance_by_id($contextid);
-    if ($context->contextlevel !== CONTEXT_MODULE) {
+    if ($context->contextlevel !== CONTEXT_SYSTEM) {
         debugging(
-            "Invalid context level {$context->contextlevel} for default category. Please use CONTEXT_MODULE",
+            "Invalid context level {$context->contextlevel} for default category. Please use CONTEXT_SYSTEM",
             DEBUG_DEVELOPER
         );
         return false;
@@ -1109,9 +1109,9 @@ function question_get_top_category($contextid, $create = false) {
     $category = $DB->get_record('question_categories', ['contextid' => $contextid, 'parent' => 0]);
 
     $context = context::instance_by_id($contextid);
-    if ($context->contextlevel !== CONTEXT_MODULE) {
+    if ($context->contextlevel !== CONTEXT_SYSTEM) {
         debugging(
-            "Invalid context level: {$context->contextlevel} for question_get_top_category, must be CONTEXT_MODULE",
+            "Invalid context level: {$context->contextlevel} for question_get_top_category, must be CONTEXT_SYSTEM",
             DEBUG_DEVELOPER
         );
         return false;
@@ -1371,9 +1371,9 @@ function question_edit_url($context) {
         return false;
     }
 
-    if ($context->contextlevel !== CONTEXT_MODULE) {
+    if ($context->contextlevel !== CONTEXT_SYSTEM) {
         debugging(
-            "Invalid contextlevel: {$context->contextlevel} provided for question_edit_url, must be CONTEXT_MODULE",
+            "Invalid contextlevel: {$context->contextlevel} provided for question_edit_url, must be CONTEXT_SYSTEM",
             DEBUG_DEVELOPER
         );
         return false;
@@ -1387,13 +1387,13 @@ function question_edit_url($context) {
     switch ($context->contextlevel) {
         case CONTEXT_SYSTEM:
             return $baseurl . 'courseid=' . $SITE->id;
-        case CONTEXT_COURSECAT:
+        case CONTEXT_SYSTEMCAT:
             // This is nasty, becuase we can only edit questions in a course
             // context at the moment, so for now we just return false.
             return false;
-        case CONTEXT_COURSE:
+        case CONTEXT_SYSTEM:
             return $baseurl . 'courseid=' . $context->instanceid;
-        case CONTEXT_MODULE:
+        case CONTEXT_SYSTEM:
             return $baseurl . 'cmid=' . $context->instanceid;
     }
 
@@ -1414,7 +1414,7 @@ function question_edit_url($context) {
 function question_extend_settings_navigation(navigation_node $navigationnode, $context, $baseurl = '/question/edit.php') {
     global $PAGE;
 
-    $iscourse = $context->contextlevel === CONTEXT_COURSE;
+    $iscourse = $context->contextlevel === CONTEXT_SYSTEM;
 
     if ($iscourse && has_capability('moodle/course:manageactivities', $context)) {
         return $navigationnode->add(
@@ -1424,7 +1424,7 @@ function question_extend_settings_navigation(navigation_node $navigationnode, $c
             null,
             'questionbank'
         );
-    } else if ($context->contextlevel == CONTEXT_MODULE) {
+    } else if ($context->contextlevel == CONTEXT_SYSTEM) {
         $params = ['cmid' => $context->instanceid];
     } else {
         return;
@@ -1825,7 +1825,7 @@ function question_page_type_list($pagetype, $parentcontext, $currentcontext): ar
         'question-export' => get_string('page-question-export', 'question'),
         'question-import' => get_string('page-question-import', 'question')
     ];
-    if ($currentcontext && $currentcontext->contextlevel == CONTEXT_COURSE) {
+    if ($currentcontext && $currentcontext->contextlevel == CONTEXT_SYSTEM) {
         require_once($CFG->dirroot . '/course/lib.php');
         return array_merge(course_page_type_list($pagetype, $parentcontext, $currentcontext), $types);
     } else {

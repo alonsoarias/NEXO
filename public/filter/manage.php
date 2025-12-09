@@ -47,19 +47,19 @@ if ($returnto !== null) {
 }
 
 // This is a policy decision, rather than something that would be impossible to implement.
-if (!in_array($context->contextlevel, [CONTEXT_COURSECAT, CONTEXT_COURSE, CONTEXT_MODULE])) {
+if (!in_array($context->contextlevel, [CONTEXT_SYSTEMCAT, CONTEXT_SYSTEM, CONTEXT_SYSTEM])) {
     throw new \moodle_exception('cannotcustomisefiltersblockuser', 'error');
 }
 
-$isfrontpage = ($context->contextlevel == CONTEXT_COURSE && $context->instanceid == SITEID);
+$isfrontpage = ($context->contextlevel == CONTEXT_SYSTEM && $context->instanceid == SITEID);
 
 $contextname = $context->get_context_name();
 
-if ($context->contextlevel == CONTEXT_COURSECAT) {
+if ($context->contextlevel == CONTEXT_SYSTEMCAT) {
     core_course_category::page_setup();
-} else if ($context->contextlevel == CONTEXT_COURSE) {
+} else if ($context->contextlevel == CONTEXT_SYSTEM) {
     $PAGE->set_heading($course->fullname);
-} else if ($context->contextlevel == CONTEXT_MODULE) {
+} else if ($context->contextlevel == CONTEXT_SYSTEM) {
     // Must be module context.
     $PAGE->set_heading($PAGE->activityrecord->name);
 }
@@ -207,7 +207,7 @@ if (empty($availablefilters)) {
 // Appropriate back link.
 if (!$isfrontpage) {
 
-    if ($context->contextlevel === CONTEXT_COURSECAT && $returnto === 'management') {
+    if ($context->contextlevel === CONTEXT_SYSTEMCAT && $returnto === 'management') {
         $url = new moodle_url('/course/management.php', ['categoryid' => $context->instanceid]);
     } else {
         $url = $context->get_url();

@@ -276,7 +276,7 @@ final class files_test extends core_reportbuilder_testcase {
             // Context.
             'Context level' => ['context:level', [
                 'context:level_operator' => select::EQUAL_TO,
-                'context:level_value' => CONTEXT_COURSE,
+                'context:level_value' => CONTEXT_SYSTEM,
             ], 2],
             'Context level (no match)' => ['context:level', [
                 'context:level_operator' => select::EQUAL_TO,

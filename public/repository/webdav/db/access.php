@@ -29,7 +29,7 @@ $capabilities = array(
 
     'repository/webdav:view' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'coursecreator' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,

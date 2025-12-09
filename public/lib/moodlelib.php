@@ -2325,7 +2325,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
 
     // Loginas as redirection if needed.
     if ($course->id != SITEID and \core\session\manager::is_loggedinas()) {
-        if ($USER->loginascontext->contextlevel == CONTEXT_COURSE) {
+        if ($USER->loginascontext->contextlevel == CONTEXT_SYSTEM) {
             if ($USER->loginascontext->instanceid != $course->id) {
                 throw new \moodle_exception('loginasonecourse', '',
                     $CFG->wwwroot.'/course/view.php?id='.$USER->loginascontext->instanceid);
@@ -4641,7 +4641,7 @@ function delete_course($courseorid, $showfeedback = true) {
     remove_course_contents($courseid, $showfeedback);
 
     // Delete the course and related context instance.
-    context_helper::delete_instance(CONTEXT_COURSE, $courseid);
+    context_helper::delete_instance(CONTEXT_SYSTEM, $courseid);
 
     $DB->delete_records("course", array("id" => $courseid));
     $DB->delete_records("course_format_options", array("courseid" => $courseid));
@@ -4768,7 +4768,7 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
                         // We delete the questions after the activity database is removed,
                         // because questions are referenced via question reference tables
                         // Delete cm and its context - orphaned contexts are purged in cron in case of any race condition.
-                        context_helper::delete_instance(CONTEXT_MODULE, $cm->id);
+                        context_helper::delete_instance(CONTEXT_SYSTEM, $cm->id);
                     }
                 }
             }
@@ -4804,7 +4804,7 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
                 // Ignore weird or missing table problems.
             }
         }
-        context_helper::delete_instance(CONTEXT_MODULE, $cm->id);
+        context_helper::delete_instance(CONTEXT_SYSTEM, $cm->id);
     }
 
     if ($showfeedback) {
@@ -5049,7 +5049,7 @@ function reset_course_userdata($data) {
                           JOIN {enrol} e ON (e.id = ue.enrolid AND e.courseid = :courseid)
                           JOIN {context} c ON (c.contextlevel = :courselevel AND c.instanceid = e.courseid)
                           JOIN {role_assignments} ra ON (ra.contextid = c.id AND ra.roleid = :roleid AND ra.userid = ue.userid)";
-                $params = array('courseid' => $data->courseid, 'roleid' => $withroleid, 'courselevel' => CONTEXT_COURSE);
+                $params = array('courseid' => $data->courseid, 'roleid' => $withroleid, 'courselevel' => CONTEXT_SYSTEM);
 
             } else {
                 // Without any role assigned at course context.
@@ -5059,7 +5059,7 @@ function reset_course_userdata($data) {
                           JOIN {context} c ON (c.contextlevel = :courselevel AND c.instanceid = e.courseid)
                      LEFT JOIN {role_assignments} ra ON (ra.contextid = c.id AND ra.userid = ue.userid)
                          WHERE ra.id IS null";
-                $params = array('courseid' => $data->courseid, 'courselevel' => CONTEXT_COURSE);
+                $params = array('courseid' => $data->courseid, 'courselevel' => CONTEXT_SYSTEM);
             }
 
             $rs = $DB->get_recordset_sql($sql, $params);

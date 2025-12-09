@@ -122,13 +122,13 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
                 $page->set_pagelayout('frontpage');
                 $page->set_pagetype('site-index');
                 break;
-            case CONTEXT_COURSE:
+            case CONTEXT_SYSTEM:
                 $page->set_pagelayout('standard');
                 $page->set_pagetype('course-view');
                 $course = $DB->get_record('course', ['id' => $context->instanceid]);
                 $page->set_course($course);
                 break;
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
                 $page->set_pagelayout('standard');
                 $mod = $DB->get_field_sql("SELECT m.name
                                              FROM {modules} m

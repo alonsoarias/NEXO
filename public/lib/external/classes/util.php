@@ -79,7 +79,7 @@ class util {
                               FROM {course} c
                               JOIN {context} x ON x.instanceid = c.id
                              WHERE x.contextlevel = ? AND c.id $listsql",
-                array_merge([CONTEXT_COURSE], $listparams)
+                array_merge([CONTEXT_SYSTEM], $listparams)
             );
             foreach ($newcourseids as $cid) {
                 if (array_key_exists($cid, $newcourses)) {

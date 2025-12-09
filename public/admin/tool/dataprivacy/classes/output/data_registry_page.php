@@ -220,7 +220,7 @@ class data_registry_page implements renderable, templatable {
      */
     public static function get_courses_branch(\context $catcontext) {
 
-        if ($catcontext->contextlevel !== CONTEXT_COURSECAT) {
+        if ($catcontext->contextlevel !== CONTEXT_SYSTEMCAT) {
             throw new \coding_exception('A course category context should be provided');
         }
 
@@ -264,7 +264,7 @@ class data_registry_page implements renderable, templatable {
      */
     public static function get_modules_branch(\context $coursecontext) {
 
-        if ($coursecontext->contextlevel !== CONTEXT_COURSE) {
+        if ($coursecontext->contextlevel !== CONTEXT_SYSTEM) {
             throw new \coding_exception('A course context should be provided');
         }
 
@@ -304,7 +304,7 @@ class data_registry_page implements renderable, templatable {
     public static function get_blocks_branch(\context $coursecontext) {
         global $DB;
 
-        if ($coursecontext->contextlevel !== CONTEXT_COURSE) {
+        if ($coursecontext->contextlevel !== CONTEXT_SYSTEM) {
             throw new \coding_exception('A course context should be provided');
         }
 

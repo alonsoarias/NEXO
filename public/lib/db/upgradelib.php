@@ -330,7 +330,7 @@ function upgrade_course_letter_boundary($courseid = null) {
     global $DB, $CFG;
 
     $coursesql = '';
-    $params = array('contextlevel' => CONTEXT_COURSE);
+    $params = array('contextlevel' => CONTEXT_SYSTEM);
     if (!empty($courseid)) {
         $coursesql = 'AND c.id = :courseid';
         $params['courseid'] = $courseid;

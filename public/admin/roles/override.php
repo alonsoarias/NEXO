@@ -101,17 +101,17 @@ switch ($context->contextlevel) {
         $PAGE->set_heading($fullname);
         $showroles = 1;
         break;
-    case CONTEXT_COURSECAT:
+    case CONTEXT_SYSTEMCAT:
         $PAGE->set_heading($SITE->fullname);
         break;
-    case CONTEXT_COURSE:
+    case CONTEXT_SYSTEM:
         if ($isfrontpage) {
             $PAGE->set_heading(get_string('frontpage', 'admin'));
         } else {
             $PAGE->set_heading($course->fullname);
         }
         break;
-    case CONTEXT_MODULE:
+    case CONTEXT_SYSTEM:
         $PAGE->set_heading($context->get_context_name(false));
         $PAGE->set_cacheable(false);
         break;

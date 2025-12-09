@@ -71,7 +71,7 @@ final class upload_users_test extends advanced_testcase {
 
         // Create role with some of allowed capabilities to enrol users, and assign this role to user.
         $enrolroleid = create_role('enrol role', 'enrolrole', '');
-        set_role_contextlevels($enrolroleid, [CONTEXT_COURSECAT]);
+        set_role_contextlevels($enrolroleid, [CONTEXT_SYSTEMCAT]);
         assign_capability('enrol/manual:enrol', CAP_ALLOW, $enrolroleid, $coursecatcontext->id);
         assign_capability('moodle/course:enrolreview', CAP_ALLOW, $enrolroleid, $coursecatcontext->id);
         assign_capability('moodle/role:assign', CAP_ALLOW, $enrolroleid, $coursecatcontext->id);
@@ -137,7 +137,7 @@ EOF;
 
         // Create role with some of allowed capabilities to enrol users, and assign this role to user.
         $enrolroleid = create_role('enrol role', 'enrolrole', '');
-        set_role_contextlevels($enrolroleid, [CONTEXT_COURSECAT]);
+        set_role_contextlevels($enrolroleid, [CONTEXT_SYSTEMCAT]);
         assign_capability('enrol/manual:enrol', CAP_ALLOW, $enrolroleid, $coursecatcontext->id);
         assign_capability('moodle/course:enrolreview', CAP_ALLOW, $enrolroleid, $coursecatcontext->id);
         assign_capability('moodle/role:assign', CAP_ALLOW, $enrolroleid, $coursecatcontext->id);

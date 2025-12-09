@@ -243,7 +243,7 @@ class mod extends base {
         // Delete module contexts.
         if ($coursemods) {
             foreach ($coursemods as $coursemod) {
-                \context_helper::delete_instance(CONTEXT_MODULE, $coursemod->id);
+                \context_helper::delete_instance(CONTEXT_SYSTEM, $coursemod->id);
             }
         }
 

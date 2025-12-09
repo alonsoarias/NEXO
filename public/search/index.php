@@ -72,9 +72,9 @@ if ($contextid) {
         $searchwithin = [];
         $searchwithin[''] = get_string('everywhere', 'search');
         $searchwithin['course'] = $coursecontext->get_context_name();
-        if ($context->contextlevel != CONTEXT_COURSE) {
+        if ($context->contextlevel != CONTEXT_SYSTEM) {
             $searchwithin['context'] = $context->get_context_name();
-            if ($context->contextlevel == CONTEXT_MODULE) {
+            if ($context->contextlevel == CONTEXT_SYSTEM) {
                 $customdata['withincmid'] = $context->instanceid;
             }
         }

@@ -74,8 +74,8 @@ class data_deletion_page implements renderable, templatable {
         $url = new moodle_url('/admin/tool/dataprivacy/datadeletion.php');
         $options = [
             CONTEXT_USER => get_string('user'),
-            CONTEXT_COURSE => get_string('course'),
-            CONTEXT_MODULE => get_string('activitiesandresources', 'tool_dataprivacy'),
+            CONTEXT_SYSTEM => get_string('course'),
+            CONTEXT_SYSTEM => get_string('activitiesandresources', 'tool_dataprivacy'),
             CONTEXT_BLOCK => get_string('blocks'),
         ];
         $filterselector = new single_select($url, 'filter', $options, $this->filter, null);

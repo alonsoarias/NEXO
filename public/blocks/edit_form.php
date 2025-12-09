@@ -200,11 +200,11 @@ class block_edit_form extends \core_form\dynamic_form {
         // it's always system-wide BUI_CONTEXTS_ENTIRE_SITE
         } else if ($parentcontext->contextlevel == CONTEXT_SYSTEM) {
 
-        } else if ($parentcontext->contextlevel == CONTEXT_COURSE) {
+        } else if ($parentcontext->contextlevel == CONTEXT_SYSTEM) {
             // 0 means display on current context only, not child contexts
             // but if course managers select mod-* as pagetype patterns, block system will overwrite this option
             // to 1 (display on current context and child contexts)
-        } else if ($parentcontext->contextlevel == CONTEXT_MODULE or $parentcontext->contextlevel == CONTEXT_USER) {
+        } else if ($parentcontext->contextlevel == CONTEXT_SYSTEM or $parentcontext->contextlevel == CONTEXT_USER) {
             // module context doesn't have child contexts, so display in current context only
         } else {
             $parentcontextname = $parentcontext->get_context_name();
@@ -316,7 +316,7 @@ class block_edit_form extends \core_form\dynamic_form {
      */
     public function is_editing_the_frontpage() {
         // There are some conditions to check related to contexts.
-        $ctxconditions = $this->page->context->contextlevel == CONTEXT_COURSE &&
+        $ctxconditions = $this->page->context->contextlevel == CONTEXT_SYSTEM &&
             $this->page->context->instanceid == get_site()->id;
         $issiteindex = (strpos($this->page->pagetype, 'site-index') === 0);
         // So now we can be 100% sure if edition is happening at frontpage.

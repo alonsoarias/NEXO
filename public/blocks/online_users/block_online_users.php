@@ -67,7 +67,7 @@ class block_online_users extends block_base {
         //Get the user current group
         $currentgroup = $isseparategroups ? groups_get_course_group($this->page->course) : NULL;
 
-        $sitelevel = $this->page->course->id == SITEID || $this->page->context->contextlevel < CONTEXT_COURSE;
+        $sitelevel = $this->page->course->id == SITEID || $this->page->context->contextlevel < CONTEXT_SYSTEM;
 
         $onlineusers = new fetcher($currentgroup, $now, $timetoshowusers, $this->page->context,
                 $sitelevel, $this->page->course->id);

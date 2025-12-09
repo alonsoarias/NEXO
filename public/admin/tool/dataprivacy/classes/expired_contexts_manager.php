@@ -182,7 +182,7 @@ class expired_contexts_manager {
         // which course end date already passed.
         // This is ordered by the context path in reverse order, which will give the child nodes before any parent node.
         $params = [
-            'contextlevel' => CONTEXT_COURSE,
+            'contextlevel' => CONTEXT_SYSTEM,
         ];
         $where = '';
 

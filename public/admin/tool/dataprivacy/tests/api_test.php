@@ -1324,12 +1324,12 @@ final class api_test extends \advanced_testcase {
 
         // Course defined values should have preference.
         list($purposevar, $categoryvar) = data_registry::var_names_from_context(
-            \context_helper::get_class_for_level(CONTEXT_COURSE)
+            \context_helper::get_class_for_level(CONTEXT_SYSTEM)
         );
         set_config($purposevar, $purposes[1]->get('id'), 'tool_dataprivacy');
         set_config($categoryvar, $categories[0]->get('id'), 'tool_dataprivacy');
 
-        list($purposeid, $categoryid) = data_registry::get_effective_default_contextlevel_purpose_and_category(CONTEXT_COURSE);
+        list($purposeid, $categoryid) = data_registry::get_effective_default_contextlevel_purpose_and_category(CONTEXT_SYSTEM);
         $this->assertEquals($purposes[1]->get('id'), $purposeid);
         $this->assertEquals($categories[0]->get('id'), $categoryid);
 
@@ -1444,9 +1444,9 @@ final class api_test extends \advanced_testcase {
      */
     public static function invalid_effective_contextlevel_provider(): array {
         return [
-            [CONTEXT_COURSECAT],
-            [CONTEXT_COURSE],
-            [CONTEXT_MODULE],
+            [CONTEXT_SYSTEMCAT],
+            [CONTEXT_SYSTEM],
+            [CONTEXT_SYSTEM],
             [CONTEXT_BLOCK],
         ];
     }
@@ -1773,8 +1773,8 @@ final class api_test extends \advanced_testcase {
         $this->assertEquals($systemdata->category, api::get_effective_context_category($contextcourse));
         $this->assertEquals($systemdata->category, api::get_effective_context_category($contextforum));
 
-        // Set a default value of inherit for CONTEXT_COURSECAT.
-        $classname = \context_helper::get_class_for_level(CONTEXT_COURSECAT);
+        // Set a default value of inherit for CONTEXT_SYSTEMCAT.
+        $classname = \context_helper::get_class_for_level(CONTEXT_SYSTEMCAT);
         list($purposevar, $categoryvar) = data_registry::var_names_from_context($classname);
         set_config($purposevar, '-1', 'tool_dataprivacy');
         set_config($categoryvar, '-1', 'tool_dataprivacy');
@@ -1791,8 +1791,8 @@ final class api_test extends \advanced_testcase {
         $this->assertEquals($systemdata->category, api::get_effective_context_category($contextcourse));
         $this->assertEquals($systemdata->category, api::get_effective_context_category($contextforum));
 
-        // Set a default value of inherit for CONTEXT_COURSE.
-        $classname = \context_helper::get_class_for_level(CONTEXT_COURSE);
+        // Set a default value of inherit for CONTEXT_SYSTEM.
+        $classname = \context_helper::get_class_for_level(CONTEXT_SYSTEM);
         list($purposevar, $categoryvar) = data_registry::var_names_from_context($classname);
         set_config($purposevar, '-1', 'tool_dataprivacy');
         set_config($categoryvar, '-1', 'tool_dataprivacy');
@@ -1809,8 +1809,8 @@ final class api_test extends \advanced_testcase {
         $this->assertEquals($systemdata->category, api::get_effective_context_category($contextcourse));
         $this->assertEquals($systemdata->category, api::get_effective_context_category($contextforum));
 
-        // Set a default value of inherit for CONTEXT_MODULE.
-        $classname = \context_helper::get_class_for_level(CONTEXT_MODULE);
+        // Set a default value of inherit for CONTEXT_SYSTEM.
+        $classname = \context_helper::get_class_for_level(CONTEXT_SYSTEM);
         list($purposevar, $categoryvar) = data_registry::var_names_from_context($classname);
         set_config($purposevar, '-1', 'tool_dataprivacy');
         set_config($categoryvar, '-1', 'tool_dataprivacy');
@@ -2004,9 +2004,9 @@ final class api_test extends \advanced_testcase {
      */
     public static function set_context_defaults_provider(): array {
         $contextlevels = [
-            [CONTEXT_COURSECAT],
-            [CONTEXT_COURSE],
-            [CONTEXT_MODULE],
+            [CONTEXT_SYSTEMCAT],
+            [CONTEXT_SYSTEM],
+            [CONTEXT_SYSTEM],
             [CONTEXT_BLOCK],
         ];
         $paramsets = [
@@ -2021,10 +2021,10 @@ final class api_test extends \advanced_testcase {
             foreach ($paramsets as $set) {
                 $data[] = array_merge($level, $set);
             }
-            if ($level == CONTEXT_MODULE) {
+            if ($level == CONTEXT_SYSTEM) {
                 // Add a combination where defaults for activity is being set.
-                $data[] = [CONTEXT_MODULE, false, false, true, false];
-                $data[] = [CONTEXT_MODULE, false, false, true, true];
+                $data[] = [CONTEXT_SYSTEM, false, false, true, false];
+                $data[] = [CONTEXT_SYSTEM, false, false, true, true];
             }
         }
         return $data;
@@ -2101,7 +2101,7 @@ final class api_test extends \advanced_testcase {
         $categoryid = $inheritcategory ? context_instance::INHERIT : $category2->get('id');
         $purposeid = $inheritpurpose ? context_instance::INHERIT : $purpose2->get('id');
         $activity = '';
-        if ($contextlevel == CONTEXT_MODULE && $foractivity) {
+        if ($contextlevel == CONTEXT_SYSTEM && $foractivity) {
             $activity = 'assign';
         }
         $result = api::set_context_defaults($contextlevel, $categoryid, $purposeid, $activity, $override);
@@ -2109,13 +2109,13 @@ final class api_test extends \advanced_testcase {
 
         $targetctxinstance = false;
         switch ($contextlevel) {
-            case CONTEXT_COURSECAT:
+            case CONTEXT_SYSTEMCAT:
                 $targetctxinstance = $coursecatctxinstance;
                 break;
-            case CONTEXT_COURSE:
+            case CONTEXT_SYSTEM:
                 $targetctxinstance = $coursectxinstance;
                 break;
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
                 $targetctxinstance = $assignctxinstance;
                 break;
             case CONTEXT_BLOCK:
@@ -2132,7 +2132,7 @@ final class api_test extends \advanced_testcase {
 
             // Check forum context instance.
             $forumctxexists = context_instance::record_exists($forumctxinstance->get('id'));
-            if ($contextlevel != CONTEXT_MODULE || $foractivity) {
+            if ($contextlevel != CONTEXT_SYSTEM || $foractivity) {
                 // The forum context instance won't be affected in this test if:
                 // - The overridden defaults are not for context modules.
                 // - Only the defaults for assign have been set.
@@ -2174,11 +2174,11 @@ final class api_test extends \advanced_testcase {
         ];
 
         if (null !== $course) {
-            $purposes->course = $this->create_and_set_purpose_for_contextlevel($course, CONTEXT_COURSE);
+            $purposes->course = $this->create_and_set_purpose_for_contextlevel($course, CONTEXT_SYSTEM);
         }
 
         if (null !== $activity) {
-            $purposes->activity = $this->create_and_set_purpose_for_contextlevel($activity, CONTEXT_MODULE);
+            $purposes->activity = $this->create_and_set_purpose_for_contextlevel($activity, CONTEXT_SYSTEM);
         }
 
         return $purposes;
@@ -2210,7 +2210,7 @@ final class api_test extends \advanced_testcase {
             api::set_contextlevel($record);
         } else {
             list($purposevar, ) = data_registry::var_names_from_context(
-                    \context_helper::get_class_for_level(CONTEXT_COURSE)
+                    \context_helper::get_class_for_level(CONTEXT_SYSTEM)
                 );
             set_config($purposevar, $purpose->get('id'), 'tool_dataprivacy');
         }

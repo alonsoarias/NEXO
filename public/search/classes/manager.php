@@ -784,10 +784,10 @@ class manager {
             $coursecontext = \context_course::instance($course->id);
             $hasgrouprestrictions = false;
 
-            if (!empty($areasbylevel[CONTEXT_COURSE]) &&
+            if (!empty($areasbylevel[CONTEXT_SYSTEM]) &&
                     (!$limitcontextids || in_array($coursecontext->id, $limitcontextids))) {
                 // Add the course contexts the user can view.
-                foreach ($areasbylevel[CONTEXT_COURSE] as $areaid => $searchclass) {
+                foreach ($areasbylevel[CONTEXT_SYSTEM] as $areaid => $searchclass) {
                     if (!empty($mycourses[$course->id]) || \core_course_category::can_view_course_info($course)) {
                         $areascontexts[$areaid][$coursecontext->id] = $coursecontext->id;
                     }
@@ -804,10 +804,10 @@ class manager {
             // Info about the course modules.
             $modinfo = get_fast_modinfo($course);
 
-            if (!empty($areasbylevel[CONTEXT_MODULE])) {
+            if (!empty($areasbylevel[CONTEXT_SYSTEM])) {
                 // Add the module contexts the user can view (cm_info->uservisible).
 
-                foreach ($areasbylevel[CONTEXT_MODULE] as $areaid => $searchclass) {
+                foreach ($areasbylevel[CONTEXT_SYSTEM] as $areaid => $searchclass) {
 
                     // Removing the plugintype 'mod_' prefix.
                     $modulename = substr($searchclass->get_component_name(), 4);

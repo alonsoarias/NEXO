@@ -1017,7 +1017,7 @@ class core_user_external extends \core_external\external_api {
         list($sqlcourseids, $params) = $DB->get_in_or_equal(array_unique($courseids), SQL_PARAMS_NAMED);
         $cselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
         $cjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
-        $params['contextlevel'] = CONTEXT_COURSE;
+        $params['contextlevel'] = CONTEXT_SYSTEM;
         $coursesql = "SELECT c.* $cselect
                         FROM {course} c $cjoin
                        WHERE c.id $sqlcourseids";

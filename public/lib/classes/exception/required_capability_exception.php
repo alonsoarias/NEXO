@@ -36,7 +36,7 @@ class required_capability_exception extends moodle_exception {
      */
     public function __construct($context, $capability, $errormessage, $stringfile) {
         $capabilityname = get_capability_string($capability);
-        if ($context->contextlevel == CONTEXT_MODULE && preg_match('/:view$/', $capability)) {
+        if ($context->contextlevel == CONTEXT_SYSTEM && preg_match('/:view$/', $capability)) {
             // Cannot redirect to mod/xx/view.php because we most probably do not have cap to view it.
             // Redirect to the course instead.
             $parentcontext = $context->get_parent_context();

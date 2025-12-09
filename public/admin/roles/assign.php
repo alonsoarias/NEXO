@@ -164,17 +164,17 @@ switch ($context->contextlevel) {
         $PAGE->set_heading($fullname);
         $showroles = 1;
         break;
-    case CONTEXT_COURSECAT:
+    case CONTEXT_SYSTEMCAT:
         core_course_category::page_setup();
         break;
-    case CONTEXT_COURSE:
+    case CONTEXT_SYSTEM:
         if ($isfrontpage) {
             $PAGE->set_heading(get_string('frontpage', 'admin'));
         } else {
             $PAGE->set_heading($course->fullname);
         }
         break;
-    case CONTEXT_MODULE:
+    case CONTEXT_SYSTEM:
         $PAGE->set_heading($context->get_context_name(false));
         $PAGE->set_cacheable(false);
         break;
@@ -186,7 +186,7 @@ switch ($context->contextlevel) {
 $PAGE->set_navigation_overflow_state(false);
 
 // Within a course context we need to explicitly set active tab as there isn't a reference in the nav tree.
-if ($context->contextlevel == CONTEXT_COURSE) {
+if ($context->contextlevel == CONTEXT_SYSTEM) {
     $PAGE->set_secondary_active_tab('participants');
 }
 echo $OUTPUT->header();
@@ -195,7 +195,7 @@ $backurl = null;
 // We are looking at a particular role. The page URL has been set correctly.
 if ($roleid) {
     $backurl = $pageurl;
-} else if ($context->contextlevel == CONTEXT_COURSE && !$isfrontpage) {
+} else if ($context->contextlevel == CONTEXT_SYSTEM && !$isfrontpage) {
     // Return to the intermediary page when within the course context.
     $backurl = new moodle_url('/enrol/otherusers.php', ['id' => $course->id]);
 } else if ($returnurl) {
@@ -207,7 +207,7 @@ if ($backurl) {
     $backbutton = new single_button($backurl, get_string('back'), 'get');
     $backbutton->class = 'singlebutton navitem';
     echo html_writer::tag('div', $OUTPUT->render($backbutton), ['class' => 'tertiary-navigation']);
-} else if (in_array($context->contextlevel, [CONTEXT_COURSE, CONTEXT_MODULE, CONTEXT_COURSECAT])) {
+} else if (in_array($context->contextlevel, [CONTEXT_SYSTEM, CONTEXT_SYSTEM, CONTEXT_SYSTEMCAT])) {
     // The front page doesn't have an intermediate page 'other users' but needs similar tertiary nav like a standard course.
     echo $OUTPUT->render_participants_tertiary_nav($course);
 }

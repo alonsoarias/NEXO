@@ -348,13 +348,13 @@ class manager {
      */
     public function is_action_enabled_in_context(\context $context, string $actionclass): bool {
         // Only check if we are in a supported context.
-        if (in_array($context->contextlevel, [CONTEXT_COURSE, CONTEXT_COURSECAT, CONTEXT_MODULE])) {
+        if (in_array($context->contextlevel, [CONTEXT_SYSTEM, CONTEXT_SYSTEMCAT, CONTEXT_SYSTEM])) {
             // Return false if AI tools is not enabled at the course level.
             if (!self::is_ai_tools_enabled_in_course($context)) {
                 return false;
             }
 
-            if ($context->contextlevel == CONTEXT_MODULE) {
+            if ($context->contextlevel == CONTEXT_SYSTEM) {
                 // Detect if this is a newly created module (doesn't have any AI settings yet).
                 $record = self::get_ai_fields_from_course_module($context->instanceid);
                 if (is_null($record->enabledaiactions)) {
@@ -768,7 +768,7 @@ class manager {
     public static function is_ai_tools_enabled_in_course(\context $context): bool {
         global $DB;
 
-        if (in_array($context->contextlevel, [CONTEXT_COURSE, CONTEXT_COURSECAT])) {
+        if (in_array($context->contextlevel, [CONTEXT_SYSTEM, CONTEXT_SYSTEMCAT])) {
             $courseid = $context->instanceid;
         } else {
             $courseid = $DB->get_field('course_modules', 'course', ['id' => $context->instanceid]);

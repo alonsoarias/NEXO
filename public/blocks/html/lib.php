@@ -48,7 +48,7 @@ function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $a
     } else {
         // Get parent context and see if user have proper permission.
         $parentcontext = $context->get_parent_context();
-        if ($parentcontext->contextlevel === CONTEXT_COURSECAT) {
+        if ($parentcontext->contextlevel === CONTEXT_SYSTEMCAT) {
             // Check if category is visible and user can view this category.
             if (!core_course_category::get($parentcontext->instanceid, IGNORE_MISSING)) {
                 send_file_not_found();

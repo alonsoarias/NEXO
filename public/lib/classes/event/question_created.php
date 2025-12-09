@@ -76,7 +76,7 @@ class question_created extends question_base {
      */
     public function get_url() {
         if ($this->courseid) {
-            if ($this->contextlevel == CONTEXT_MODULE) {
+            if ($this->contextlevel == CONTEXT_SYSTEM) {
                 return new \moodle_url('/question/bank/previewquestion/preview.php', ['cmid' => $this->contextinstanceid, 'id' => $this->objectid]);
             }
             return new \moodle_url('/question/bank/previewquestion/preview.php', ['courseid' => $this->courseid, 'id' => $this->objectid]);

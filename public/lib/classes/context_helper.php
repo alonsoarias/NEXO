@@ -60,7 +60,7 @@ abstract class context_helper extends context {
         self::$alllevels = array(
             CONTEXT_SYSTEM => \core\context\system::class,
             CONTEXT_USER => \core\context\user::class,
-            CONTEXT_COURSECAT => \core\context\coursecat::class,
+            CONTEXT_SYSTEMCAT => \core\context\coursecat::class,
             CONTEXT_BLOCK => \core\context\block::class,
         );
 

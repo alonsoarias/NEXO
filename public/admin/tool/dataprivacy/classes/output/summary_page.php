@@ -47,9 +47,9 @@ class summary_page implements renderable, templatable {
         $contextlevels = [
             'contextlevelname10' => CONTEXT_SYSTEM,
             'contextlevelname30' => CONTEXT_USER,
-            'contextlevelname40' => CONTEXT_COURSECAT,
-            'contextlevelname50' => CONTEXT_COURSE,
-            'contextlevelname70' => CONTEXT_MODULE,
+            'contextlevelname40' => CONTEXT_SYSTEMCAT,
+            'contextlevelname50' => CONTEXT_SYSTEM,
+            'contextlevelname70' => CONTEXT_SYSTEM,
             'contextlevelname80' => CONTEXT_BLOCK
         ];
 

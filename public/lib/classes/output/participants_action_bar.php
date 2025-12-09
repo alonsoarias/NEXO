@@ -48,9 +48,9 @@ class participants_action_bar implements renderable {
         $this->course = $course;
         $this->page = $page;
         $node = 'users';
-        if ($this->page->context->contextlevel == CONTEXT_MODULE) {
+        if ($this->page->context->contextlevel == CONTEXT_SYSTEM) {
             $node = 'modulesettings';
-        } else if ($this->page->context->contextlevel == CONTEXT_COURSECAT) {
+        } else if ($this->page->context->contextlevel == CONTEXT_SYSTEMCAT) {
             $node = 'categorysettings';
         }
 
@@ -99,8 +99,8 @@ class participants_action_bar implements renderable {
         $formattedcontent = [];
         $enrolmentsheading = get_string('enrolments', 'enrol');
         if (
-            $this->page->context->contextlevel != CONTEXT_MODULE &&
-                $this->page->context->contextlevel != CONTEXT_COURSECAT
+            $this->page->context->contextlevel != CONTEXT_SYSTEM &&
+                $this->page->context->contextlevel != CONTEXT_SYSTEMCAT
         ) {
             // Pre-populate the formatted tertiary nav items with the "Enrolled users" node if user can view the participants page.
             $coursecontext = context_course::instance($this->course->id);
@@ -148,8 +148,8 @@ class participants_action_bar implements renderable {
 
         // If we are accessing a page from a module/category context additional nodes will not be visible.
         if (
-            $this->page->context->contextlevel != CONTEXT_MODULE &&
-                $this->page->context->contextlevel != CONTEXT_COURSECAT
+            $this->page->context->contextlevel != CONTEXT_SYSTEM &&
+                $this->page->context->contextlevel != CONTEXT_SYSTEMCAT
         ) {
             // Need to do some funky code here to find out if we have added third party navigation nodes.
             $thirdpartynodearray = $this->get_thirdparty_node_array() ?: [];

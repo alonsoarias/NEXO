@@ -69,7 +69,7 @@ class user_profile_viewed extends base {
      */
     public function get_description() {
         $desc = "The user with id '$this->userid' viewed the profile for the user with id '$this->relateduserid'";
-        $desc .= ($this->contextlevel == CONTEXT_COURSE) ? " in the course with id '$this->courseid'." : ".";
+        $desc .= ($this->contextlevel == CONTEXT_SYSTEM) ? " in the course with id '$this->courseid'." : ".";
         return $desc;
     }
 
@@ -79,7 +79,7 @@ class user_profile_viewed extends base {
      * @return \moodle_url
      */
     public function get_url() {
-        if ($this->contextlevel == CONTEXT_COURSE) {
+        if ($this->contextlevel == CONTEXT_SYSTEM) {
             return new \moodle_url('/user/view.php', array('id' => $this->relateduserid, 'course' => $this->courseid));
         }
         return new \moodle_url('/user/profile.php', array('id' => $this->relateduserid));

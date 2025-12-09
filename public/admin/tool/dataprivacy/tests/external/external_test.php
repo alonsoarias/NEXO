@@ -480,7 +480,7 @@ final class external_test extends \core_external\tests\externallib_testcase {
         $user = $generator->create_user();
         $this->setUser($user);
         $this->expectException(\required_capability_exception::class);
-        external::set_context_defaults(CONTEXT_COURSECAT, context_instance::INHERIT, context_instance::INHERIT, '', false);
+        external::set_context_defaults(CONTEXT_SYSTEMCAT, context_instance::INHERIT, context_instance::INHERIT, '', false);
     }
 
     /**
@@ -526,7 +526,7 @@ final class external_test extends \core_external\tests\externallib_testcase {
         $modulename = $modulelevel ? 'assign' : '';
         $categoryid = $category2->get('id');
         $purposeid = $purpose2->get('id');
-        $result = external::set_context_defaults(CONTEXT_MODULE, $categoryid, $purposeid, $modulename, $override);
+        $result = external::set_context_defaults(CONTEXT_SYSTEM, $categoryid, $purposeid, $modulename, $override);
 
         // Extract the result.
         $return = external_api::clean_returnvalue(external::set_context_defaults_returns(), $result);
@@ -543,7 +543,7 @@ final class external_test extends \core_external\tests\externallib_testcase {
         }
 
         // Check the saved defaults.
-        list($savedpurpose, $savedcategory) = \tool_dataprivacy\data_registry::get_defaults(CONTEXT_MODULE, $modulename);
+        list($savedpurpose, $savedcategory) = \tool_dataprivacy\data_registry::get_defaults(CONTEXT_SYSTEM, $modulename);
         $this->assertEquals($categoryid, $savedcategory);
         $this->assertEquals($purposeid, $savedpurpose);
     }
@@ -730,7 +730,7 @@ final class external_test extends \core_external\tests\externallib_testcase {
         }
 
         // Set the context default for the assignment module.
-        api::set_context_defaults(CONTEXT_MODULE, $categoryid, $purposeid, 'assign');
+        api::set_context_defaults(CONTEXT_SYSTEM, $categoryid, $purposeid, 'assign');
 
         // Call the WS function.
         $result = external::get_activity_options($nodefaults);

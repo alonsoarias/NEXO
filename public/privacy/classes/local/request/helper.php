@@ -178,7 +178,7 @@ class helper {
             'userid' => $userid,
             // Strip the mod_ from the name.
             'modname' => substr($contextlist->get_component(), 4),
-            'contextlevel' => CONTEXT_MODULE,
+            'contextlevel' => CONTEXT_SYSTEM,
         ];
 
         $contextlist->add_from_sql($sql, $params);

@@ -384,7 +384,7 @@ class engine extends \core_search\engine {
         if (!empty($filters->order) && $filters->order === 'location') {
             $coursecontext = $filters->context->get_course_context();
             $query->addBoostQuery('courseid', $coursecontext->instanceid, self::COURSE_BOOST);
-            if ($filters->context->contextlevel !== CONTEXT_COURSE) {
+            if ($filters->context->contextlevel !== CONTEXT_SYSTEM) {
                 // If it's a block or activity, also add a boost for the specific context id.
                 $query->addBoostQuery('contextid', $filters->context->id, self::CONTEXT_BOOST);
             }

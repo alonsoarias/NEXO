@@ -479,7 +479,7 @@ function xmldb_main_upgrade($oldversion) {
         $rs = $DB->get_recordset_sql(
             sql: $sql,
             params: [
-                'contextcourse' => CONTEXT_COURSE,
+                'contextcourse' => CONTEXT_SYSTEM,
                 'instancetype' => 'coursecommunication',
             ],
         );

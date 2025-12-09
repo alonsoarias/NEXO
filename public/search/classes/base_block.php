@@ -137,8 +137,8 @@ abstract class base_block extends base {
                            OR bi.pagetypepattern IN ('site-index', 'course-*', '*')))
                        $restrictions
               ORDER BY bi.timemodified ASC",
-                array_merge($contextparams, [CONTEXT_BLOCK, CONTEXT_MODULE, CONTEXT_COURSE,
-                    $modifiedfrom, $this->get_block_name(), CONTEXT_COURSE, 'course-view-%'],
+                array_merge($contextparams, [CONTEXT_BLOCK, CONTEXT_SYSTEM, CONTEXT_SYSTEM,
+                    $modifiedfrom, $this->get_block_name(), CONTEXT_SYSTEM, 'course-view-%'],
                 $restrictionparams));
     }
 
@@ -252,7 +252,7 @@ abstract class base_block extends base {
                  LEFT JOIN {course} c ON c.id = parent.instanceid AND parent.contextlevel = ?
                  LEFT JOIN {course_modules} cm ON cm.id = parent.instanceid AND parent.contextlevel = ?
                      WHERE bi.id = ?",
-                    [CONTEXT_COURSE, CONTEXT_MODULE, $id], $strictness);
+                    [CONTEXT_SYSTEM, CONTEXT_SYSTEM, $id], $strictness);
             $cache->set($id, $instance);
         }
         return $instance;
@@ -318,9 +318,9 @@ abstract class base_block extends base {
                 $sql = '';
                 break;
 
-            case CONTEXT_COURSECAT:
-            case CONTEXT_COURSE:
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEMCAT:
+            case CONTEXT_SYSTEM:
+            case CONTEXT_SYSTEM:
             case CONTEXT_USER:
                 // Find all blocks whose parent is within the specified context.
                 $sql = " JOIN {context} gcrsx ON gcrsx.id = $blocktable.parentcontextid
@@ -391,7 +391,7 @@ abstract class base_block extends base {
                        $extrajoins
                  WHERE bi.blockname = ? AND parent.contextlevel = ?
               GROUP BY $groupbycolumns
-              ORDER BY $dborder", [CONTEXT_BLOCK, $this->get_block_name(), CONTEXT_COURSE]);
+              ORDER BY $dborder", [CONTEXT_BLOCK, $this->get_block_name(), CONTEXT_SYSTEM]);
         return new \core\dml\recordset_walk($rs, function($rec) {
             $id = $rec->ctxid;
             \context_helper::preload_from_record($rec);

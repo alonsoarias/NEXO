@@ -98,7 +98,7 @@ if ($userrating != RATING_UNSET_RATING) {
     $rm->delete_ratings($options);
 }
 
-if (!empty($cm) && $context->contextlevel == CONTEXT_MODULE) {
+if (!empty($cm) && $context->contextlevel == CONTEXT_SYSTEM) {
     // Tell the module that its grades have changed (note that 'cmidnumber' is required in order to update grades).
     $modinstance = $DB->get_record($cm->modname, array('id' => $cm->instance), '*', MUST_EXIST);
     $modinstance->cmidnumber = $cm->idnumber;

@@ -28,7 +28,7 @@ $capabilities = [
     // Capability to record audio using this plugin.
     'tiny/recordrtc:recordaudio' => [
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'user' => CAP_ALLOW,
         ],
@@ -36,7 +36,7 @@ $capabilities = [
     // Capability to record video using this plugin.
     'tiny/recordrtc:recordvideo' => [
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [
             'user' => CAP_ALLOW,
         ],
@@ -44,14 +44,14 @@ $capabilities = [
     // Capability to record screen using this plugin.
     'tiny/recordrtc:recordscreen' => [
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [
             'user' => CAP_ALLOW,
         ],
     ],
     'tiny/recordrtc:use' => [
         'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
+        'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'user' => CAP_ALLOW,
         ],

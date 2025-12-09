@@ -206,8 +206,8 @@ class context_instance extends \core\form\persistent {
         $exportedpurpose = $exporter->export($renderer);
 
         switch ($retentioncontextlevel) {
-            case CONTEXT_COURSE:
-            case CONTEXT_MODULE:
+            case CONTEXT_SYSTEM:
+            case CONTEXT_SYSTEM:
             case CONTEXT_BLOCK:
                 $str = get_string('effectiveretentionperiodcourse', 'tool_dataprivacy',
                     $exportedpurpose->formattedretentionperiod);

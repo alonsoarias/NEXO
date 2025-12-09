@@ -61,13 +61,13 @@ class boostnavbar implements \renderable {
         // Defines whether section items with an action should be removed by default.
         $removesections = true;
 
-        if ($this->page->context->contextlevel == CONTEXT_COURSECAT) {
+        if ($this->page->context->contextlevel == CONTEXT_SYSTEMCAT) {
             // Remove the 'Permissions' navbar node in the Check permissions page.
             if ($this->page->pagetype === 'admin-roles-check') {
                 $this->remove('permissions');
             }
         }
-        if ($this->page->context->contextlevel == CONTEXT_COURSE) {
+        if ($this->page->context->contextlevel == CONTEXT_SYSTEM) {
             $removesections = course_get_format($this->page->course)->can_sections_be_removed_from_navigation();
             // Remove any duplicate navbar nodes.
             $this->remove_duplicate_items();
@@ -106,7 +106,7 @@ class boostnavbar implements \renderable {
         }
 
         // Remove 'My courses' if we are in the module context.
-        if ($this->page->context->contextlevel == CONTEXT_MODULE) {
+        if ($this->page->context->contextlevel == CONTEXT_SYSTEM) {
             $this->remove('mycourses');
             $this->remove('courses');
             // Remove the course category breadcrumb nodes.

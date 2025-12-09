@@ -42,11 +42,11 @@ final class expired_contexts_test extends \advanced_testcase {
         ];
 
         if (null !== $course) {
-            $purposes->course = $this->create_and_set_purpose_for_contextlevel($course, CONTEXT_COURSE);
+            $purposes->course = $this->create_and_set_purpose_for_contextlevel($course, CONTEXT_SYSTEM);
         }
 
         if (null !== $activity) {
-            $purposes->activity = $this->create_and_set_purpose_for_contextlevel($activity, CONTEXT_MODULE);
+            $purposes->activity = $this->create_and_set_purpose_for_contextlevel($activity, CONTEXT_SYSTEM);
         }
 
         return $purposes;
