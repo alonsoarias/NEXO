@@ -105,19 +105,9 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
 
     // Navigation settings
     $temp = new admin_settingpage('navigation', new lang_string('navigation'));
-    $temp->add(new admin_setting_configcheckbox(
-        'enabledashboard',
-        new lang_string('enabledashboard', 'admin'),
-        new lang_string('enabledashboard_help', 'admin'),
-        1
-    ));
 
+    // NEXO: Dashboard and My Courses are not available, only site homepage.
     $choices = [HOMEPAGE_SITE => new lang_string('home')];
-    if (!isset($CFG->enabledashboard) || $CFG->enabledashboard) {
-        $choices[HOMEPAGE_MY] = new lang_string('mymoodle', 'admin');
-    }
-    $choices[HOMEPAGE_MYCOURSES] = new lang_string('mycourses', 'admin');
-    $choices[HOMEPAGE_USER] = new lang_string('userpreference', 'admin');
 
     // Allow hook callbacks to extend options.
     $hook = new \core_user\hook\extend_default_homepage();
@@ -125,15 +115,7 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
     $choices += $hook->get_options();
 
     $temp->add(new admin_setting_configselect('defaulthomepage', new lang_string('defaulthomepage', 'admin'),
-            new lang_string('configdefaulthomepage', 'admin'), get_default_home_page(), $choices));
-    if (!isset($CFG->enabledashboard) || $CFG->enabledashboard) {
-        $temp->add(new admin_setting_configcheckbox(
-            'allowguestmymoodle',
-            new lang_string('allowguestmymoodle', 'admin'),
-            new lang_string('configallowguestmymoodle', 'admin'),
-            1
-        ));
-    }
+            new lang_string('configdefaulthomepage', 'admin'), HOMEPAGE_SITE, $choices));
     $temp->add(new admin_setting_configcheckbox('usesitenameforsitepages', new lang_string('usesitenameforsitepages', 'admin'), new lang_string('configusesitenameforsitepages', 'admin'), 0));
     $temp->add(new admin_setting_configcheckbox('linkadmincategories', new lang_string('linkadmincategories', 'admin'), new lang_string('linkadmincategories_help', 'admin'), 1));
 
@@ -167,12 +149,6 @@ if ($hassiteconfig or has_any_capability($capabilities, $systemcontext)) { // sp
     $temp->add(new admin_setting_configselect('doclang', get_string('doclang', 'admin'), get_string('configdoclang', 'admin'), '', $ltemp));
     $temp->add(new admin_setting_configcheckbox('doctonewwindow', new lang_string('doctonewwindow', 'admin'), new lang_string('configdoctonewwindow', 'admin'), 0));
     $ADMIN->add('appearance', $temp);
-
-    if (!empty($CFG->enabledashboard)) {
-        $temp = new admin_externalpage('mypage', new lang_string('mypage', 'admin'), $CFG->wwwroot . '/my/indexsys.php',
-                'moodle/my:configsyspages');
-        $ADMIN->add('appearance', $temp);
-    }
 
     $temp = new admin_externalpage('profilepage', new lang_string('myprofile', 'admin'), $CFG->wwwroot . '/user/profilesys.php',
             'moodle/my:configsyspages');

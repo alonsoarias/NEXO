@@ -4909,7 +4909,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
      * @return mixed string or null
      */
     public function get_setting() {
-        $site = course_get_format(get_site())->get_course();
+        $site = get_site();
         return $site->{$this->name} != '' ? $site->{$this->name} : NULL;
     }
 
@@ -4955,7 +4955,6 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         $record->{$this->name} = $data;
         $record->timemodified  = time();
 
-        course_get_format($SITE)->update_course_format_options($record);
         $DB->update_record('course', $record);
 
         // Reset caches.
@@ -4963,7 +4962,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         if ($SITE->id == $COURSE->id) {
             $COURSE = $SITE;
         }
-        core_courseformat\base::reset_course_cache($SITE->id);
+        cache_helper::purge_by_event('changesincourse');
 
         return '';
     }

@@ -10,6 +10,18 @@ $hassiteconfig = has_capability('moodle/site:config', $systemcontext);
 
 $ADMIN->add('root', new admin_externalpage('adminnotifications', new lang_string('notifications'), "$CFG->wwwroot/$CFG->admin/index.php"));
 
+// General site settings category.
+$ADMIN->add('root', new admin_category('general', new lang_string('general', 'admin')));
+
+// Front page settings - site name configuration.
+if ($hassiteconfig) {
+    $temp = new admin_settingpage('frontpagesettings', new lang_string('frontpagesettings', 'admin'));
+    $temp->add(new admin_setting_sitesettext('fullname', new lang_string('fullsitename'), '', null, PARAM_TEXT, 50));
+    $temp->add(new admin_setting_sitesettext('shortname', new lang_string('shortsitename'), '', null, PARAM_TEXT, 50));
+    $temp->add(new admin_setting_special_frontpagedesc());
+    $ADMIN->add('general', $temp);
+}
+
 // Hidden upgrade script.
 $ADMIN->add('root', new admin_externalpage('upgradesettings', new lang_string('upgradesettings', 'admin'), "$CFG->wwwroot/$CFG->admin/upgradesettings.php", 'moodle/site:config', true));
 

@@ -42,28 +42,10 @@ class primary extends view {
 
         $showhomenode = empty($this->page->theme->removedprimarynavitems) ||
             !in_array('home', $this->page->theme->removedprimarynavitems);
-        // We do not need to change the text for the home/dashboard depending on the set homepage.
+        // NEXO: Only site homepage is available, dashboard has been removed.
         if ($showhomenode) {
-            $sitehome = $this->add(get_string('home'), new \moodle_url('/'), self::TYPE_SYSTEM,
+            $this->add(get_string('home'), new \moodle_url('/'), self::TYPE_SYSTEM,
                 null, 'home', new \pix_icon('i/home', ''));
-        }
-        if (isloggedin() && !isguestuser()) {
-            $homepage = get_home_page();
-            if ($homepage == HOMEPAGE_MY || $homepage == HOMEPAGE_MYCOURSES) {
-                // We need to stop automatic redirection.
-                if ($showhomenode) {
-                    $sitehome->action->param('redirect', '0');
-                }
-            }
-
-            // Add the dashboard link.
-            $showmyhomenode = !empty($CFG->enabledashboard) && (empty($this->page->theme->removedprimarynavitems) ||
-                !in_array('myhome', $this->page->theme->removedprimarynavitems));
-            if ($showmyhomenode) {
-                $this->add(get_string('myhome'), new \moodle_url('/my/'),
-                    self::TYPE_SETTING, null, 'myhome', new \pix_icon('i/dashboard', ''));
-            }
-
         }
 
         // Add the calendar link only for guest users.
