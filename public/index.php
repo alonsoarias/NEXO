@@ -33,6 +33,7 @@ require_once($CFG->libdir .'/filelib.php');
 redirect_if_major_upgrade_required();
 
 $PAGE->set_url('/');
+$PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('frontpage');
 $PAGE->add_body_class('limitedwidth');
 $PAGE->set_cacheable(false);

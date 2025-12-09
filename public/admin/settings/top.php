@@ -8,10 +8,11 @@
 $systemcontext = context_system::instance();
 $hassiteconfig = has_capability('moodle/site:config', $systemcontext);
 
-$ADMIN->add('root', new admin_externalpage('adminnotifications', new lang_string('notifications'), "$CFG->wwwroot/$CFG->admin/index.php"));
-
 // General site settings category.
 $ADMIN->add('root', new admin_category('general', new lang_string('general', 'admin')));
+
+// Notifications page under General.
+$ADMIN->add('general', new admin_externalpage('adminnotifications', new lang_string('notifications'), "$CFG->wwwroot/$CFG->admin/index.php"));
 
 // Front page settings - site name configuration.
 if ($hassiteconfig) {
