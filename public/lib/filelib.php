@@ -350,25 +350,71 @@ function file_get_unused_draft_itemid() {
 /**
  * Initialise file picker options.
  *
- * NEXO: Simplified version without repository integration.
+ * NEXO: Version without repository integration.
  * Original function was in repository/lib.php.
+ * Provides all necessary structure for editor and file picker UI.
  *
  * @param stdClass $args Options for the file picker
  * @return stdClass File picker options
  */
 function initialise_filepicker($args) {
-    $options = new stdClass();
-    $options->accepted_types = $args->accepted_types ?? '*';
-    $options->return_types = $args->return_types ?? FILE_INTERNAL;
-    $options->context = $args->context ?? context_system::instance();
-    $options->env = $args->env ?? 'filepicker';
-    $options->client_id = uniqid();
-    $options->itemid = $args->itemid ?? 0;
-    $options->maxbytes = $args->maxbytes ?? -1;
-    $options->maxfiles = $args->maxfiles ?? 1;
-    $options->buttonname = $args->buttonname ?? false;
-    $options->repositories = []; // NEXO: No repositories available.
-    return $options;
+    global $CFG, $USER, $PAGE;
+    static $templatesinitialized = array();
+    require_once($CFG->libdir . '/licenselib.php');
+
+    $return = new stdClass();
+
+    // License information.
+    $licenses = license_manager::get_licenses();
+    $return->licenses = $licenses;
+
+    if (!empty($CFG->sitedefaultlicense)) {
+        $return->defaultlicense = $CFG->sitedefaultlicense;
+    }
+
+    // Author information.
+    $return->author = fullname($USER);
+
+    // Context handling.
+    if (empty($args->context)) {
+        $context = $PAGE->context;
+    } else {
+        $context = $args->context;
+    }
+
+    // External links configuration.
+    $externallink = (int)get_config(null, 'repositoryallowexternallinks');
+    if (empty($externallink)) {
+        $return->externallink = false;
+    } else {
+        $return->externallink = true;
+    }
+
+    // User preferences.
+    $return->rememberuserlicensepref = (bool) get_config(null, 'rememberuserlicensepref');
+    $return->userprefs = array();
+    $return->userprefs['recentrepository'] = get_user_preferences('filepicker_recentrepository', '');
+    $return->userprefs['recentlicense'] = get_user_preferences('filepicker_recentlicense', '');
+    $return->userprefs['recentviewmode'] = get_user_preferences('filepicker_recentviewmode', '');
+
+    // File types configuration.
+    $return->accepted_types = file_get_typegroup('extension', $args->accepted_types);
+    $return->return_types = $args->return_types;
+
+    // NEXO: No repositories available - empty array.
+    $return->repositories = array();
+
+    // Initialize templates if needed.
+    if (!array_key_exists('core', $templatesinitialized)) {
+        $fprenderer = $PAGE->get_renderer('core', 'files');
+        $templates = $fprenderer->filepicker_js_templates();
+        $templatesinitialized['core'] = true;
+        if (sizeof($templates)) {
+            $PAGE->requires->js_init_call('M.core_filepicker.set_templates', array($templates), true);
+        }
+    }
+
+    return $return;
 }
 
 /**

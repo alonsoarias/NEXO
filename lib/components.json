@@ -24,6 +24,7 @@
         "cachelock": "public/cache/locks",
         "fileconverter": "public/files/converter",
         "theme": "public/theme",
+        "repository": "public/repository",
         "local": "public/local"
     },
     "subsystems": {
@@ -74,6 +75,7 @@
         "privacy": "public/privacy",
         "report": "public/report",
         "reportbuilder": "public/reportbuilder",
+        "repository": "public/repository",
         "rss": "public/rss",
         "role": "public/admin/roles",
         "search": "public/search",
