@@ -17,7 +17,6 @@
         "report": "public/report",
         "mlbackend": "public/lib/mlbackend",
         "webservice": "public/webservice",
-        "repository": "public/repository",
         "search": "public/search/engine",
         "plagiarism": "public/plagiarism",
         "tool": "public/admin/tool",
@@ -25,8 +24,7 @@
         "cachelock": "public/cache/locks",
         "fileconverter": "public/files/converter",
         "theme": "public/theme",
-        "local": "public/local",
-        "smsgateway": "public/sms/gateway"
+        "local": "public/local"
     },
     "subsystems": {
         "ai": "public/ai",
@@ -76,11 +74,9 @@
         "privacy": "public/privacy",
         "report": "public/report",
         "reportbuilder": "public/reportbuilder",
-        "repository": "public/repository",
         "rss": "public/rss",
         "role": "public/admin/roles",
         "search": "public/search",
-        "sms": "public/sms",
         "table": "public/lib/table",
         "timezones": null,
         "user": "public/user",

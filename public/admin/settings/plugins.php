@@ -34,14 +34,12 @@ $ADMIN->add('modules', new admin_category('filtersettings', new lang_string('man
 $ADMIN->add('modules', new admin_category('mediaplayers', new lang_string('type_media_plural', 'plugin')));
 $ADMIN->add('modules', new admin_category('fileconverterplugins', new lang_string('type_fileconverter_plural', 'plugin')));
 $ADMIN->add('modules', new admin_category('dataformatsettings', new lang_string('dataformats')));
-$ADMIN->add('modules', new admin_category('repositorysettings', new lang_string('repositories', 'repository')));
 $ADMIN->add('modules', new admin_category('plagiarism', new lang_string('plagiarism', 'plagiarism')));
 $ADMIN->add('modules', new admin_category('reportplugins', new lang_string('reports')));
 $ADMIN->add('modules', new admin_category('searchplugins', new lang_string('search', 'admin')));
 $ADMIN->add('modules', new admin_category('tools', new lang_string('tools', 'admin')));
 $ADMIN->add('modules', new admin_category('cache', new lang_string('caching', 'cache')));
 $ADMIN->add('cache', new admin_category('cachestores', new lang_string('cachestores', 'cache')));
-$ADMIN->add('modules', new admin_category('sms', new lang_string('sms', 'core_sms')));
 $ADMIN->add('modules', new admin_category('localplugins', new lang_string('localplugins')));
 
 
@@ -325,41 +323,6 @@ if ($hassiteconfig) {
         /** @var \core\plugininfo\dataformat $plugin */
         $plugin->load_settings($ADMIN, 'dataformatsettings', $hassiteconfig);
     }
-
-    // repository setting
-    require_once("$CFG->dirroot/repository/lib.php");
-    $managerepo = new lang_string('manage', 'repository');
-    $url = $CFG->wwwroot.'/'.$CFG->admin.'/repository.php';
-
-    // Add main page (with table)
-    $temp = new admin_page_managerepositories();
-    $ADMIN->add('repositorysettings', $temp);
-
-    // Add common settings page
-    $temp = new admin_settingpage('managerepositoriescommon', new lang_string('commonrepositorysettings', 'repository'));
-    $temp->add(new admin_setting_configtext('repositorycacheexpire', new lang_string('cacheexpire', 'repository'), new lang_string('configcacheexpire', 'repository'), 120, PARAM_INT));
-    $temp->add(new admin_setting_configtext('repositorygetfiletimeout', new lang_string('getfiletimeout', 'repository'), new lang_string('configgetfiletimeout', 'repository'), 30, PARAM_INT));
-    $temp->add(new admin_setting_configtext('repositorysyncfiletimeout', new lang_string('syncfiletimeout', 'repository'), new lang_string('configsyncfiletimeout', 'repository'), 1, PARAM_INT));
-    $temp->add(new admin_setting_configtext('repositorysyncimagetimeout', new lang_string('syncimagetimeout', 'repository'), new lang_string('configsyncimagetimeout', 'repository'), 3, PARAM_INT));
-    $temp->add(new admin_setting_configcheckbox('repositoryallowexternallinks', new lang_string('allowexternallinks', 'repository'), new lang_string('configallowexternallinks', 'repository'), 1));
-    $temp->add(new admin_setting_configcheckbox('legacyfilesaddallowed', new lang_string('legacyfilesaddallowed', 'admin'), new lang_string('legacyfilesaddallowed_help', 'admin'), 1));
-    $ADMIN->add('repositorysettings', $temp);
-    $ADMIN->add('repositorysettings', new admin_externalpage('repositorynew',
-        new lang_string('addplugin', 'repository'), $url, 'moodle/site:config', true));
-    $ADMIN->add('repositorysettings', new admin_externalpage('repositorydelete',
-        new lang_string('deleterepository', 'repository'), $url, 'moodle/site:config', true));
-    $ADMIN->add('repositorysettings', new admin_externalpage('repositorycontroller',
-        new lang_string('manage', 'repository'), $url, 'moodle/site:config', true));
-    $ADMIN->add('repositorysettings', new admin_externalpage('repositoryinstancenew',
-        new lang_string('createrepository', 'repository'), $url, 'moodle/site:config', true));
-    $ADMIN->add('repositorysettings', new admin_externalpage('repositoryinstanceedit',
-        new lang_string('editrepositoryinstance', 'repository'), $url, 'moodle/site:config', true));
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('repository');
-    core_collator::asort_objects_by_property($plugins, 'displayname');
-    foreach ($plugins as $plugin) {
-        /** @var \core\plugininfo\repository $plugin */
-        $plugin->load_settings($ADMIN, 'repositorysettings', $hassiteconfig);
-    }
 }
 
 // Plagiarism plugin settings
@@ -561,30 +524,6 @@ if ($hassiteconfig) {
             $settings = new admin_settingpage('cachestore_'.$plugin.'_settings', new lang_string('pluginname', 'cachestore_'.$plugin), 'moodle/site:config');
             include($settingspath);
             $ADMIN->add('cachestores', $settings);
-        }
-    }
-}
-
-// SMS plugins.
-if ($hassiteconfig) {
-    $ADMIN->add(
-        'sms',
-        new admin_externalpage(
-            'smsgateway',
-            new lang_string('manage_sms_gateways', 'core_sms'),
-            $CFG->wwwroot . '/sms/sms_gateways.php',
-        ),
-    );
-    foreach (core_component::get_plugin_list('smsgateway') as $plugin => $path) {
-        $settingspath = $path . '/settings.php';
-        if (file_exists($settingspath)) {
-            $settings = new admin_settingpage(
-                'smsgateway_' . $plugin . '_settings',
-                new lang_string('pluginname', 'smsgateway_' . $plugin),
-                'moodle/site:config',
-            );
-            include($settingspath);
-            $ADMIN->add('smsgateway', $settings);
         }
     }
 }
