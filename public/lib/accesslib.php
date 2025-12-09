@@ -1688,83 +1688,32 @@ function isloggedin() {
 /**
  * Determines if a user is logged in as real guest user with username 'guest'.
  *
+ * NEXO: Guest users are not supported. This function always returns false.
+ *
  * @category   access
  *
  * @param int|object $user mixed user object or id, $USER if not specified
- * @return bool true if user is the real guest user, false if not logged in or other user
+ * @return bool Always returns false - guest users are not supported
  */
 function isguestuser($user = null) {
-    global $USER, $DB, $CFG;
-
-    // make sure we have the user id cached in config table, because we are going to use it a lot
-    if (empty($CFG->siteguest)) {
-        if (!$guestid = $DB->get_field('user', 'id', array('username'=>'guest'))) {
-            // guest does not exist yet, weird
-            return false;
-        }
-        set_config('siteguest', $guestid);
-    }
-    if ($user === null) {
-        $user = $USER;
-    }
-
-    if ($user === null) {
-        // happens when setting the $USER
-        return false;
-
-    } else if (is_numeric($user)) {
-        return ($CFG->siteguest == $user);
-
-    } else if (is_object($user)) {
-        if (empty($user->id)) {
-            return false; // not logged in means is not be guest
-        } else {
-            return ($CFG->siteguest == $user->id);
-        }
-
-    } else {
-        throw new coding_exception('Invalid user parameter supplied for isguestuser() function!');
-    }
+    // NEXO: Guest users are not supported.
+    return false;
 }
 
 /**
  * Does user have a (temporary or real) guest access to course?
  *
+ * NEXO: Guest access is not supported. This function always returns false.
+ *
  * @category   access
  *
  * @param context $context
  * @param stdClass|int $user
- * @return bool
+ * @return bool Always returns false - guest access is not supported
  */
 function is_guest(context $context, $user = null) {
-    global $USER;
-
-    // first find the course context
-    $coursecontext = $context->get_course_context();
-
-    // make sure there is a real user specified
-    if ($user === null) {
-        $userid = isset($USER->id) ? $USER->id : 0;
-    } else {
-        $userid = is_object($user) ? $user->id : $user;
-    }
-
-    if (isguestuser($userid)) {
-        // can not inspect or be enrolled
-        return true;
-    }
-
-    if (has_capability('moodle/course:view', $coursecontext, $user)) {
-        // viewing users appear out of nowhere, they are neither guests nor participants
-        return false;
-    }
-
-    // consider only real active enrolments here
-    if (is_enrolled($coursecontext, $user, '', true)) {
-        return false;
-    }
-
-    return true;
+    // NEXO: Guest access is not supported.
+    return false;
 }
 
 /**

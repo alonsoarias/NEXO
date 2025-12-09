@@ -148,8 +148,9 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
 
     if ($user) {
         // The auth plugin has already provided the user via the loginpage_hook() called above.
-    } else if (($frm->username == 'guest') and empty($CFG->guestloginbutton)) {
-        $user = false;    /// Can't log in as guest if guest button is disabled
+    } else if ($frm->username == 'guest') {
+        // NEXO: Guest login is not supported.
+        $user = false;
         $frm = false;
     } else {
         if (empty($errormsg)) {
@@ -176,11 +177,7 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
     if ($user) {
 
         // language setup
-        if (isguestuser($user)) {
-            // no predefined language for guests - use existing session or default site lang
-            unset($user->lang);
-
-        } else if (!empty($user->lang)) {
+        if (!empty($user->lang)) {
             // unset previous session language - use user preference instead
             unset($SESSION->lang);
         }

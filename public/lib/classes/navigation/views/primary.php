@@ -48,12 +48,6 @@ class primary extends view {
                 null, 'home', new \pix_icon('i/home', ''));
         }
 
-        // Add the calendar link only for guest users.
-        if (isguestuser()) {
-            $this->add(get_string('calendar', 'calendar'), new \moodle_url('/calendar/view.php?view=month'), self::TYPE_ROOTNODE,
-                null, 'calendar');
-        }
-
         $showsiteadminnode = empty($this->page->theme->removedprimarynavitems) ||
             !in_array('siteadminnode', $this->page->theme->removedprimarynavitems);
 

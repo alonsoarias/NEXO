@@ -3726,18 +3726,13 @@ function delete_user(stdClass $user) {
 /**
  * Retrieve the guest user object.
  *
- * @return stdClass A {@link $USER} object
+ * NEXO: Guest users are not supported. This function always returns false.
+ *
+ * @return bool Always returns false - guest users are not supported
  */
 function guest_user() {
-    global $CFG, $DB;
-
-    if ($newuser = $DB->get_record('user', array('id' => $CFG->siteguest))) {
-        $newuser->confirmed = 1;
-        $newuser->lang = get_newuser_language();
-        $newuser->lastip = getremoteaddr();
-    }
-
-    return $newuser;
+    // NEXO: Guest users are not supported.
+    return false;
 }
 
 /**

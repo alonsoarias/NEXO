@@ -94,7 +94,8 @@ class login implements renderable, templatable {
         $languagedata = new \core\output\language_menu($PAGE);
 
         $this->languagemenu = $languagedata->export_for_action_menu($OUTPUT);
-        $this->canloginasguest = $CFG->guestloginbutton && !isguestuser();
+        // NEXO: Guest login is not supported.
+        $this->canloginasguest = false;
         $this->canloginbyemail = !empty($CFG->authloginviaemail);
         $this->cansignup = $CFG->registerauth == 'email' || !empty($CFG->registerauth);
         if ($CFG->rememberusername == 0) {
