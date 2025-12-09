@@ -17,7 +17,6 @@
 namespace core\session;
 
 use core\context;
-use core\context\course as context_system;
 use core\context\system as context_system;
 use core\session\manager as sessionmanager;
 use stdClass;

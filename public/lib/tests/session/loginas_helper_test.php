@@ -16,7 +16,6 @@
 
 namespace core\session;
 
-use core\context\course as context_system;
 use core\context\system as context_system;
 
 /**

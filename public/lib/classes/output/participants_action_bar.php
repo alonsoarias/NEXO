@@ -16,7 +16,7 @@
 
 namespace core\output;
 
-use core\context\course as context_system;
+use core\context\system as context_system;
 use moodle_page;
 use navigation_node;
 use moodle_url;
