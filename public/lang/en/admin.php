@@ -702,6 +702,7 @@ $string['frontpagesettings'] = 'Site home settings';
 $string['fullnamedisplay'] = 'Full name format';
 $string['fullnamedisplayprivate'] = 'Full name format - private';
 $string['gdrequired'] = 'The GD extension is now required by Moodle for image conversion.';
+$string['general'] = 'General';
 $string['generalsettings'] = 'General settings';
 $string['geoipdbedition'] = 'GeoIP Database Edition';
 $string['geoipdbedition_desc'] = 'Select the edition of the GeoIP database to download. Please be aware that using the GeoIP2-City database requires a valid paid license.';
