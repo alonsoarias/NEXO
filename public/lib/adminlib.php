@@ -4942,7 +4942,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
      * @return string empty or error message
      */
     public function write_setting($data) {
-        global $CFG;
+        global $CFG, $SITE;
         $data = trim($data);
         $validated = $this->validate($data);
         if ($validated !== true) {
@@ -4952,6 +4952,13 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         // NEXO: Store in config instead of course table.
         $configname = 'site' . $this->name;
         set_config($configname, $data);
+
+        // Update $CFG immediately.
+        $CFG->$configname = $data;
+
+        // Reset $SITE so it gets reloaded with new values.
+        $SITE = null;
+        $SITE = get_site();
 
         // Purge caches.
         purge_all_caches();
