@@ -953,43 +953,6 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
     $preferences->titleidentifier = 'preferences,moodle';
     $returnobject->navitems[] = $preferences;
 
-
-    if (is_role_switched($course->id)) {
-        if ($role = $DB->get_record('role', array('id' => $user->access['rsw'][$context->path]))) {
-            // Build role-return link instead of logout link.
-            $rolereturn = new stdClass();
-            $rolereturn->itemtype = 'link';
-            $rolereturn->url = new moodle_url('/course/switchrole.php', array(
-                'id' => $course->id,
-                'sesskey' => sesskey(),
-                'switchrole' => 0,
-                'returnurl' => $page->url->out_as_local_url(false)
-            ));
-            $rolereturn->title = get_string('switchrolereturn');
-            $rolereturn->titleidentifier = 'switchrolereturn,moodle';
-            $returnobject->navitems[] = $rolereturn;
-
-            $returnobject->metadata['asotherrole'] = true;
-            $returnobject->metadata['rolename'] = role_get_name($role, $context);
-
-        }
-    } else {
-        // Build switch role link.
-        $roles = get_switchable_roles($context);
-        if (is_array($roles) && (count($roles) > 0)) {
-            $switchrole = new stdClass();
-            $switchrole->itemtype = 'link';
-            $switchrole->url = new moodle_url('/course/switchrole.php', array(
-                'id' => $course->id,
-                'switchrole' => -1,
-                'returnurl' => $page->url->out_as_local_url(false)
-            ));
-            $switchrole->title = get_string('switchroleto');
-            $switchrole->titleidentifier = 'switchroleto,moodle';
-            $returnobject->navitems[] = $switchrole;
-        }
-    }
-
     if ($returnobject->metadata['asotheruser'] = \core\session\manager::is_loggedinas()) {
         $realuser = \core\session\manager::get_realuser();
 
@@ -1006,7 +969,7 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
         $userrevert = new stdClass();
         $userrevert->itemtype = 'link';
         $userrevert->url = new moodle_url('/course/loginas.php', [
-            'id' => $course->id,
+            'id' => SITEID,
             'sesskey' => sesskey()
         ]);
         $userrevert->title = get_string('logout');

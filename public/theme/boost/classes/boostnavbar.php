@@ -67,81 +67,12 @@ class boostnavbar implements \renderable {
                 $this->remove('permissions');
             }
         }
-        if ($this->page->context->contextlevel == CONTEXT_SYSTEM) {
-            $removesections = course_get_format($this->page->course)->can_sections_be_removed_from_navigation();
-            // Remove any duplicate navbar nodes.
-            $this->remove_duplicate_items();
-            // Remove 'My courses' and 'Courses' if we are in the course context.
-            $this->remove('mycourses');
-            $this->remove('courses');
-            // Remove the course category breadcrumb nodes.
-            foreach ($this->items as $key => $item) {
-                // Remove if it is a course category breadcrumb node.
-                $this->remove($item->key, \breadcrumb_navigation_node::TYPE_CATEGORY);
-            }
-            // Remove the course breadcrumb node.
-            if (!str_starts_with($this->page->pagetype, 'course-view-section-')) {
-                $this->remove($this->page->course->id, \breadcrumb_navigation_node::TYPE_COURSE);
-            }
-            // Remove the navbar nodes that already exist in the secondary navigation menu.
-            $this->remove_items_that_exist_in_navigation($PAGE->secondarynav);
 
-            switch ($this->page->pagetype) {
-                case 'group-groupings':
-                case 'group-grouping':
-                case 'group-overview':
-                case 'group-assign':
-                    // Remove the 'Groups' navbar node in the Groupings, Grouping, group Overview and Assign pages.
-                    $this->remove('groups');
-                case 'backup-backup':
-                case 'backup-restorefile':
-                case 'backup-copy':
-                case 'course-reset':
-                    // Remove the 'Import' navbar node in the Backup, Restore, Copy course and Reset pages.
-                    $this->remove('import');
-                case 'course-user':
-                    $this->remove('mygrades');
-                    $this->remove('grades');
-            }
-        }
+        // Remove the navbar nodes that already exist in the secondary navigation menu.
+        $this->remove_items_that_exist_in_navigation($PAGE->secondarynav);
 
-        // Remove 'My courses' if we are in the module context.
-        if ($this->page->context->contextlevel == CONTEXT_SYSTEM) {
-            $this->remove('mycourses');
-            $this->remove('courses');
-            // Remove the course category breadcrumb nodes.
-            foreach ($this->items as $key => $item) {
-                // Remove if it is a course category breadcrumb node.
-                $this->remove($item->key, \breadcrumb_navigation_node::TYPE_CATEGORY);
-
-                // Module types not visible on the course main page cannot have a section breadcrumb.
-                if (!$this->page->cm->is_of_type_that_can_display() && $item->type === navigation_node::TYPE_SECTION) {
-                    $this->remove($item->key, \breadcrumb_navigation_node::TYPE_SECTION);
-                }
-            }
-            $courseformat = course_get_format($this->page->course);
-            $removesections = $courseformat->can_sections_be_removed_from_navigation();
-            if ($removesections) {
-                // If the course sections are removed, we need to add the anchor of current section to the Course.
-                $coursenode = $this->get_item($this->page->course->id);
-                if (!is_null($coursenode) && $this->page->cm->sectionnum !== null) {
-                    $coursenode->action = course_get_format($this->page->course)->get_view_url($this->page->cm->sectionnum);
-                }
-            }
-        }
-
-        if ($this->page->context->contextlevel == CONTEXT_SYSTEM) {
-            // Remove the navbar nodes that already exist in the secondary navigation menu.
-            $this->remove_items_that_exist_in_navigation($PAGE->secondarynav);
-        }
-
-        // Set the designated one path for courses.
-        $mycoursesnode = $this->get_item('mycourses');
-        if (!is_null($mycoursesnode)) {
-            $url = new \moodle_url('/my/courses.php');
-            $mycoursesnode->action = $url;
-            $mycoursesnode->text = get_string('mycourses');
-        }
+        // Remove any duplicate navbar nodes.
+        $this->remove_duplicate_items();
 
         $this->remove_no_link_items($removesections);
 
