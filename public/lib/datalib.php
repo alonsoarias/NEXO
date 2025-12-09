@@ -603,7 +603,7 @@ function get_site() {
     $site->fullname = $CFG->sitefullname ?? 'NEXO Site';
     $site->shortname = $CFG->siteshortname ?? 'NEXO';
     $site->idnumber = '';
-    $site->summary = '';
+    $site->summary = $CFG->sitesummary ?? '';
     $site->summaryformat = FORMAT_HTML;
     $site->format = 'site';
     $site->visible = 1;

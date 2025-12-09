@@ -5025,6 +5025,7 @@ class admin_setting_requiredpasswordunmask extends admin_setting_configpasswordu
 
 /**
  * Special text editor for site description.
+ * NEXO: Modified to use config instead of course table.
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -5043,8 +5044,10 @@ class admin_setting_special_frontpagedesc extends admin_setting_confightmleditor
      * @return string The current setting
      */
     public function get_setting() {
-        $site = get_site();
-        return $site->{$this->name};
+        global $CFG;
+        // NEXO: Get from config instead of course table.
+        $configname = 'site' . $this->name;
+        return $CFG->$configname ?? '';
     }
 
     /**
@@ -5054,20 +5057,21 @@ class admin_setting_special_frontpagedesc extends admin_setting_confightmleditor
      * @return string empty or error message
      */
     public function write_setting($data) {
-        global $DB, $SITE, $COURSE;
-        $record = new stdClass();
-        $record->id            = $SITE->id;
-        $record->{$this->name} = $data;
-        $record->timemodified  = time();
+        global $CFG, $SITE;
 
-        $DB->update_record('course', $record);
+        // NEXO: Store in config instead of course table.
+        $configname = 'site' . $this->name;
+        set_config($configname, $data);
 
-        // Reset caches.
-        $SITE = $DB->get_record('course', array('id'=>$SITE->id), '*', MUST_EXIST);
-        if ($SITE->id == $COURSE->id) {
-            $COURSE = $SITE;
-        }
-        cache_helper::purge_by_event('changesincourse');
+        // Update $CFG immediately.
+        $CFG->$configname = $data;
+
+        // Reset $SITE so it gets reloaded with new values.
+        $SITE = null;
+        $SITE = get_site();
+
+        // Purge caches.
+        purge_all_caches();
 
         return '';
     }
