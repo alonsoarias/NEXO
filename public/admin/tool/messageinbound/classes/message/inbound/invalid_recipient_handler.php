@@ -27,7 +27,7 @@ namespace tool_messageinbound\message\inbound;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/repository/lib.php');
+// NEXO: Repository subsystem removed.
 
 /**
  * A Handler to re-process messages which previously failed sender verification.

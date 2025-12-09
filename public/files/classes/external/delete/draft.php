@@ -78,7 +78,7 @@ class draft extends external_api {
      */
     public static function execute(int $draftitemid, array $files): array {
         global $CFG, $USER;
-        require_once($CFG->dirroot . '/repository/lib.php');
+        // NEXO: Repository subsystem removed - implementing file deletion directly.
 
         $params = self::validate_parameters(self::execute_parameters(), compact('draftitemid', 'files'));
         [$draftitemid, $files] = array_values($params);
@@ -89,7 +89,19 @@ class draft extends external_api {
         $files = array_map(function($file) {
             return (object) $file;
         }, $files);
-        $parentpaths = repository_delete_selected_files($usercontext, 'user', 'draft', $draftitemid, $files);
+
+        // NEXO: Delete files directly using file_storage.
+        $fs = get_file_storage();
+        $parentpaths = [];
+        foreach ($files as $file) {
+            $filepath = $file->filepath ?? '/';
+            $filename = $file->filename;
+            $storedfile = $fs->get_file($usercontext->id, 'user', 'draft', $draftitemid, $filepath, $filename);
+            if ($storedfile) {
+                $storedfile->delete();
+                $parentpaths[$filepath] = true;
+            }
+        }
 
         return [
             'parentpaths' => array_keys($parentpaths),

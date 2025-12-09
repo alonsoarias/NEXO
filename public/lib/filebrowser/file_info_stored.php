@@ -135,20 +135,10 @@ class file_info_stored extends file_info {
             return get_string('privatefilesof', 'repository', $username). ': '. join('/', $fpath);
         } else {
             // for all other files (except user private files) return 'Server files: PATH'
-
-            // first, get and cache the name of the repository_local (will be used as prefix for file names):
+            // NEXO: Repository subsystem removed - use simple default name.
             static $replocalname = null;
             if ($replocalname === null) {
-                require_once($CFG->dirroot . "/repository/lib.php");
-                $instances = repository::get_instances(array('type' => 'local'));
-                if (count($instances)) {
-                    $firstinstance = reset($instances);
-                    $replocalname = $firstinstance->get_name();
-                } else if (get_string_manager()->string_exists('pluginname', 'repository_local')) {
-                    $replocalname = get_string('pluginname', 'repository_local');
-                } else {
-                    $replocalname = get_string('arearoot', 'repository');
-                }
+                $replocalname = get_string('arearoot', 'repository');
             }
 
             return $replocalname. ': '. join('/', $fpath);
