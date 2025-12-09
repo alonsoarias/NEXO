@@ -634,7 +634,7 @@ class core_renderer extends renderer_base {
             // $course->id is not defined during installation
             return '';
         } else if (isloggedin()) {
-            $context = context_system::instance($course->id);
+            $context = context_system::instance();
 
             $fullname = fullname($USER);
             // Since Moodle 2.0 this link always goes to the public profile page (not the course profile page)

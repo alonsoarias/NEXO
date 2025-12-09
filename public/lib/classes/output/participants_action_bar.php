@@ -97,23 +97,6 @@ class participants_action_bar implements renderable {
         }
 
         $formattedcontent = [];
-        $enrolmentsheading = get_string('enrolments', 'enrol');
-        if (
-            $this->page->context->contextlevel != CONTEXT_SYSTEM &&
-                $this->page->context->contextlevel != CONTEXT_SYSTEMCAT
-        ) {
-            // Pre-populate the formatted tertiary nav items with the "Enrolled users" node if user can view the participants page.
-            $coursecontext = context_system::instance($this->course->id);
-            $canviewparticipants = course_can_view_participants($coursecontext);
-            if ($canviewparticipants) {
-                $participantsurl = (new moodle_url('/user/index.php', ['id' => $this->course->id]))->out();
-                $formattedcontent[] = [
-                    $enrolmentsheading => [
-                        $participantsurl => get_string('enrolledusers', 'enrol'),
-                    ],
-                ];
-            }
-        }
 
         $nodes = $this->get_ordered_nodes();
         foreach ($nodes as $description => $content) {
@@ -125,36 +108,13 @@ class participants_action_bar implements renderable {
                     if ($node->has_action()) {
                         $items[$node->action()->out()] = $node->text;
                     }
-
-                    // Additional items to be added.
-                    if ($key === 'groups') {
-                        $params = ['id' => $this->course->id];
-                        $items += [
-                            (new moodle_url('/group/groupings.php', $params))->out() => get_string('groupings', 'group'),
-                            (new moodle_url('/group/overview.php', $params))->out() => get_string('overview', 'group'),
-                        ];
-                    }
                 }
             }
             if ($items) {
-                if ($heading === $enrolmentsheading) {
-                    // Merge the contents of the "Enrolments" group with the ones from the course settings nav.
-                    $formattedcontent[0][$heading] = array_merge($formattedcontent[0][$heading], $items);
-                } else {
-                    $formattedcontent[][$heading] = $items;
-                }
+                $formattedcontent[][$heading] = $items;
             }
         }
 
-        // If we are accessing a page from a module/category context additional nodes will not be visible.
-        if (
-            $this->page->context->contextlevel != CONTEXT_SYSTEM &&
-                $this->page->context->contextlevel != CONTEXT_SYSTEMCAT
-        ) {
-            // Need to do some funky code here to find out if we have added third party navigation nodes.
-            $thirdpartynodearray = $this->get_thirdparty_node_array() ?: [];
-            $formattedcontent = array_merge($formattedcontent, $thirdpartynodearray);
-        }
         return $formattedcontent;
     }
 
