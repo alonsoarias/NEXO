@@ -119,10 +119,6 @@ define('CONTEXT_SYSTEM', 10);
 define('CONTEXT_USER', 30);
 /** Course category context level - one instance for each category */
 define('CONTEXT_COURSECAT', 40);
-/** @deprecated Course context level - no longer used in NEXO */
-define('CONTEXT_COURSE', 50);
-/** @deprecated Course module context level - no longer used in NEXO */
-define('CONTEXT_MODULE', 70);
 /**
  * Block context level - one instance for each block, sticky blocks are tricky
  * because ppl think they should be able to override them at lower contexts.
@@ -145,7 +141,7 @@ define('RISK_DATALOSS',    0x0020);
 
 /** rolename displays - the name as defined in the role definition, localised if name empty */
 define('ROLENAME_ORIGINAL', 0);
-/** rolename displays - the name as defined by a role alias at the course level, falls back to ROLENAME_ORIGINAL if alias not present */
+/** rolename displays - the name as defined by a role alias, falls back to ROLENAME_ORIGINAL if alias not present */
 define('ROLENAME_ALIAS', 1);
 /** rolename displays - Both, like this:  Role alias (Original) */
 define('ROLENAME_BOTH', 2);
@@ -625,62 +621,6 @@ function has_all_capabilities(array $capabilities, context $context, $user = nul
         }
     }
     return true;
-}
-
-/**
- * Is course creator going to have capability in a new course?
- *
- * This is intended to be used in enrolment plugins before or during course creation,
- * do not use after the course is fully created.
- *
- * @category access
- *
- * @param string $capability the name of the capability to check.
- * @param context $context course or category context where is course going to be created
- * @param integer|stdClass $user A user id or object. By default (null) checks the permissions of the current user.
- * @return boolean true if the user will have this capability.
- *
- * @throws coding_exception if different type of context submitted
- */
-function guess_if_creator_will_have_course_capability($capability, context $context, $user = null) {
-    global $CFG;
-
-    if ($context->contextlevel != CONTEXT_COURSE and $context->contextlevel != CONTEXT_COURSECAT) {
-        throw new coding_exception('Only course or course category context expected');
-    }
-
-    if (has_capability($capability, $context, $user)) {
-        // User already has the capability, it could be only removed if CAP_PROHIBIT
-        // was involved here, but we ignore that.
-        return true;
-    }
-
-    if (!has_capability('moodle/course:create', $context, $user)) {
-        return false;
-    }
-
-    if (!enrol_is_enabled('manual')) {
-        return false;
-    }
-
-    if (empty($CFG->creatornewroleid)) {
-        return false;
-    }
-
-    if ($context->contextlevel == CONTEXT_COURSE) {
-        if (is_viewing($context, $user, 'moodle/role:assign') or is_enrolled($context, $user, 'moodle/role:assign')) {
-            return false;
-        }
-    } else {
-        if (has_capability('moodle/course:view', $context, $user) and has_capability('moodle/role:assign', $context, $user)) {
-            return false;
-        }
-    }
-
-    // Most likely they will be enrolled after the course creation is finished,
-    // does the new role have the required capability?
-    list($neededroles, $forbiddenroles) = get_roles_with_cap_in_context($context, $capability);
-    return isset($neededroles[$CFG->creatornewroleid]);
 }
 
 /**
@@ -1253,31 +1193,8 @@ function get_local_override($roleid, $contextid, $capability) {
  * @return array of ($context, $course, $cm)
  */
 function get_context_info_array($contextid) {
-    global $DB;
-
     $context = context::instance_by_id($contextid, MUST_EXIST);
-    $course  = null;
-    $cm      = null;
-
-    if ($context->contextlevel == CONTEXT_COURSE) {
-        $course = $DB->get_record('course', array('id'=>$context->instanceid), '*', MUST_EXIST);
-
-    } else if ($context->contextlevel == CONTEXT_MODULE) {
-        $cm = get_coursemodule_from_id('', $context->instanceid, 0, false, MUST_EXIST);
-        $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
-
-    } else if ($context->contextlevel == CONTEXT_BLOCK) {
-        $parent = $context->get_parent_context();
-
-        if ($parent->contextlevel == CONTEXT_COURSE) {
-            $course = $DB->get_record('course', array('id'=>$parent->instanceid), '*', MUST_EXIST);
-        } else if ($parent->contextlevel == CONTEXT_MODULE) {
-            $cm = get_coursemodule_from_id('', $parent->instanceid, 0, false, MUST_EXIST);
-            $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
-        }
-    }
-
-    return array($context, $course, $cm);
+    return array($context, null, null);
 }
 
 /**
@@ -1950,20 +1867,6 @@ function is_viewing(context $context, $user = null, $withcapability = '') {
     }
 
     return true;
-}
-
-/**
- * Returns true if the user is able to access the course.
- *
- * @deprecated Courses are not supported in NEXO.
- * @param stdClass $course record
- * @param stdClass|int|null $user user record or id, current user if null
- * @param string $withcapability Check for this capability as well.
- * @param bool $onlyactive consider only active enrolments in enabled plugins and time restrictions
- * @return boolean Always returns false - courses not supported
- */
-function can_access_course(stdClass $course, $user = null, $withcapability = '', $onlyactive = false) {
-    return false;
 }
 
 /**
@@ -3005,8 +2908,7 @@ function get_user_roles(context $context, $userid = 0, $checkparentcontexts = tr
 }
 
 /**
- * Like get_user_roles, but adds in the authenticated user role, and the front
- * page roles, if applicable.
+ * Like get_user_roles, but adds in the authenticated user role.
  *
  * @param context $context the context.
  * @param int $userid optional. Defaults to $USER->id
@@ -3023,19 +2925,6 @@ function get_user_roles_with_special(context $context, $userid = 0) {
     }
 
     $ras = get_user_roles($context, $userid);
-
-    // Add front-page role if relevant.
-    $defaultfrontpageroleid = isset($CFG->defaultfrontpageroleid) ? $CFG->defaultfrontpageroleid : 0;
-    $isfrontpage = ($context->contextlevel == CONTEXT_COURSE && $context->instanceid == SITEID) ||
-            is_inside_frontpage($context);
-    if ($defaultfrontpageroleid && $isfrontpage) {
-        $frontpagecontext = context_course::instance(SITEID);
-        $ra = new stdClass();
-        $ra->userid = $userid;
-        $ra->contextid = $frontpagecontext->id;
-        $ra->roleid = $defaultfrontpageroleid;
-        $ras[] = $ra;
-    }
 
     // Add authenticated user role if relevant.
     $defaultuserroleid      = isset($CFG->defaultuserroleid) ? $CFG->defaultuserroleid : 0;
@@ -3392,46 +3281,6 @@ function get_overridable_roles(context $context, $rolenamedisplay = ROLENAME_ALI
 }
 
 /**
- * Create a role menu suitable for default role selection in enrol plugins.
- *
- * @package    core_enrol
- *
- * @param context $context
- * @param int $addroleid current or default role - always added to list
- * @return array roleid=>localised role name
- */
-function get_default_enrol_roles(context $context, $addroleid = null) {
-    global $DB;
-
-    $params = array('contextlevel'=>CONTEXT_COURSE);
-
-    if ($coursecontext = $context->get_course_context(false)) {
-        $params['coursecontext'] = $coursecontext->id;
-    } else {
-        $params['coursecontext'] = 0; // no course names
-        $coursecontext = null;
-    }
-
-    if ($addroleid) {
-        $addrole = "OR r.id = :addroleid";
-        $params['addroleid'] = $addroleid;
-    } else {
-        $addrole = "";
-    }
-
-    $sql = "SELECT r.id, r.name, r.shortname, rn.name AS coursealias
-              FROM {role} r
-         LEFT JOIN {role_context_levels} rcl ON (rcl.roleid = r.id AND rcl.contextlevel = :contextlevel)
-         LEFT JOIN {role_names} rn ON (rn.contextid = :coursecontext AND rn.roleid = r.id)
-             WHERE rcl.id IS NOT NULL $addrole
-          ORDER BY sortorder DESC";
-
-    $roles = $DB->get_records_sql($sql, $params);
-
-    return role_fix_names($roles, $context, ROLENAME_BOTH, true);
-}
-
-/**
  * Return context levels where this role is assignable.
  *
  * @param integer $roleid the id of a role.
@@ -3509,15 +3358,10 @@ function get_with_capability_join(context $context, $capability, $useridcolumn) 
     $i++;
     $paramprefix = 'eu' . $i . '_';
 
-    $defaultuserroleid      = isset($CFG->defaultuserroleid) ? $CFG->defaultuserroleid : 0;
-    $defaultfrontpageroleid = isset($CFG->defaultfrontpageroleid) ? $CFG->defaultfrontpageroleid : 0;
+    $defaultuserroleid = isset($CFG->defaultuserroleid) ? $CFG->defaultuserroleid : 0;
 
     $ctxids = trim($context->path, '/');
     $ctxids = str_replace('/', ',', $ctxids);
-
-    // Context is the frontpage
-    $isfrontpage = $context->contextlevel == CONTEXT_COURSE && $context->instanceid == SITEID;
-    $isfrontpage = $isfrontpage || is_inside_frontpage($context);
 
     $caps = (array) $capability;
 
@@ -3590,10 +3434,6 @@ function get_with_capability_join(context $context, $capability, $useridcolumn) 
             // Easy, nobody has the permission.
             unset($needed[$cap]);
             unset($prohibited[$cap]);
-        } else if ($isfrontpage and !empty($prohibited[$cap][$defaultfrontpageroleid])) {
-            // Everybody is disqualified on the frontpage.
-            unset($needed[$cap]);
-            unset($prohibited[$cap]);
         }
         if (empty($prohibited[$cap])) {
             unset($prohibited[$cap]);
@@ -3632,8 +3472,7 @@ function get_with_capability_join(context $context, $capability, $useridcolumn) 
     // Now add the needed and prohibited roles conditions as joins.
     if (!empty($needed['any'])) {
         // Simple case - there are no prohibits involved.
-        if (!empty($needed['any'][$defaultuserroleid]) ||
-                ($isfrontpage && !empty($needed['any'][$defaultfrontpageroleid]))) {
+        if (!empty($needed['any'][$defaultuserroleid])) {
             // Everybody.
         } else {
             $joins[] = "JOIN (SELECT DISTINCT userid
@@ -3647,8 +3486,7 @@ function get_with_capability_join(context $context, $capability, $useridcolumn) 
         $everybody = false;
         foreach ($needed as $cap => $unused) {
             if (empty($prohibited[$cap])) {
-                if (!empty($needed[$cap][$defaultuserroleid]) ||
-                        ($isfrontpage && !empty($needed[$cap][$defaultfrontpageroleid]))) {
+                if (!empty($needed[$cap][$defaultuserroleid])) {
                     $everybody = true;
                     break;
                 } else {
@@ -3658,13 +3496,11 @@ function get_with_capability_join(context $context, $capability, $useridcolumn) 
                                         AND roleid IN (".implode(',', array_keys($needed[$cap])) .")";
                 }
             } else {
-                if (!empty($prohibited[$cap][$defaultuserroleid]) ||
-                        ($isfrontpage && !empty($prohibited[$cap][$defaultfrontpageroleid]))) {
+                if (!empty($prohibited[$cap][$defaultuserroleid])) {
                     // Nobody can have this cap because it is prohibited in default roles.
                     continue;
 
-                } else if (!empty($needed[$cap][$defaultuserroleid]) ||
-                        ($isfrontpage && !empty($needed[$cap][$defaultfrontpageroleid]))) {
+                } else if (!empty($needed[$cap][$defaultuserroleid])) {
                     // Everybody except the prohibited - hiding does not matter.
                     $unions[] = "SELECT id AS userid
                                    FROM {user}
@@ -3735,16 +3571,9 @@ function get_users_by_capability(context $context, $capability, $fields = '', $s
         $groups = '', $exceptions = '', $notuseddoanything = null, $notusedview = null, $useviewallgroups = false) {
     global $CFG, $DB;
 
-    // Context is a course page other than the frontpage.
-    $iscoursepage = $context->contextlevel == CONTEXT_COURSE && $context->instanceid != SITEID;
-
     // Set up default fields list if necessary.
     if (empty($fields)) {
-        if ($iscoursepage) {
-            $fields = 'u.*, ul.timeaccess AS lastaccess';
-        } else {
-            $fields = 'u.*';
-        }
+        $fields = 'u.*';
     } else {
         if ($CFG->debugdeveloper && strpos($fields, 'u.*') === false && strpos($fields, 'u.id') === false) {
             debugging('u.id must be included in the list of fields passed to get_users_by_capability().', DEBUG_DEVELOPER);
@@ -3752,12 +3581,8 @@ function get_users_by_capability(context $context, $capability, $fields = '', $s
     }
 
     // Set up default sort if necessary.
-    if (empty($sort)) { // default to course lastaccess or just lastaccess
-        if ($iscoursepage) {
-            $sort = 'ul.timeaccess';
-        } else {
-            $sort = 'u.lastaccess';
-        }
+    if (empty($sort)) {
+        $sort = 'u.lastaccess';
     }
 
     // Get the bits of SQL relating to capabilities.
@@ -3770,17 +3595,6 @@ function get_users_by_capability(context $context, $capability, $fields = '', $s
     $wherecond = [$sqljoin->wheres];
     $params    = $sqljoin->params;
     $joins     = [$sqljoin->joins];
-
-    // Add user lastaccess JOIN, if required.
-    if ((strpos($sort, 'ul.timeaccess') === false) and (strpos($fields, 'ul.timeaccess') === false)) {
-         // Here user_lastaccess is not required MDL-13810.
-    } else {
-        if ($iscoursepage) {
-            $joins[] = "LEFT OUTER JOIN {user_lastaccess} ul ON (ul.userid = u.id AND ul.courseid = {$context->instanceid})";
-        } else {
-            throw new coding_exception('Invalid sort in get_users_by_capability(), ul.timeaccess allowed only for course contexts.');
-        }
-    }
 
     // Groups.
     if ($groups) {
@@ -4207,34 +4021,7 @@ function get_user_capability_contexts(string $capability, bool $getcategories, $
         $rs->close();
     }
 
-    $courses = [];
-    $fieldlist = \core\access\get_user_capability_course_helper::map_fieldnames($coursefieldsexceptid);
-    if ($courseorderby) {
-        $fields = explode(',', $courseorderby);
-        $courseorderby = '';
-        foreach ($fields as $field) {
-            if ($courseorderby) {
-                $courseorderby .= ',';
-            }
-            $courseorderby .= 'c.'.$field;
-        }
-        $courseorderby = 'ORDER BY '.$courseorderby;
-    }
-    $rs = $DB->get_recordset_sql("
-            SELECT c.id $fieldlist
-              FROM {course} c
-               JOIN {context} x ON c.id = x.instanceid AND x.contextlevel = ?
-            $contextlimitsql
-            $courseorderby", array_merge([CONTEXT_COURSE], $contextlimitparams));
-    foreach ($rs as $course) {
-        $courses[] = $course;
-        $limit--;
-        if ($limit == 0) {
-            break;
-        }
-    }
-    $rs->close();
-    return [$categories, $courses];
+    return [$categories, []];
 }
 
 /**
@@ -4976,11 +4763,9 @@ function get_sorted_contexts($select, $params = array()) {
               FROM {context} ctx
               LEFT JOIN {user} u ON ctx.contextlevel = " . CONTEXT_USER . " AND u.id = ctx.instanceid
               LEFT JOIN {course_categories} cat ON ctx.contextlevel = " . CONTEXT_COURSECAT . " AND cat.id = ctx.instanceid
-              LEFT JOIN {course} c ON ctx.contextlevel = " . CONTEXT_COURSE . " AND c.id = ctx.instanceid
-              LEFT JOIN {course_modules} cm ON ctx.contextlevel = " . CONTEXT_MODULE . " AND cm.id = ctx.instanceid
               LEFT JOIN {block_instances} bi ON ctx.contextlevel = " . CONTEXT_BLOCK . " AND bi.id = ctx.instanceid
            $select
-          ORDER BY ctx.contextlevel, bi.defaultregion, COALESCE(cat.sortorder, c.sortorder, cm.section, bi.defaultweight), u.lastname, u.firstname, cm.id
+          ORDER BY ctx.contextlevel, bi.defaultregion, COALESCE(cat.sortorder, bi.defaultweight), u.lastname, u.firstname
             ", $params);
 }
 
