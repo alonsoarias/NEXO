@@ -22,6 +22,8 @@ use context;
 /**
  * Course format filter.
  *
+ * NEXO: Courses are not supported, this filter always matches.
+ *
  * @package    tool_usertours
  * @copyright  2017 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -43,12 +45,8 @@ class courseformat extends base {
      *                                  And whose values are the values to display
      */
     public static function get_filter_options() {
-        $options = [];
-        $courseformats = get_sorted_course_formats(true);
-        foreach ($courseformats as $courseformat) {
-            $options[$courseformat] = get_string('pluginname', "format_$courseformat");
-        }
-        return $options;
+        // NEXO: Courses are not supported.
+        return [];
     }
 
     /**
@@ -59,15 +57,7 @@ class courseformat extends base {
      * @return  boolean
      */
     public static function filter_matches(tour $tour, context $context) {
-        global $COURSE;
-        $values = $tour->get_filter_values('courseformat');
-        if (empty($values)) {
-            // There are no values configured, meaning all.
-            return true;
-        }
-        if (empty($COURSE->format)) {
-            return false;
-        }
-        return in_array($COURSE->format, $values);
+        // NEXO: Courses are not supported, always match.
+        return true;
     }
 }
