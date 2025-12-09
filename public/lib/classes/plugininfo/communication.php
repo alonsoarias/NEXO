@@ -31,11 +31,8 @@ use moodle_url;
 class communication extends base {
 
     public static function get_manage_url(): ?moodle_url {
-        if (!\core_communication\api::is_available()) {
-            return null;
-        }
-
-        return new moodle_url('/admin/settings.php', ['section' => 'managecommunicationproviders']);
+        // Communication providers are not available in this installation.
+        return null;
     }
 
     public function get_settings_section_name(): string {
