@@ -75,16 +75,9 @@ class stored_file {
         $this->fs          = $fs;
         $this->file_record = clone($file_record); // prevent modifications
 
-        if (!empty($file_record->repositoryid)) {
-            require_once("$CFG->dirroot/repository/lib.php");
-            $this->repository = repository::get_repository_by_id($file_record->repositoryid, SYSCONTEXTID);
-            if ($this->repository->supported_returntypes() & FILE_REFERENCE != FILE_REFERENCE) {
-                // Repository cannot do file reference.
-                throw new moodle_exception('error');
-            }
-        } else {
-            $this->repository = null;
-        }
+        // NEXO: Repository subsystem removed.
+        $this->repository = null;
+
         // make sure all reference fields exist in file_record even when it is not a reference
         foreach (array('referencelastsync', 'referencefileid', 'reference', 'repositoryid') as $key) {
             if (empty($this->file_record->$key)) {
@@ -119,7 +112,8 @@ class stored_file {
      * @return bool
      */
     public function is_external_file() {
-        return !empty($this->repository);
+        // NEXO: Repository subsystem removed - no external files.
+        return false;
     }
 
     /**
@@ -128,7 +122,8 @@ class stored_file {
      * @return bool
      */
     public function is_controlled_link() {
-        return $this->is_external_file() && $this->repository->supported_returntypes() & FILE_CONTROLLED_LINK;
+        // NEXO: Repository subsystem removed - no controlled links.
+        return false;
     }
 
     /**

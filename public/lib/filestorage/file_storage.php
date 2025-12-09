@@ -486,10 +486,9 @@ class file_storage {
     public function get_file_by_id($fileid) {
         global $DB;
 
+        // NEXO: Repository subsystem removed - no files_reference join.
         $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                   FROM {files} f
-             LEFT JOIN {files_reference} r
-                       ON f.referencefileid = r.id
                  WHERE f.id = ?";
         if ($filerecord = $DB->get_record_sql($sql, array($fileid))) {
             return $this->get_file_instance($filerecord);
@@ -507,10 +506,9 @@ class file_storage {
     public function get_file_by_hash($pathnamehash) {
         global $DB;
 
+        // NEXO: Repository subsystem removed - no files_reference join.
         $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                   FROM {files} f
-             LEFT JOIN {files_reference} r
-                       ON f.referencefileid = r.id
                  WHERE f.pathnamehash = ?";
         if ($filerecord = $DB->get_record_sql($sql, array($pathnamehash))) {
             return $this->get_file_instance($filerecord);
@@ -583,22 +581,8 @@ class file_storage {
      * @param string $sort A fragment of SQL to use for sorting
      */
     public function get_external_files($repositoryid, $sort = '') {
-        global $DB;
-        $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
-                  FROM {files} f
-             LEFT JOIN {files_reference} r
-                       ON f.referencefileid = r.id
-                 WHERE r.repositoryid = ?";
-        if (!empty($sort)) {
-            $sql .= " ORDER BY {$sort}";
-        }
-
-        $result = array();
-        $filerecords = $DB->get_records_sql($sql, array($repositoryid));
-        foreach ($filerecords as $filerecord) {
-            $result[$filerecord->pathnamehash] = $this->get_file_instance($filerecord);
-        }
-        return $result;
+        // NEXO: Repository subsystem removed - no external files.
+        return array();
     }
 
     /**
@@ -650,10 +634,9 @@ class file_storage {
             throw new coding_exception('If specifying $limitfrom you must also specify $limitnum');
         }
 
+        // NEXO: Repository subsystem removed - no files_reference join.
         $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                   FROM {files} f
-             LEFT JOIN {files_reference} r
-                       ON f.referencefileid = r.id
                  WHERE f.contextid = :contextid
                        AND f.component = :component
                        AND f.filearea $areasql
@@ -806,10 +789,9 @@ class file_storage {
             $dirs = $includedirs ? "" : "AND filename <> '.'";
             $length = core_text::strlen($filepath);
 
+            // NEXO: Repository subsystem removed - no files_reference join.
             $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                       FROM {files} f
-                 LEFT JOIN {files_reference} r
-                           ON f.referencefileid = r.id
                      WHERE f.contextid = :contextid AND f.component = :component AND f.filearea = :filearea AND f.itemid = :itemid
                            AND ".$DB->sql_substr("f.filepath", 1, $length)." = :filepath
                            AND f.id <> :dirid
@@ -836,10 +818,9 @@ class file_storage {
             $length = core_text::strlen($filepath);
 
             if ($includedirs) {
+                // NEXO: Repository subsystem removed - no files_reference join.
                 $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                           FROM {files} f
-                     LEFT JOIN {files_reference} r
-                               ON f.referencefileid = r.id
                          WHERE f.contextid = :contextid AND f.component = :component AND f.filearea = :filearea
                                AND f.itemid = :itemid AND f.filename = '.'
                                AND ".$DB->sql_substr("f.filepath", 1, $length)." = :filepath
@@ -855,10 +836,9 @@ class file_storage {
                 }
             }
 
+            // NEXO: Repository subsystem removed - no files_reference join.
             $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                       FROM {files} f
-                 LEFT JOIN {files_reference} r
-                           ON f.referencefileid = r.id
                      WHERE f.contextid = :contextid AND f.component = :component AND f.filearea = :filearea AND f.itemid = :itemid
                            AND f.filepath = :filepath AND f.filename <> '.'
                            $orderby";
@@ -1108,10 +1088,9 @@ class file_storage {
         unset($filerecord['contenthash']);
         unset($filerecord['pathnamehash']);
 
+        // NEXO: Repository subsystem removed - no files_reference join.
         $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
                   FROM {files} f
-             LEFT JOIN {files_reference} r
-                       ON f.referencefileid = r.id
                  WHERE f.id = ?";
 
         if (!$newrecord = $DB->get_record_sql($sql, array($fid))) {
@@ -2018,10 +1997,9 @@ class file_storage {
         }
         $like = $DB->sql_like('f.filename', ':query', false);
 
+        // NEXO: Repository subsystem removed - no files_reference join.
         $sql = "SELECT $select
                   FROM {files} f
-             LEFT JOIN {files_reference} r
-                    ON f.referencefileid = r.id
                   JOIN {context} c
                     ON f.contextid = c.id
                  WHERE c.contextlevel <> :contextlevel
@@ -2059,33 +2037,8 @@ class file_storage {
      * @return array of stored_file indexed by its pathnamehash
      */
     public function search_references($reference) {
-        global $DB;
-
-        if (is_null($reference)) {
-            throw new coding_exception('NULL is not a valid reference to an external file');
-        }
-
-        // Give {@link self::unpack_reference()} a chance to throw exception if the
-        // reference is not in a valid format.
-        self::unpack_reference($reference);
-
-        $referencehash = sha1($reference);
-
-        $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
-                  FROM {files} f
-                  JOIN {files_reference} r ON f.referencefileid = r.id
-                  JOIN {repository_instances} ri ON r.repositoryid = ri.id
-                 WHERE r.referencehash = ?
-                       AND (f.component <> ? OR f.filearea <> ?)";
-
-        $rs = $DB->get_recordset_sql($sql, array($referencehash, 'user', 'draft'));
-        $files = array();
-        foreach ($rs as $filerecord) {
-            $files[$filerecord->pathnamehash] = $this->get_file_instance($filerecord);
-        }
-        $rs->close();
-
-        return $files;
+        // NEXO: Repository subsystem removed - no file references.
+        return array();
     }
 
     /**
@@ -2103,26 +2056,8 @@ class file_storage {
      * @return int
      */
     public function search_references_count($reference) {
-        global $DB;
-
-        if (is_null($reference)) {
-            throw new coding_exception('NULL is not a valid reference to an external file');
-        }
-
-        // Give {@link self::unpack_reference()} a chance to throw exception if the
-        // reference is not in a valid format.
-        self::unpack_reference($reference);
-
-        $referencehash = sha1($reference);
-
-        $sql = "SELECT COUNT(f.id)
-                  FROM {files} f
-                  JOIN {files_reference} r ON f.referencefileid = r.id
-                  JOIN {repository_instances} ri ON r.repositoryid = ri.id
-                 WHERE r.referencehash = ?
-                       AND (f.component <> ? OR f.filearea <> ?)";
-
-        return (int)$DB->count_records_sql($sql, array($referencehash, 'user', 'draft'));
+        // NEXO: Repository subsystem removed - no file references.
+        return 0;
     }
 
     /**
@@ -2176,27 +2111,7 @@ class file_storage {
      * @param stored_file $storedfile
      */
     public function update_references_to_storedfile(stored_file $storedfile) {
-        global $CFG, $DB;
-        $params = array();
-        $params['contextid'] = $storedfile->get_contextid();
-        $params['component'] = $storedfile->get_component();
-        $params['filearea']  = $storedfile->get_filearea();
-        $params['itemid']    = $storedfile->get_itemid();
-        $params['filename']  = $storedfile->get_filename();
-        $params['filepath']  = $storedfile->get_filepath();
-        $reference = self::pack_reference($params);
-        $referencehash = sha1($reference);
-
-        $sql = "SELECT repositoryid, id FROM {files_reference}
-                 WHERE referencehash = ?";
-        $rs = $DB->get_recordset_sql($sql, array($referencehash));
-
-        $now = time();
-        foreach ($rs as $record) {
-            $this->update_references($record->id, $now, null,
-                    $storedfile->get_contenthash(), $storedfile->get_filesize(), 0, $storedfile->get_timemodified());
-        }
-        $rs->close();
+        // NEXO: Repository subsystem removed - no file references to update.
     }
 
     /**
@@ -2344,19 +2259,18 @@ class file_storage {
      * {files} and {files_refernece} join.
      *
      * @param string $filesprefix the table prefix for the {files} table
-     * @param string $filesreferenceprefix the table prefix for the {files_reference} table
+     * @param string $filesreferenceprefix the table prefix for the {files_reference} table (NEXO: unused)
      * @return string the sql to go after a SELECT
      */
     private static function instance_sql_fields($filesprefix, $filesreferenceprefix) {
         // Note, these fieldnames MUST NOT overlap between the two tables,
         // else problems like MDL-33172 occur.
+        // NEXO: Removed referencefileid - repository subsystem removed.
         $filefields = array('contenthash', 'pathnamehash', 'contextid', 'component', 'filearea',
             'itemid', 'filepath', 'filename', 'userid', 'filesize', 'mimetype', 'status', 'source',
-            'author', 'license', 'timecreated', 'timemodified', 'sortorder', 'referencefileid');
+            'author', 'license', 'timecreated', 'timemodified', 'sortorder');
 
-        $referencefields = array('repositoryid' => 'repositoryid',
-            'reference' => 'reference',
-            'lastsync' => 'referencelastsync');
+        // NEXO: Repository reference fields removed.
 
         // id is specifically named to prevent overlaping between the two tables.
         $fields = array();
@@ -2365,102 +2279,49 @@ class file_storage {
             $fields[] = "{$filesprefix}.{$field}";
         }
 
-        foreach ($referencefields as $field => $alias) {
-            $fields[] = "{$filesreferenceprefix}.{$field} AS {$alias}";
-        }
-
         return implode(', ', $fields);
     }
 
     /**
      * Returns the id of the record in {files_reference} that matches the passed repositoryid and reference
      *
-     * If the record already exists, its id is returned. If there is no such record yet,
-     * new one is created (using the lastsync provided, too) and its id is returned.
-     *
      * @param int $repositoryid
      * @param string $reference
      * @param int $lastsync
      * @param int $lifetime argument not used any more
-     * @return int
+     * @return int|null
      */
     private function get_or_create_referencefileid($repositoryid, $reference, $lastsync = null, $lifetime = null) {
-        global $DB;
-
-        $id = $this->get_referencefileid($repositoryid, $reference, IGNORE_MISSING);
-
-        if ($id !== false) {
-            // bah, that was easy
-            return $id;
-        }
-
-        // no such record yet, create one
-        try {
-            $id = $DB->insert_record('files_reference', array(
-                'repositoryid'  => $repositoryid,
-                'reference'     => $reference,
-                'referencehash' => sha1($reference),
-                'lastsync'      => $lastsync));
-        } catch (dml_exception $e) {
-            // if inserting the new record failed, chances are that the race condition has just
-            // occured and the unique index did not allow to create the second record with the same
-            // repositoryid + reference combo
-            $id = $this->get_referencefileid($repositoryid, $reference, MUST_EXIST);
-        }
-
-        return $id;
+        // NEXO: Repository subsystem removed - no file references.
+        return null;
     }
 
     /**
      * Returns the id of the record in {files_reference} that matches the passed parameters
      *
-     * Depending on the required strictness, false can be returned. The behaviour is consistent
-     * with standard DML methods.
-     *
      * @param int $repositoryid
      * @param string $reference
-     * @param int $strictness either {@link IGNORE_MISSING}, {@link IGNORE_MULTIPLE} or {@link MUST_EXIST}
-     * @return int|bool
+     * @param int $strictness
+     * @return bool
      */
     private function get_referencefileid($repositoryid, $reference, $strictness) {
-        global $DB;
-
-        return $DB->get_field('files_reference', 'id',
-            array('repositoryid' => $repositoryid, 'referencehash' => sha1($reference)), $strictness);
+        // NEXO: Repository subsystem removed - no file references.
+        return false;
     }
 
     /**
      * Updates a reference to the external resource and all files that use it
      *
-     * This function is called after synchronisation of an external file and updates the
-     * contenthash, filesize and status of all files that reference this external file
-     * as well as time last synchronised.
-     *
      * @param int $referencefileid
      * @param int $lastsync
-     * @param int $lifetime argument not used any more, liefetime is returned by repository
+     * @param int $lifetime
      * @param string $contenthash
      * @param int $filesize
-     * @param int $status 0 if ok or 666 if source is missing
-     * @param int $timemodified last time modified of the source, if known
+     * @param int $status
+     * @param int $timemodified
      */
     public function update_references($referencefileid, $lastsync, $lifetime, $contenthash, $filesize, $status, $timemodified = null) {
-        global $DB;
-        $referencefileid = clean_param($referencefileid, PARAM_INT);
-        $lastsync = clean_param($lastsync, PARAM_INT);
-        validate_param($contenthash, PARAM_TEXT, NULL_NOT_ALLOWED);
-        $filesize = clean_param($filesize, PARAM_INT);
-        $status = clean_param($status, PARAM_INT);
-        $params = array('contenthash' => $contenthash,
-                    'filesize' => $filesize,
-                    'status' => $status,
-                    'referencefileid' => $referencefileid,
-                    'timemodified' => $timemodified);
-        $DB->execute('UPDATE {files} SET contenthash = :contenthash, filesize = :filesize,
-            status = :status ' . ($timemodified ? ', timemodified = :timemodified' : '') . '
-            WHERE referencefileid = :referencefileid', $params);
-        $data = array('id' => $referencefileid, 'lastsync' => $lastsync);
-        $DB->update_record('files_reference', (object)$data);
+        // NEXO: Repository subsystem removed - no file references to update.
     }
 
     /**
