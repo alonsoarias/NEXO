@@ -594,9 +594,7 @@ abstract class context extends stdClass implements IteratorAggregate {
         $fs = get_file_storage();
         $fs->delete_area_files($this->_id);
 
-        // Delete all repository instances attached to this context.
-        require_once($CFG->dirroot . '/repository/lib.php');
-        \repository::delete_all_for_context($this->_id);
+        // NEXO: Repository subsystem removed.
 
         // Delete all advanced grading data attached to this context.
         require_once($CFG->dirroot.'/grade/grading/lib.php');

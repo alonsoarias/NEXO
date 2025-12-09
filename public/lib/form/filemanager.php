@@ -29,7 +29,7 @@ global $CFG;
 
 require_once('HTML/QuickForm/element.php');
 require_once($CFG->dirroot.'/lib/filelib.php');
-require_once($CFG->dirroot.'/repository/lib.php');
+// NEXO: Repository subsystem removed.
 require_once('templatable_form_element.php');
 
 /**
@@ -250,7 +250,7 @@ class MoodleQuickForm_filemanager extends HTML_QuickForm_element implements temp
      */
     function toHtml() {
         global $CFG, $USER, $COURSE, $PAGE, $OUTPUT;
-        require_once("$CFG->dirroot/repository/lib.php");
+        // NEXO: Repository subsystem removed.
 
         // security - never ever allow guest/not logged in user to upload anything or use this element!
         if (isguestuser() or !isloggedin()) {
@@ -395,7 +395,7 @@ class form_filemanager implements renderable {
      */
     public function __construct(stdClass $options) {
         global $CFG, $USER, $PAGE;
-        require_once($CFG->dirroot. '/repository/lib.php');
+        // NEXO: Repository subsystem removed.
         require_once($CFG->libdir . '/licenselib.php');
         $defaults = array(
             'maxbytes'=>-1,

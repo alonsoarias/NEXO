@@ -52,7 +52,8 @@ class file_picker implements renderable {
      */
     public function __construct(stdClass $options) {
         global $CFG, $USER, $PAGE;
-        require_once($CFG->dirroot . '/repository/lib.php');
+
+        // NEXO: Repository subsystem removed - simplified file picker.
         $defaults = [
             'accepted_types' => '*',
             'return_types' => FILE_INTERNAL,
@@ -81,7 +82,7 @@ class file_picker implements renderable {
                 $file = $fs->get_file($usercontext->id, 'user', 'draft', $options->itemid, $options->filepath, $options->filename);
             }
             if (!empty($file)) {
-                $options->currentfile = html_writer::link(moodle_url::make_draftfile_url(
+                $options->currentfile = \html_writer::link(moodle_url::make_draftfile_url(
                     $file->get_itemid(),
                     $file->get_filepath(),
                     $file->get_filename(),
@@ -89,8 +90,18 @@ class file_picker implements renderable {
             }
         }
 
-        // Initialise options, getting files in root path.
-        $this->options = initialise_filepicker($options);
+        // NEXO: Simplified options without repository integration.
+        $this->options = new stdClass();
+        $this->options->repositories = [];
+        $this->options->accepted_types = $options->accepted_types;
+        $this->options->return_types = $options->return_types;
+        $this->options->env = $options->env;
+        $this->options->client_id = $options->client_id;
+        $this->options->itemid = $options->itemid;
+        $this->options->maxbytes = $options->maxbytes;
+        $this->options->maxfiles = $options->maxfiles;
+        $this->options->buttonname = $options->buttonname;
+        $this->options->currentfile = $options->currentfile;
 
         // Copying other options.
         foreach ($options as $name => $value) {

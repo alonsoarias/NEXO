@@ -284,7 +284,6 @@ class page_requirements_manager {
         $this->YUI_config->add_moodle_metadata();
 
         // Every page should include definition of following modules.
-        $this->js_module($this->find_module('core_filepicker'));
         $this->js_module($this->find_module('core_comment'));
     }
 
@@ -796,37 +795,6 @@ class page_requirements_manager {
             // Must be some core stuff - list here is not complete, this is just the stuff used from multiple places
             // so that we do nto have to repeat the definition of these modules over and over again.
             switch ($component) {
-                case 'core_filepicker':
-                    $module = [
-                        'name' => 'core_filepicker',
-                        'fullpath' => '/repository/filepicker.js',
-                        'requires' => [
-                            'base', 'node', 'node-event-simulate', 'json', 'async-queue', 'io-base', 'io-upload-iframe', 'io-form',
-                            'yui2-treeview', 'panel', 'cookie', 'datatable', 'datatable-sort', 'resize-plugin', 'dd-plugin',
-                            'escape', 'moodle-core_filepicker', 'moodle-core-notification-dialogue',
-                        ],
-                        'strings'  => [
-                            ['lastmodified', 'moodle'],
-                            ['name', 'moodle'],
-                            ['type', 'repository'],
-                            ['size', 'repository'],
-                            ['invalidjson', 'repository'],
-                            ['error', 'moodle'],
-                            ['info', 'moodle'],
-                            ['nofilesattached', 'repository'],
-                            ['filepicker', 'repository'],
-                            ['logout', 'repository'],
-                            ['nofilesavailable', 'repository'],
-                            ['norepositoriesavailable', 'repository'],
-                            ['fileexistsdialogheader', 'repository'],
-                            ['fileexistsdialog_editor', 'repository'],
-                            ['fileexistsdialog_filemanager', 'repository'],
-                            ['renameto', 'repository'],
-                            ['referencesexist', 'repository'],
-                            ['select', 'repository'],
-                        ],
-                    ];
-                    break;
                 case 'core_comment':
                     $module = [
                         'name' => 'core_comment',
@@ -876,7 +844,7 @@ class page_requirements_manager {
                     $module = [
                         'name' => 'core_dndupload',
                         'fullpath' => '/lib/form/dndupload.js',
-                        'requires' => ['node', 'event', 'json', 'core_filepicker'],
+                        'requires' => ['node', 'event', 'json'],
                         'strings'  => [
                             ['uploadformlimit', 'moodle'], ['droptoupload', 'moodle'], ['maxfilesreached', 'moodle'],
                             ['dndenabled_inbox', 'moodle'], ['fileexists', 'moodle'], ['maxbytesfile', 'error'],

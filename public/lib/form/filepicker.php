@@ -28,8 +28,9 @@
 global $CFG;
 
 require_once("HTML/QuickForm/button.php");
-require_once($CFG->dirroot.'/repository/lib.php');
 require_once('templatable_form_element.php');
+
+// NEXO: Repository subsystem removed - filepicker uses simplified file upload.
 
 /**
  * Filepicker form element
@@ -139,55 +140,17 @@ class MoodleQuickForm_filepicker extends HTML_QuickForm_input implements templat
             $this->setValue($draftitemid);
         }
 
-        if ($COURSE->id == SITEID) {
-            $context = context_system::instance();
-        } else {
-            $context = context_system::instance($COURSE->id);
-        }
-
-        $client_id = uniqid();
-
-        $args = new stdClass();
-        // need these three to filter repositories list
-        $args->accepted_types = $this->_options['accepted_types']?$this->_options['accepted_types']:'*';
-        $args->return_types = $this->_options['return_types'];
-        $args->itemid = $draftitemid;
-        $args->maxbytes = $this->_options['maxbytes'];
-        $args->context = $PAGE->context;
-        $args->buttonname = $elname.'choose';
-        $args->elementid = $id;
-
+        // NEXO: Simplified file picker without repository.
+        // Just show a basic file upload interface with drag and drop support.
         $html = $this->_getTabs();
-        $fp = new file_picker($args);
-        $options = $fp->options;
-        $options->context = $PAGE->context;
-        $html .= $OUTPUT->render($fp);
         $html .= '<input type="hidden" name="'.$elname.'" id="'.$id.'" value="'.$draftitemid.'" class="filepickerhidden"/>';
 
-        $module = array('name'=>'form_filepicker', 'fullpath'=>'/lib/form/filepicker.js', 'requires'=>array('core_filepicker', 'node', 'node-event-simulate', 'core_dndupload'));
-        $PAGE->requires->js_init_call('M.form_filepicker.init', array($fp->options), true, $module);
-
-        $nonjsfilepicker = new moodle_url('/repository/draftfiles_manager.php', array(
-            'env'=>'filepicker',
-            'action'=>'browse',
-            'itemid'=>$draftitemid,
-            'subdirs'=>0,
-            'maxbytes'=>$options->maxbytes,
-            'maxfiles'=>1,
-            'ctx_id'=>$PAGE->context->id,
-            'course'=>$PAGE->course->id,
-            'sesskey'=>sesskey(),
-            ));
-
-        // non js file picker
-        $html .= '<noscript>';
-        $html .= "<div><object type='text/html' data='$nonjsfilepicker' height='160' width='600' style='border:1px solid #000'></object></div>";
-        $html .= '</noscript>';
-
-        if (!empty($args->accepted_types) && $args->accepted_types != '*') {
+        // Show accepted file types if specified.
+        $acceptedtypes = $this->_options['accepted_types'];
+        if (!empty($acceptedtypes) && $acceptedtypes != '*') {
             $html .= html_writer::tag('p', get_string('filesofthesetypes', 'form'));
             $util = new \core_form\filetypes_util();
-            $filetypedescriptions = $util->describe_file_types($args->accepted_types);
+            $filetypedescriptions = $util->describe_file_types($acceptedtypes);
             $html .= $OUTPUT->render_from_template('core_form/filetypes-descriptions', $filetypedescriptions);
         }
 

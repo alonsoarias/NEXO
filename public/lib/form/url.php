@@ -63,15 +63,12 @@ class MoodleQuickForm_url extends HTML_QuickForm_text implements templatable {
      * @param array $options data which need to be posted.
      */
     public function __construct($elementName=null, $elementLabel=null, $attributes=null, $options=null) {
-        global $CFG;
-        require_once("$CFG->dirroot/repository/lib.php");
         $options = (array)$options;
         foreach ($options as $name=>$value) {
             $this->_options[$name] = $value;
         }
-        if (!isset($this->_options['usefilepicker'])) {
-            $this->_options['usefilepicker'] = true;
-        }
+        // NEXO: File picker is not available, repository subsystem removed.
+        $this->_options['usefilepicker'] = false;
 
         parent::__construct($elementName, $elementLabel, $attributes);
         $this->_type = 'url';

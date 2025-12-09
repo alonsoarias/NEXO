@@ -10704,7 +10704,7 @@ class admin_setting_configstoredfile extends admin_setting {
         global $CFG;
 
         require_once("$CFG->libdir/filelib.php");
-        require_once("$CFG->dirroot/repository/lib.php");
+        // NEXO: Repository subsystem removed.
         $defaults = array(
             'mainfile' => '', 'subdirs' => 0, 'maxbytes' => -1, 'maxfiles' => 1,
             'accepted_types' => '*', 'return_types' => FILE_INTERNAL, 'areamaxbytes' => FILE_AREA_MAX_BYTES_UNLIMITED,
