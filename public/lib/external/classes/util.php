@@ -19,7 +19,6 @@ namespace core_external;
 use context;
 use context_system;
 use context_helper;
-use context_system;
 use core_user;
 use moodle_exception;
 use moodle_url;
