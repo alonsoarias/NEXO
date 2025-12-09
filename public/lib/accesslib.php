@@ -403,8 +403,8 @@ function get_guest_role() {
  * Check whether a user has a particular capability in a given context.
  *
  * For example:
- *      $context = context_module::instance($cm->id);
- *      has_capability('mod/forum:replypost', $context)
+ *      $context = context_system::instance();
+ *      has_capability('moodle/site:config', $context)
  *
  * By default checks the capabilities of the current user, but you can pass a
  * different userid. By default will return true for admin users, but you can override that with the fourth argument.
@@ -1020,75 +1020,6 @@ function reload_all_capabilities() {
                 role_switch($roleid, $context);
             }
         }
-    }
-}
-
-/**
- * Adds a temp role to current USER->access array.
- *
- * Useful for the "temporary guest" access we grant to logged-in users.
- * This is useful for enrol plugins only.
- *
- * @since Moodle 2.2
- * @param context_course $coursecontext
- * @param int $roleid
- * @return void
- */
-function load_temp_course_role(context_course $coursecontext, $roleid) {
-    global $USER, $SITE;
-
-    if (empty($roleid)) {
-        debugging('invalid role specified in load_temp_course_role()');
-        return;
-    }
-
-    if ($coursecontext->instanceid == $SITE->id) {
-        debugging('Can not use temp roles on the frontpage');
-        return;
-    }
-
-    if (!isset($USER->access)) {
-        load_all_capabilities();
-    }
-
-    $coursecontext->reload_if_dirty();
-
-    if (isset($USER->access['ra'][$coursecontext->path][$roleid])) {
-        return;
-    }
-
-    $USER->access['ra'][$coursecontext->path][(int)$roleid] = (int)$roleid;
-}
-
-/**
- * Removes any extra guest roles from current USER->access array.
- * This is useful for enrol plugins only.
- *
- * @since Moodle 2.2
- * @param context_course $coursecontext
- * @return void
- */
-function remove_temp_course_roles(context_course $coursecontext) {
-    global $DB, $USER, $SITE;
-
-    if ($coursecontext->instanceid == $SITE->id) {
-        debugging('Can not use temp roles on the frontpage');
-        return;
-    }
-
-    if (empty($USER->access['ra'][$coursecontext->path])) {
-        //no roles here, weird
-        return;
-    }
-
-    $sql = "SELECT DISTINCT ra.roleid AS id
-              FROM {role_assignments} ra
-             WHERE ra.contextid = :contextid AND ra.userid = :userid";
-    $ras = $DB->get_records_sql($sql, array('contextid'=>$coursecontext->id, 'userid'=>$USER->id));
-
-    $USER->access['ra'][$coursecontext->path] = array();
-    foreach ($ras as $r) {
-        $USER->access['ra'][$coursecontext->path][(int)$r->id] = (int)$r->id;
     }
 }
 
@@ -2668,11 +2599,7 @@ function get_roles_used_in_context(context $context, $includeparents = true) {
  */
 function get_user_roles_in_course($userid, $courseid) {
     global $CFG, $DB;
-    if ($courseid == SITEID) {
-        $context = context_system::instance();
-    } else {
-        $context = context_course::instance($courseid);
-    }
+    $context = context_system::instance();
     // If the current user can assign roles, then they can see all roles on the profile and participants page,
     // provided the roles are assigned to at least 1 user in the context. If not, only the policy-defined roles.
     if (has_capability('moodle/role:assign', $context)) {
@@ -4106,21 +4033,11 @@ function role_switch($roleid, context $context) {
 /**
  * Checks if the user has switched roles within the given course.
  *
- * Note: You can only switch roles within the course, hence it takes a course id
- * rather than a context. On that note Petr volunteered to implement this across
- * all other contexts, all requests for this should be forwarded to him ;)
- *
  * @param int $courseid The id of the course to check
- * @return bool True if the user has switched roles within the course.
+ * @return bool Always returns false - courses not supported in NEXO
  */
 function is_role_switched($courseid) {
-    global $USER;
-    // NEXO: Use IGNORE_MISSING since course table doesn't exist
-    $context = context_course::instance($courseid, IGNORE_MISSING);
-    if (!$context) {
-        return false;
-    }
-    return (!empty($USER->access['rsw'][$context->path]));
+    return false;
 }
 
 /**
@@ -4733,9 +4650,7 @@ function role_change_permission($roleid, $context, $capname, $permission) {
 class_alias(core\context_helper::class, 'context_helper', true);
 class_alias(core\context::class, 'context', true);
 class_alias(core\context\block::class, 'context_block');
-class_alias(core\context\course::class, 'context_course', true);
 class_alias(core\context\coursecat::class, 'context_coursecat');
-class_alias(core\context\module::class, 'context_module', true);
 class_alias(core\context\system::class, 'context_system', true);
 class_alias(core\context\user::class, 'context_user', true);
 
