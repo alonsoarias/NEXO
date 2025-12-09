@@ -101,12 +101,7 @@ class core_renderer extends \core_renderer {
             }
 
             // Only provide user information if the user is the current user, or a user which the current user can view.
-            // When checking user_can_view_profile(), either:
-            // If the page context is course, check the course context (from the page object) or;
-            // If page context is NOT course, then check across all courses.
-            $course = ($this->page->context->contextlevel == CONTEXT_SYSTEM) ? $this->page->course : null;
-
-            if (user_can_view_profile($user, $course)) {
+            if (user_can_view_profile($user)) {
                 // Use the user's full name if the heading isn't set.
                 if (empty($heading)) {
                     $heading = fullname($user);
@@ -193,63 +188,18 @@ class core_renderer extends \core_renderer {
             }
         }
 
-        $prefix = null;
-        if ($context->contextlevel == CONTEXT_SYSTEM) {
-            if ($this->page->course->format === 'singleactivity') {
-                $heading = format_string($this->page->course->fullname, true, ['context' => $context]);
-            } else {
-                $heading = $this->page->cm->get_formatted_name();
-                $iconurl = $this->page->cm->get_icon_url();
-                $iconclass = $iconurl->get_param('filtericon') ? '' : 'nofilter';
-                $iconattrs = [
-                    'class' => "icon activityicon $iconclass",
-                    'aria-hidden' => 'true'
-                ];
-                $imagedata = html_writer::img($iconurl->out(false), '', $iconattrs);
-                $purposeclass = plugin_supports('mod', $this->page->activityname, FEATURE_MOD_PURPOSE);
-                $purposeclass .= ' activityiconcontainer me-2';
-                $purposeclass .= ' modicon_' . $this->page->activityname;
-                $isbranded = component_callback('mod_' . $this->page->activityname, 'is_branded', [], false);
-                $imagedata = html_writer::tag('div', $imagedata, ['class' => $purposeclass . ($isbranded ? ' isbranded' : '')]);
-                if (!empty($USER->editing)) {
-                    $prefix = get_string('modulename', $this->page->activityname);
-                }
-            }
-        }
-
-        $contextheader = new \context_header($heading, $headinglevel, $imagedata, $userbuttons, $prefix);
+        $contextheader = new \context_header($heading, $headinglevel, $imagedata, $userbuttons);
         return $this->render($contextheader);
     }
 
     /**
-     * See if this is the first view of the current cm in the session if it has fake blocks.
+     * See if this is the first view of the current page in the session if it has fake blocks.
      *
-     * (We track up to 100 cms so as not to overflow the session.)
      * This is done for drawer regions containing fake blocks so we can show blocks automatically.
      *
      * @return boolean true if the page has fakeblocks and this is the first visit.
      */
     public function firstview_fakeblocks(): bool {
-        global $SESSION;
-
-        $firstview = false;
-        if ($this->page->cm) {
-            if (!$this->page->blocks->region_has_fakeblocks('side-pre')) {
-                return false;
-            }
-            if (!property_exists($SESSION, 'firstview_fakeblocks')) {
-                $SESSION->firstview_fakeblocks = [];
-            }
-            if (array_key_exists($this->page->cm->id, $SESSION->firstview_fakeblocks)) {
-                $firstview = false;
-            } else {
-                $SESSION->firstview_fakeblocks[$this->page->cm->id] = true;
-                $firstview = true;
-                if (count($SESSION->firstview_fakeblocks) > 100) {
-                    array_shift($SESSION->firstview_fakeblocks);
-                }
-            }
-        }
-        return $firstview;
+        return false;
     }
 }

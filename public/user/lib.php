@@ -881,10 +881,8 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
         return $returnobject;
     }
 
-    $course = $page->course;
-
     // Query the environment.
-    $context = context_system::instance($course->id);
+    $context = context_system::instance();
 
     // Get basic user metadata.
     $returnobject->metadata['userid'] = $user->id;
