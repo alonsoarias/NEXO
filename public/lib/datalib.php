@@ -664,61 +664,8 @@ function get_course($courseid, $clone = true) {
  * @return array Array of courses
  */
 function get_courses($categoryid="all", $sort="c.sortorder ASC", $fields="c.*") {
-
-    global $USER, $CFG, $DB;
-
-    $params = array();
-
-    if ($categoryid !== "all" && is_numeric($categoryid)) {
-        $categoryselect = "WHERE c.category = :catid";
-        $params['catid'] = $categoryid;
-    } else {
-        $categoryselect = "";
-    }
-
-    if (empty($sort)) {
-        $sortstatement = "";
-    } else {
-        $sortstatement = "ORDER BY $sort";
-    }
-
-    $visiblecourses = array();
-
-    $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
-    $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
-    $params['contextlevel'] = CONTEXT_SYSTEM;
-
-    // The fields "id, category, visible" are required in the subsequent loop and must always be present.
-    if ($fields !== 'c.*') {
-        $fieldarray = array_merge(
-            // Split fields on comma + zero or more whitespace, merge with required fields.
-            preg_split('/,\s*/', $fields), [
-                'c.id',
-                'c.category',
-                'c.visible',
-            ]
-        );
-        $fields = implode(',', array_unique($fieldarray));
-    }
-
-    $sql = "SELECT $fields $ccselect
-              FROM {course} c
-           $ccjoin
-              $categoryselect
-              $sortstatement";
-
-    // pull out all course matching the cat
-    if ($courses = $DB->get_records_sql($sql, $params)) {
-
-        // loop throught them
-        foreach ($courses as $course) {
-            context_helper::preload_from_record($course);
-            if (core_course_category::can_view_course_info($course)) {
-                $visiblecourses [$course->id] = $course;
-            }
-        }
-    }
-    return $visiblecourses;
+    // NEXO: Courses have been removed, return empty array.
+    return array();
 }
 
 /**
@@ -738,104 +685,9 @@ function get_courses($categoryid="all", $sort="c.sortorder ASC", $fields="c.*") 
  */
 function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$totalcount,
                             $requiredcapabilities = array(), $searchcond = [], $params = []) {
-    global $CFG, $DB;
-
-    if ($DB->sql_regex_supported()) {
-        $REGEXP    = $DB->sql_regex(true);
-        $NOTREGEXP = $DB->sql_regex(false);
-    }
-
-    $i = 0;
-
-    $concat = $DB->sql_concat("COALESCE(c.summary, '')", "' '", 'c.fullname', "' '", 'c.idnumber', "' '", 'c.shortname');
-
-    foreach ($searchterms as $searchterm) {
-        $i++;
-
-        // Initially we aren't going to perform NOT LIKE searches, only MSSQL
-        // will use it to simulate the "-" operator with LIKE clause.
-        $NOT = false;
-
-        // Under MSSQL, trim the + and - operators and perform
-        // simpler LIKE (or NOT LIKE) queries.
-        if (!$DB->sql_regex_supported()) {
-            if (substr($searchterm, 0, 1) == '-') {
-                $NOT = true;
-            }
-            $searchterm = trim($searchterm, '+-');
-        }
-
-        // TODO: +- may not work for non latin languages
-
-        if (substr($searchterm,0,1) == '+') {
-            $searchterm = trim($searchterm, '+-');
-            $searchterm = preg_quote($searchterm, '|');
-            $searchcond[] = "$concat $REGEXP :ss$i";
-            $params['ss'.$i] = "(^|[^a-zA-Z0-9])$searchterm([^a-zA-Z0-9]|$)";
-
-        } else if ((substr($searchterm,0,1) == "-") && (core_text::strlen($searchterm) > 1)) {
-            $searchterm = trim($searchterm, '+-');
-            $searchterm = preg_quote($searchterm, '|');
-            $searchcond[] = "$concat $NOTREGEXP :ss$i";
-            $params['ss'.$i] = "(^|[^a-zA-Z0-9])$searchterm([^a-zA-Z0-9]|$)";
-
-        } else {
-            $searchcond[] = $DB->sql_like($concat,":ss$i", false, true, $NOT);
-            $params['ss'.$i] = "%$searchterm%";
-        }
-    }
-
-    if (empty($searchcond)) {
-        $searchcond = array('1 = 1');
-    }
-
-    $searchcond = implode(" AND ", $searchcond);
-
-    $courses = array();
-    $c = 0; // counts how many visible courses we've seen
-
-    // Tiki pagination
-    $limitfrom = $page * $recordsperpage;
-    $limitto   = $limitfrom + $recordsperpage;
-
-    $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
-    $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
-    $params['contextlevel'] = CONTEXT_SYSTEM;
-
-    $sql = "SELECT c.* $ccselect
-              FROM {course} c
-           $ccjoin
-             WHERE $searchcond AND c.id <> ".SITEID."
-          ORDER BY $sort";
-
-    $mycourses = enrol_get_my_courses();
-    $rs = $DB->get_recordset_sql($sql, $params);
-    foreach($rs as $course) {
-        // Preload contexts only for hidden courses or courses we need to return.
-        context_helper::preload_from_record($course);
-        $coursecontext = context_system::instance($course->id);
-        if (!array_key_exists($course->id, $mycourses) && !core_course_category::can_view_course_info($course)) {
-            continue;
-        }
-        if (!empty($requiredcapabilities)) {
-            if (!has_all_capabilities($requiredcapabilities, $coursecontext)) {
-                continue;
-            }
-        }
-        // Don't exit this loop till the end
-        // we need to count all the visible courses
-        // to update $totalcount
-        if ($c >= $limitfrom && $c < $limitto) {
-            $courses[$course->id] = $course;
-        }
-        $c++;
-    }
-    $rs->close();
-
-    // our caller expects 2 bits of data - our return
-    // array, and an updated $totalcount
-    $totalcount = $c;
-    return $courses;
+    // NEXO: Courses have been removed, return empty results.
+    $totalcount = 0;
+    return array();
 }
 
 /**
@@ -850,204 +702,7 @@ function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$total
  * @return void
  */
 function fix_course_sortorder() {
-    global $DB, $SITE;
-
-    //WARNING: this is PHP5 only code!
-
-    // if there are any changes made to courses or categories we will trigger
-    // the cache events to purge all cached courses/categories data
-    $cacheevents = array();
-
-    if ($unsorted = $DB->get_records('course_categories', array('sortorder'=>0))) {
-        //move all categories that are not sorted yet to the end
-        $DB->set_field('course_categories', 'sortorder',
-            get_max_courses_in_category() * MAX_COURSE_CATEGORIES, array('sortorder' => 0));
-        $cacheevents['changesincoursecat'] = true;
-    }
-
-    $allcats = $DB->get_records('course_categories', null, 'sortorder, id', 'id, sortorder, parent, depth, path');
-    $topcats    = array();
-    $brokencats = array();
-    foreach ($allcats as $cat) {
-        $sortorder = (int)$cat->sortorder;
-        if (!$cat->parent) {
-            while(isset($topcats[$sortorder])) {
-                $sortorder++;
-            }
-            $topcats[$sortorder] = $cat;
-            continue;
-        }
-        if (!isset($allcats[$cat->parent])) {
-            $brokencats[] = $cat;
-            continue;
-        }
-        if (!isset($allcats[$cat->parent]->children)) {
-            $allcats[$cat->parent]->children = array();
-        }
-        while(isset($allcats[$cat->parent]->children[$sortorder])) {
-            $sortorder++;
-        }
-        $allcats[$cat->parent]->children[$sortorder] = $cat;
-    }
-    unset($allcats);
-
-    // add broken cats to category tree
-    if ($brokencats) {
-        $defaultcat = reset($topcats);
-        foreach ($brokencats as $cat) {
-            $topcats[] = $cat;
-        }
-    }
-
-    // now walk recursively the tree and fix any problems found
-    $sortorder = 0;
-    $fixcontexts = array();
-    if (_fix_course_cats($topcats, $sortorder, 0, 0, '', $fixcontexts)) {
-        $cacheevents['changesincoursecat'] = true;
-    }
-
-    // detect if there are "multiple" frontpage courses and fix them if needed
-    $frontcourses = $DB->get_records('course', array('category'=>0), 'id');
-    if (count($frontcourses) > 1) {
-        if (isset($frontcourses[SITEID])) {
-            $frontcourse = $frontcourses[SITEID];
-            unset($frontcourses[SITEID]);
-        } else {
-            $frontcourse = array_shift($frontcourses);
-        }
-        $defaultcat = reset($topcats);
-        foreach ($frontcourses as $course) {
-            $DB->set_field('course', 'category', $defaultcat->id, array('id'=>$course->id));
-            $context = context_system::instance($course->id);
-            $fixcontexts[$context->id] = $context;
-            $cacheevents['changesincourse'] = true;
-        }
-        unset($frontcourses);
-    } else {
-        $frontcourse = reset($frontcourses);
-    }
-
-    // now fix the paths and depths in context table if needed
-    if ($fixcontexts) {
-        foreach ($fixcontexts as $fixcontext) {
-            $fixcontext->reset_paths(false);
-        }
-        context_helper::build_all_paths(false);
-        unset($fixcontexts);
-        $cacheevents['changesincourse'] = true;
-        $cacheevents['changesincoursecat'] = true;
-    }
-
-    // release memory
-    unset($topcats);
-    unset($brokencats);
-    unset($fixcontexts);
-
-    // fix frontpage course sortorder
-    if ($frontcourse->sortorder != 1) {
-        $DB->set_field('course', 'sortorder', 1, array('id'=>$frontcourse->id));
-        $cacheevents['changesincourse'] = true;
-    }
-
-    // now fix the course counts in category records if needed
-    $sql = "SELECT cc.id, cc.coursecount, COUNT(c.id) AS newcount
-              FROM {course_categories} cc
-              LEFT JOIN {course} c ON c.category = cc.id
-          GROUP BY cc.id, cc.coursecount
-            HAVING cc.coursecount <> COUNT(c.id)";
-
-    if ($updatecounts = $DB->get_records_sql($sql)) {
-        // categories with more courses than MAX_COURSES_IN_CATEGORY
-        $categories = array();
-        foreach ($updatecounts as $cat) {
-            $cat->coursecount = $cat->newcount;
-            if ($cat->coursecount >= get_max_courses_in_category()) {
-                $categories[] = $cat->id;
-            }
-            unset($cat->newcount);
-            $DB->update_record_raw('course_categories', $cat, true);
-        }
-        if (!empty($categories)) {
-            $str = implode(', ', $categories);
-            debugging("The number of courses (category id: $str) has reached max number of courses " .
-                "in a category (" . get_max_courses_in_category() . "). It will cause a sorting performance issue. " .
-                "Please set higher value for \$CFG->maxcoursesincategory in config.php. " .
-                "Please also make sure \$CFG->maxcoursesincategory * MAX_COURSE_CATEGORIES less than max integer. " .
-                "See tracker issues: MDL-25669 and MDL-69573", DEBUG_DEVELOPER);
-        }
-        $cacheevents['changesincoursecat'] = true;
-    }
-
-    // now make sure that sortorders in course table are withing the category sortorder ranges
-    $sql = "SELECT DISTINCT cc.id, cc.sortorder
-              FROM {course_categories} cc
-              JOIN {course} c ON c.category = cc.id
-             WHERE c.sortorder < cc.sortorder OR c.sortorder > cc.sortorder + " . get_max_courses_in_category();
-
-    if ($fixcategories = $DB->get_records_sql($sql)) {
-        //fix the course sortorder ranges
-        foreach ($fixcategories as $cat) {
-            $sql = "UPDATE {course}
-                       SET sortorder = ".$DB->sql_modulo('sortorder', get_max_courses_in_category())." + ?
-                     WHERE category = ?";
-            $DB->execute($sql, array($cat->sortorder, $cat->id));
-        }
-        $cacheevents['changesincoursecat'] = true;
-    }
-    unset($fixcategories);
-
-    // categories having courses with sortorder duplicates or having gaps in sortorder
-    $sql = "SELECT DISTINCT c1.category AS id , cc.sortorder
-              FROM {course} c1
-              JOIN {course} c2 ON c1.sortorder = c2.sortorder
-              JOIN {course_categories} cc ON (c1.category = cc.id)
-             WHERE c1.id <> c2.id";
-    $fixcategories = $DB->get_records_sql($sql);
-
-    $sql = "SELECT cc.id, cc.sortorder, cc.coursecount, MAX(c.sortorder) AS maxsort, MIN(c.sortorder) AS minsort
-              FROM {course_categories} cc
-              JOIN {course} c ON c.category = cc.id
-          GROUP BY cc.id, cc.sortorder, cc.coursecount
-            HAVING (MAX(c.sortorder) <>  cc.sortorder + cc.coursecount) OR (MIN(c.sortorder) <>  cc.sortorder + 1)";
-    $gapcategories = $DB->get_records_sql($sql);
-
-    foreach ($gapcategories as $cat) {
-        if (isset($fixcategories[$cat->id])) {
-            // duplicates detected already
-
-        } else if ($cat->minsort == $cat->sortorder and $cat->maxsort == $cat->sortorder + $cat->coursecount - 1) {
-            // easy - new course inserted with sortorder 0, the rest is ok
-            $sql = "UPDATE {course}
-                       SET sortorder = sortorder + 1
-                     WHERE category = ?";
-            $DB->execute($sql, array($cat->id));
-
-        } else {
-            // it needs full resorting
-            $fixcategories[$cat->id] = $cat;
-        }
-        $cacheevents['changesincourse'] = true;
-    }
-    unset($gapcategories);
-
-    // fix course sortorders in problematic categories only
-    foreach ($fixcategories as $cat) {
-        $i = 1;
-        $courses = $DB->get_records('course', array('category'=>$cat->id), 'sortorder ASC, id DESC', 'id, sortorder');
-        foreach ($courses as $course) {
-            if ($course->sortorder != $cat->sortorder + $i) {
-                $course->sortorder = $cat->sortorder + $i;
-                $DB->update_record_raw('course', $course, true);
-                $cacheevents['changesincourse'] = true;
-            }
-            $i++;
-        }
-    }
-
-    // advise all caches that need to be rebuilt
-    foreach (array_keys($cacheevents) as $event) {
-        cache_helper::purge_by_event($event);
-    }
+    // NEXO: Courses and course categories have been removed, nothing to fix.
 }
 
 /**
@@ -1066,39 +721,8 @@ function fix_course_sortorder() {
  * @return bool if changes were made
  */
 function _fix_course_cats($children, &$sortorder, $parent, $depth, $path, &$fixcontexts) {
-    global $DB;
-
-    $depth++;
-    $changesmade = false;
-
-    foreach ($children as $cat) {
-        $sortorder = $sortorder + get_max_courses_in_category();
-        $update = false;
-        if ($parent != $cat->parent or $depth != $cat->depth or $path.'/'.$cat->id != $cat->path) {
-            $cat->parent = $parent;
-            $cat->depth  = $depth;
-            $cat->path   = $path.'/'.$cat->id;
-            $update = true;
-
-            // make sure context caches are rebuild and dirty contexts marked
-            $context = context_systemcat::instance($cat->id);
-            $fixcontexts[$context->id] = $context;
-        }
-        if ($cat->sortorder != $sortorder) {
-            $cat->sortorder = $sortorder;
-            $update = true;
-        }
-        if ($update) {
-            $DB->update_record('course_categories', $cat, true);
-            $changesmade = true;
-        }
-        if (isset($cat->children)) {
-            if (_fix_course_cats($cat->children, $sortorder, $cat->id, $cat->depth, $cat->path, $fixcontexts)) {
-                $changesmade = true;
-            }
-        }
-    }
-    return $changesmade;
+    // NEXO: Course categories have been removed, nothing to fix.
+    return false;
 }
 
 /**
@@ -1167,16 +791,8 @@ function increment_revision_number($table, $field, $select, ?array $params = nul
  * @return array|false
  */
 function get_course_mods($courseid) {
-    global $DB;
-
-    if (empty($courseid)) {
-        return false; // avoid warnings
-    }
-
-    return $DB->get_records_sql("SELECT cm.*, m.name as modname
-                                   FROM {modules} m, {course_modules} cm
-                                  WHERE cm.course = ? AND cm.module = m.id AND m.visible = 1",
-                                array($courseid)); // no disabled mods
+    // NEXO: Course modules have been removed.
+    return false;
 }
 
 
@@ -1198,48 +814,11 @@ function get_course_mods($courseid) {
  * @return stdClass|false
  */
 function get_coursemodule_from_id($modulename, $cmid, $courseid=0, $sectionnum=false, $strictness=IGNORE_MISSING) {
-    global $DB;
-
-    $params = array('cmid'=>$cmid);
-
-    if (!$modulename) {
-        if (!$modulename = $DB->get_field_sql("SELECT md.name
-                                                 FROM {modules} md
-                                                 JOIN {course_modules} cm ON cm.module = md.id
-                                                WHERE cm.id = :cmid", $params, $strictness)) {
-            return false;
-        }
-    } else {
-        if (!core_component::is_valid_plugin_name('mod', $modulename)) {
-            throw new coding_exception('Invalid modulename parameter');
-        }
+    // NEXO: Course modules have been removed.
+    if ($strictness == MUST_EXIST) {
+        throw new dml_exception('invalidrecord', 'course_modules');
     }
-
-    $params['modulename'] = $modulename;
-
-    $courseselect = "";
-    $sectionfield = "";
-    $sectionjoin  = "";
-
-    if ($courseid) {
-        $courseselect = "AND cm.course = :courseid";
-        $params['courseid'] = $courseid;
-    }
-
-    if ($sectionnum) {
-        $sectionfield = ", cw.section AS sectionnum";
-        $sectionjoin  = "LEFT JOIN {course_sections} cw ON cw.id = cm.section";
-    }
-
-    $sql = "SELECT cm.*, m.name, md.name AS modname $sectionfield
-              FROM {course_modules} cm
-                   JOIN {modules} md ON md.id = cm.module
-                   JOIN {".$modulename."} m ON m.id = cm.instance
-                   $sectionjoin
-             WHERE cm.id = :cmid AND md.name = :modulename
-                   $courseselect";
-
-    return $DB->get_record_sql($sql, $params, $strictness);
+    return false;
 }
 
 /**
@@ -1260,37 +839,11 @@ function get_coursemodule_from_id($modulename, $cmid, $courseid=0, $sectionnum=f
  * @return stdClass
  */
 function get_coursemodule_from_instance($modulename, $instance, $courseid=0, $sectionnum=false, $strictness=IGNORE_MISSING) {
-    global $DB;
-
-    if (!core_component::is_valid_plugin_name('mod', $modulename)) {
-        throw new coding_exception('Invalid modulename parameter');
+    // NEXO: Course modules have been removed.
+    if ($strictness == MUST_EXIST) {
+        throw new dml_exception('invalidrecord', 'course_modules');
     }
-
-    $params = array('instance'=>$instance, 'modulename'=>$modulename);
-
-    $courseselect = "";
-    $sectionfield = "";
-    $sectionjoin  = "";
-
-    if ($courseid) {
-        $courseselect = "AND cm.course = :courseid";
-        $params['courseid'] = $courseid;
-    }
-
-    if ($sectionnum) {
-        $sectionfield = ", cw.section AS sectionnum";
-        $sectionjoin  = "LEFT JOIN {course_sections} cw ON cw.id = cm.section";
-    }
-
-    $sql = "SELECT cm.*, m.name, md.name AS modname $sectionfield
-              FROM {course_modules} cm
-                   JOIN {modules} md ON md.id = cm.module
-                   JOIN {".$modulename."} m ON m.id = cm.instance
-                   $sectionjoin
-             WHERE m.id = :instance AND md.name = :modulename
-                   $courseselect";
-
-    return $DB->get_record_sql($sql, $params, $strictness);
+    return false;
 }
 
 /**
@@ -1302,26 +855,8 @@ function get_coursemodule_from_instance($modulename, $instance, $courseid=0, $se
  * @return array Array of results
  */
 function get_coursemodules_in_course($modulename, $courseid, $extrafields='') {
-    global $DB;
-
-    if (!core_component::is_valid_plugin_name('mod', $modulename)) {
-        throw new coding_exception('Invalid modulename parameter');
-    }
-
-    if (!empty($extrafields)) {
-        $extrafields = ", $extrafields";
-    }
-    $params = array();
-    $params['courseid'] = $courseid;
-    $params['modulename'] = $modulename;
-
-
-    return $DB->get_records_sql("SELECT cm.*, m.name, md.name as modname $extrafields
-                                   FROM {course_modules} cm, {modules} md, {".$modulename."} m
-                                  WHERE cm.course = :courseid AND
-                                        cm.instance = m.id AND
-                                        md.name = :modulename AND
-                                        md.id = cm.module", $params);
+    // NEXO: Course modules have been removed.
+    return array();
 }
 
 /**
@@ -1344,52 +879,8 @@ function get_coursemodules_in_course($modulename, $courseid, $extrafields='') {
  *          and course_sections tables, or an empty array if an error occurred.
  */
 function get_all_instances_in_courses($modulename, $courses, $userid=NULL, $includeinvisible=false) {
-    global $CFG, $DB;
-
-    if (!core_component::is_valid_plugin_name('mod', $modulename)) {
-        throw new coding_exception('Invalid modulename parameter');
-    }
-
-    $outputarray = array();
-
-    if (empty($courses) || !is_array($courses) || count($courses) == 0) {
-        return $outputarray;
-    }
-
-    list($coursessql, $params) = $DB->get_in_or_equal(array_keys($courses), SQL_PARAMS_NAMED, 'c0');
-    $params['modulename'] = $modulename;
-
-    if (!$rawmods = $DB->get_records_sql("SELECT cm.id AS coursemodule, m.*, cw.section, cm.visible AS visible,
-                                                 cm.groupmode, cm.groupingid, cm.lang, cm.enableaitools, cm.enabledaiactions
-                                            FROM {course_modules} cm, {course_sections} cw, {modules} md,
-                                                 {".$modulename."} m
-                                           WHERE cm.course $coursessql AND
-                                                 cm.instance = m.id AND
-                                                 cm.section = cw.id AND
-                                                 md.name = :modulename AND
-                                                 md.id = cm.module", $params)) {
-        return $outputarray;
-    }
-
-    foreach ($courses as $course) {
-        $modinfo = get_fast_modinfo($course, $userid);
-
-        if (empty($modinfo->instances[$modulename])) {
-            continue;
-        }
-
-        foreach ($modinfo->instances[$modulename] as $cm) {
-            if (!$includeinvisible and !$cm->uservisible) {
-                continue;
-            }
-            if (!isset($rawmods[$cm->id])) {
-                continue;
-            }
-            $outputarray[] = $rawmods[$cm->id];
-        }
-    }
-
-    return $outputarray;
+    // NEXO: Course modules have been removed.
+    return array();
 }
 
 /**
@@ -1436,23 +927,8 @@ function get_all_instances_in_course($modulename, $course, $userid=NULL, $includ
  * @return bool Success
  */
 function instance_is_visible($moduletype, $module) {
-    global $DB;
-
-    if (!empty($module->id)) {
-        $params = array('courseid'=>$module->course, 'moduletype'=>$moduletype, 'moduleid'=>$module->id);
-        if ($records = $DB->get_records_sql("SELECT cm.instance, cm.visible, cm.groupingid, cm.id, cm.course
-                                               FROM {course_modules} cm, {modules} m
-                                              WHERE cm.course = :courseid AND
-                                                    cm.module = m.id AND
-                                                    m.name = :moduletype AND
-                                                    cm.instance = :moduleid", $params)) {
-
-            foreach ($records as $record) { // there should only be one - use the first one
-                return $record->visible;
-            }
-        }
-    }
-    return true;  // visible by default!
+    // NEXO: Course modules have been removed.
+    return false;
 }
 
 
@@ -1988,15 +1464,7 @@ function xmldb_debug($message, $object) {
  * @return boolean Whether the user can create courses in any category in the system.
  */
 function user_can_create_courses() {
-    global $DB;
-    $catsrs = $DB->get_recordset('course_categories');
-    foreach ($catsrs as $cat) {
-        if (has_capability('moodle/course:create', context_systemcat::instance($cat->id))) {
-            $catsrs->close();
-            return true;
-        }
-    }
-    $catsrs->close();
+    // NEXO: Courses have been removed, no one can create courses.
     return false;
 }
 
