@@ -29,18 +29,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The maximum courses in a category
- * MAX_COURSES_IN_CATEGORY * MAX_COURSE_CATEGORIES must not be more than max integer!
- */
-define('MAX_COURSES_IN_CATEGORY', 10000);
-
-/**
-  * The maximum number of course categories
-  * MAX_COURSES_IN_CATEGORY * MAX_COURSE_CATEGORIES must not be more than max integer!
-  */
-define('MAX_COURSE_CATEGORIES', 10000);
-
-/**
  * Number of seconds to wait before updating lastaccess information in DB.
  *
  * We allow overwrites from config.php, useful to ensure coherence in performance
@@ -644,113 +632,6 @@ function get_course($courseid, $clone = true) {
 }
 
 /**
- * Returns list of courses, for whole site, or category
- *
- * Returns list of courses, for whole site, or category
- * Important: Using c.* for fields is extremely expensive because
- *            we are using distinct. You almost _NEVER_ need all the fields
- *            in such a large SELECT
- *
- * Consider using core_course_category::get_courses()
- * or core_course_category::search_courses() instead since they use caching.
- *
- * @global object
- * @global object
- * @global object
- * @uses CONTEXT_SYSTEM
- * @param string|int $categoryid Either a category id or 'all' for everything
- * @param string $sort A field and direction to sort by
- * @param string $fields The additional fields to return (note that "id, category, visible" are always present)
- * @return array Array of courses
- */
-function get_courses($categoryid="all", $sort="c.sortorder ASC", $fields="c.*") {
-    // NEXO: Courses have been removed, return empty array.
-    return array();
-}
-
-/**
- * A list of courses that match a search
- *
- * @global object
- * @global object
- * @param array $searchterms An array of search criteria
- * @param string $sort A field and direction to sort by
- * @param int $page The page number to get
- * @param int $recordsperpage The number of records per page
- * @param int $totalcount Passed in by reference.
- * @param array $requiredcapabilities Extra list of capabilities used to filter courses
- * @param array $searchcond additional search conditions, for example ['c.enablecompletion = :p1']
- * @param array $params named parameters for additional search conditions, for example ['p1' => 1]
- * @return stdClass[] {@link $COURSE} records
- */
-function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$totalcount,
-                            $requiredcapabilities = array(), $searchcond = [], $params = []) {
-    // NEXO: Courses have been removed, return empty results.
-    $totalcount = 0;
-    return array();
-}
-
-/**
- * Fixes course category and course sortorder, also verifies category and course parents and paths.
- * (circular references are not fixed)
- *
- * @global object
- * @global object
- * @uses MAX_COURSE_CATEGORIES
- * @uses SITEID
- * @uses CONTEXT_SYSTEM
- * @return void
- */
-function fix_course_sortorder() {
-    // NEXO: Courses and course categories have been removed, nothing to fix.
-}
-
-/**
- * Internal recursive category verification function, do not use directly!
- *
- * @todo Document the arguments of this function better
- *
- * @global object
- * @uses CONTEXT_SYSTEMCAT
- * @param array $children
- * @param int $sortorder
- * @param string $parent
- * @param int $depth
- * @param string $path
- * @param array $fixcontexts
- * @return bool if changes were made
- */
-function _fix_course_cats($children, &$sortorder, $parent, $depth, $path, &$fixcontexts) {
-    // NEXO: Course categories have been removed, nothing to fix.
-    return false;
-}
-
-/**
- * Returns a menu of all available scales from the site as well as the given course
- *
- * @global object
- * @param int $courseid The id of the course as found in the 'course' table.
- * @return array
- */
-function get_scales_menu($courseid=0) {
-    global $DB;
-
-    $sql = "SELECT id, name, courseid
-              FROM {scale}
-             WHERE courseid = 0 or courseid = ?
-          ORDER BY courseid ASC, name ASC";
-    $params = array($courseid);
-    $scales = array();
-    $results = $DB->get_records_sql($sql, $params);
-    foreach ($results as $index => $record) {
-        $context = empty($record->courseid) ? context_system::instance() : context_system::instance($record->courseid);
-        $scales[$index] = format_string($record->name, false, ["context" => $context]);
-    }
-    // Format: [id => 'scale name'].
-    return $scales;
-}
-
-/**
  * Increment standard revision field.
  *
  * The revision are based on current time and are incrementing.
@@ -778,157 +659,6 @@ function increment_revision_number($table, $field, $select, ?array $params = nul
         $sql = $sql . " WHERE $select";
     }
     $DB->execute($sql, $params);
-}
-
-
-/// MODULE FUNCTIONS /////////////////////////////////////////////////
-
-/**
- * Just gets a raw list of all modules in a course
- *
- * @global object
- * @param int $courseid The id of the course as found in the 'course' table.
- * @return array|false
- */
-function get_course_mods($courseid) {
-    // NEXO: Course modules have been removed.
-    return false;
-}
-
-
-/**
- * Given an id of a course module, finds the coursemodule description
- *
- * Please note that this function performs 1-2 DB queries. When possible use cached
- * course modinfo. For example get_fast_modinfo($courseorid)->get_cm($cmid)
- * See also {@link cm_info::get_course_module_record()}
- *
- * @global object
- * @param string $modulename name of module type, eg. resource, assignment,... (optional, slower and less safe if not specified)
- * @param int $cmid course module id (id in course_modules table)
- * @param int $courseid optional course id for extra validation
- * @param bool $sectionnum include relative section number (0,1,2 ...)
- * @param int $strictness IGNORE_MISSING means compatible mode, false returned if record not found, debug message if more found;
- *                        IGNORE_MULTIPLE means return first, ignore multiple records found(not recommended);
- *                        MUST_EXIST means throw exception if no record or multiple records found
- * @return stdClass|false
- */
-function get_coursemodule_from_id($modulename, $cmid, $courseid=0, $sectionnum=false, $strictness=IGNORE_MISSING) {
-    // NEXO: Course modules have been removed.
-    if ($strictness == MUST_EXIST) {
-        throw new dml_exception('invalidrecord', 'course_modules');
-    }
-    return false;
-}
-
-/**
- * Given an instance number of a module, finds the coursemodule description
- *
- * Please note that this function performs DB query. When possible use cached course
- * modinfo. For example get_fast_modinfo($courseorid)->instances[$modulename][$instance]
- * See also {@link cm_info::get_course_module_record()}
- *
- * @global object
- * @param string $modulename name of module type, eg. resource, assignment,...
- * @param int $instance module instance number (id in resource, assignment etc. table)
- * @param int $courseid optional course id for extra validation
- * @param bool $sectionnum include relative section number (0,1,2 ...)
- * @param int $strictness IGNORE_MISSING means compatible mode, false returned if record not found, debug message if more found;
- *                        IGNORE_MULTIPLE means return first, ignore multiple records found(not recommended);
- *                        MUST_EXIST means throw exception if no record or multiple records found
- * @return stdClass
- */
-function get_coursemodule_from_instance($modulename, $instance, $courseid=0, $sectionnum=false, $strictness=IGNORE_MISSING) {
-    // NEXO: Course modules have been removed.
-    if ($strictness == MUST_EXIST) {
-        throw new dml_exception('invalidrecord', 'course_modules');
-    }
-    return false;
-}
-
-/**
- * Returns all course modules of given activity in course
- *
- * @param string $modulename The module name (forum, quiz, etc.)
- * @param int $courseid The course id to get modules for
- * @param string $extrafields extra fields starting with m.
- * @return array Array of results
- */
-function get_coursemodules_in_course($modulename, $courseid, $extrafields='') {
-    // NEXO: Course modules have been removed.
-    return array();
-}
-
-/**
- * Returns an array of all the active instances of a particular module in given courses, sorted in the order they are defined
- *
- * Returns an array of all the active instances of a particular
- * module in given courses, sorted in the order they are defined
- * in the course. Returns an empty array on any errors.
- *
- * The returned objects includle the columns cw.section, cm.visible,
- * cm.groupmode, cm.groupingid and cm.lang and are indexed by cm.id.
- *
- * @global object
- * @global object
- * @param string $modulename The name of the module to get instances for
- * @param array $courses an array of course objects.
- * @param int $userid
- * @param int $includeinvisible
- * @return array of module instance objects, including some extra fields from the course_modules
- *          and course_sections tables, or an empty array if an error occurred.
- */
-function get_all_instances_in_courses($modulename, $courses, $userid=NULL, $includeinvisible=false) {
-    // NEXO: Course modules have been removed.
-    return array();
-}
-
-/**
- * Returns an array of all the active instances of a particular module in a given course,
- * sorted in the order they are defined.
- *
- * Returns an array of all the active instances of a particular
- * module in a given course, sorted in the order they are defined
- * in the course. Returns an empty array on any errors.
- *
- * The returned objects includle the columns cw.section, cm.visible,
- * cm.groupmode, and cm.groupingid, and are indexed by cm.id.
- *
- * Simply calls {@link all_instances_in_courses()} with a single provided course
- *
- * @param string $modulename The name of the module to get instances for
- * @param object $course The course obect.
- * @return array of module instance objects, including some extra fields from the course_modules
- *          and course_sections tables, or an empty array if an error occurred.
- * @param int $userid
- * @param int $includeinvisible
- */
-function get_all_instances_in_course($modulename, $course, $userid=NULL, $includeinvisible=false) {
-    return get_all_instances_in_courses($modulename, array($course->id => $course), $userid, $includeinvisible);
-}
-
-
-/**
- * Determine whether a module instance is visible within a course
- *
- * Given a valid module object with info about the id and course,
- * and the module's type (eg "forum") returns whether the object
- * is visible or not according to the 'eye' icon only.
- *
- * NOTE: This does NOT take into account visibility to a particular user.
- * To get visibility access for a specific user, use get_fast_modinfo, get a
- * cm_info object from this, and check the ->uservisible property; or use
- * the \core_availability\info_module::is_user_visible() static function.
- *
- * @global object
-
- * @param $moduletype Name of the module eg 'forum'
- * @param $module Object which is the instance of the module
- * @return bool Success
- */
-function instance_is_visible($moduletype, $module) {
-    // NEXO: Course modules have been removed.
-    return false;
 }
 
 
@@ -1459,16 +1189,6 @@ function xmldb_debug($message, $object) {
 }
 
 /**
- * @global object
- * @uses CONTEXT_SYSTEMCAT
- * @return boolean Whether the user can create courses in any category in the system.
- */
-function user_can_create_courses() {
-    // NEXO: Courses have been removed, no one can create courses.
-    return false;
-}
-
-/**
  * This method can update the values in mulitple database rows for a colum with
  * a unique index, without violating that constraint.
  *
@@ -1589,22 +1309,6 @@ function decompose_update_into_safe_changes(array $newvalues, $unusedvalue) {
     }
 
     return $safechanges;
-}
-
-/**
- * Return maximum number of courses in a category
- *
- * @uses MAX_COURSES_IN_CATEGORY
- * @return int number of courses
- */
-function get_max_courses_in_category() {
-    global $CFG;
-    // Use default MAX_COURSES_IN_CATEGORY if $CFG->maxcoursesincategory is not set or invalid.
-    if (!isset($CFG->maxcoursesincategory) || clean_param($CFG->maxcoursesincategory, PARAM_INT) == 0) {
-        return MAX_COURSES_IN_CATEGORY;
-    } else {
-        return $CFG->maxcoursesincategory;
-    }
 }
 
 /**
