@@ -108,10 +108,10 @@ final class provider_test extends provider_testcase {
         $cm2 = $this->getDataGenerator()->create_module('url', ['course' => $c2]);
 
         $sysctx = \context_system::instance();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
-        $cm1ctx = \context_module::instance($cm1->cmid);
-        $cm2ctx = \context_module::instance($cm2->cmid);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
+        $cm1ctx = \context_system::instance($cm1->cmid);
+        $cm2ctx = \context_system::instance($cm2->cmid);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -166,7 +166,7 @@ final class provider_test extends provider_testcase {
         $c1 = $this->getDataGenerator()->create_course();
 
         $sysctx = \context_system::instance();
-        $c1ctx = \context_course::instance($c1->id);
+        $c1ctx = \context_system::instance($c1->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -209,8 +209,8 @@ final class provider_test extends provider_testcase {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
         $sysctx = \context_system::instance();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -250,8 +250,8 @@ final class provider_test extends provider_testcase {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
         $sysctx = \context_system::instance();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -297,7 +297,7 @@ final class provider_test extends provider_testcase {
 
         $course = $this->getDataGenerator()->create_course();
         $sysctx = \context_system::instance();
-        $c1ctx = \context_course::instance($course->id);
+        $c1ctx = \context_system::instance($course->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -340,10 +340,10 @@ final class provider_test extends provider_testcase {
         $c2 = $this->getDataGenerator()->create_course();
         $cm2 = $this->getDataGenerator()->create_module('url', ['course' => $c2]);
         $sysctx = \context_system::instance();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
-        $cm1ctx = \context_module::instance($cm1->cmid);
-        $cm2ctx = \context_module::instance($cm2->cmid);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
+        $cm1ctx = \context_system::instance($cm1->cmid);
+        $cm2ctx = \context_system::instance($cm2->cmid);
 
         $path = [get_string('privacy:path:logs', 'tool_log'), get_string('pluginname', 'logstore_database')];
         $this->enable_logging();

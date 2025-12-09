@@ -49,7 +49,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $studentrole->id);
 
         $page = new \moodle_page();
-        $page->set_context(\context_course::instance($course->id));
+        $page->set_context(\context_system::instance($course->id));
         $page->set_pagelayout('course');
         $course->format = course_get_format($course)->get_format();
         $page->set_pagetype('course-view-' . $course->format);
@@ -80,7 +80,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         $page = new \moodle_page();
-        $page->set_context(\context_course::instance(SITEID));
+        $page->set_context(\context_system::instance(SITEID));
         $page->set_pagelayout('frontpage');
         $page->set_pagetype('site-index');
         $page->blocks->load_blocks();
@@ -146,7 +146,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $course = $this->getDataGenerator()->create_course();
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $studentrole->id);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Create a HTML block.
         $title = 'Some course info';
@@ -249,7 +249,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $course = $this->getDataGenerator()->create_course();
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $studentrole->id);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Create a HTML block.
         $title = 'My block $$(a+b)=2$$';

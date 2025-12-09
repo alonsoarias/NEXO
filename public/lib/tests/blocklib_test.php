@@ -346,7 +346,7 @@ final class blocklib_test extends \advanced_testcase {
         // Set up fixture.
         $syscontext = \context_system::instance();
         $cat = $this->getDataGenerator()->create_category(array('name' => 'testcategory'));
-        $fakecontext = \context_coursecat::instance($cat->id);
+        $fakecontext = \context_systemcat::instance($cat->id);
         $regionname = 'a-region';
         $blockname = $this->get_a_known_block_type();
 
@@ -367,7 +367,7 @@ final class blocklib_test extends \advanced_testcase {
 
         // Set up fixture.
         $syscontext = \context_system::instance();
-        $childcontext = \context_coursecat::instance(1);
+        $childcontext = \context_systemcat::instance(1);
         $regionname = 'a-region';
         $blockname = $this->get_a_known_block_type();
 

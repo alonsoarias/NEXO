@@ -74,7 +74,7 @@ final class role_filter_test extends \advanced_testcase {
      * Test the filter_matches function when any is set.
      */
     public function test_filter_matches_any(): void {
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         // Note: No need to persist this tour.
         $tour = new \tool_usertours\tour();
@@ -95,7 +95,7 @@ final class role_filter_test extends \advanced_testcase {
      * Test the filter_matches function when one role is set.
      */
     public function test_filter_matches_single_role(): void {
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         $roles = [
             'student',
@@ -124,7 +124,7 @@ final class role_filter_test extends \advanced_testcase {
      * Test the filter_matches function when multiple roles are set.
      */
     public function test_filter_matches_multiple_role(): void {
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         $roles = [
             'teacher',
@@ -154,7 +154,7 @@ final class role_filter_test extends \advanced_testcase {
      * Test the filter_matches function when one user has multiple roles.
      */
     public function test_filter_matches_multiple_role_one_user(): void {
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         $roles = [
             'student',
@@ -186,7 +186,7 @@ final class role_filter_test extends \advanced_testcase {
      * Test the filter_matches function when it is targetted at an admin.
      */
     public function test_filter_matches_multiple_role_only_admin(): void {
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         $roles = [
             \tool_usertours\local\filter\role::ROLE_SITEADMIN,
@@ -214,7 +214,7 @@ final class role_filter_test extends \advanced_testcase {
      * Test the filter_matches function when multiple roles are set, including an admin user.
      */
     public function test_filter_matches_multiple_role_including_admin(): void {
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         $roles = [
             \tool_usertours\local\filter\role::ROLE_SITEADMIN,
@@ -247,7 +247,7 @@ final class role_filter_test extends \advanced_testcase {
     public function test_filter_matches_multiple_role_admin_user(): void {
         global $USER;
 
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
 
         $roles = [
             \tool_usertours\local\filter\role::ROLE_SITEADMIN,

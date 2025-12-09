@@ -70,8 +70,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $syscontext = \context_system::instance();
 
         // AI policy.
@@ -194,7 +194,7 @@ final class provider_test extends \advanced_testcase {
     public function test_export_user_data_for_policy(): void {
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Set the user policy.
         manager::user_policy_accepted($user->id, $coursecontext->id);
@@ -224,8 +224,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $timecreated1 = $clock->time();
@@ -330,8 +330,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $timecreated1 = $clock->time();
@@ -440,8 +440,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $timecreated1 = $clock->time();
@@ -549,8 +549,8 @@ final class provider_test extends \advanced_testcase {
         $user3 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
 
         // Set the user policy.
         manager::user_policy_accepted($user1->id, $course1context->id);
@@ -576,8 +576,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_text(
@@ -652,8 +652,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_image(
@@ -726,8 +726,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new summarise_text(
@@ -802,7 +802,7 @@ final class provider_test extends \advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_text(
@@ -879,7 +879,7 @@ final class provider_test extends \advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_image(
@@ -954,7 +954,7 @@ final class provider_test extends \advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new summarise_text(
@@ -1031,8 +1031,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
 
         manager::user_policy_accepted($user1->id, $course1context->id);
         manager::user_policy_accepted($user2->id, $course2context->id);
@@ -1061,8 +1061,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_text(
@@ -1134,8 +1134,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_image(
@@ -1207,8 +1207,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new summarise_text(
@@ -1282,8 +1282,8 @@ final class provider_test extends \advanced_testcase {
         $user3 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
 
         // Set the user policy.
         manager::user_policy_accepted($user1->id, $course1context->id);
@@ -1312,8 +1312,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_text(
@@ -1392,8 +1392,8 @@ final class provider_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new generate_image(
@@ -1469,8 +1469,8 @@ final class provider_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
         $clock = $this->mock_clock_with_frozen();
 
         $action = new summarise_text(

@@ -604,13 +604,13 @@ function filter_preload_activities(course_modinfo $modinfo) {
     $cmcontexts = array();
     $cmcontextids = array();
     foreach ($modinfo->get_cms() as $cm) {
-        $modulecontext = context_module::instance($cm->id);
+        $modulecontext = context_system::instance($cm->id);
         $cmcontextids[] = $modulecontext->id;
         $cmcontexts[] = $modulecontext;
     }
 
     // Get course context and all other parents.
-    $coursecontext = context_course::instance($modinfo->get_course_id());
+    $coursecontext = context_system::instance($modinfo->get_course_id());
     $parentcontextids = explode('/', substr($coursecontext->path, 1));
     $allcontextids = array_merge($cmcontextids, $parentcontextids);
 

@@ -124,7 +124,7 @@ final class get_state_test extends \core_external\tests\externallib_testcase {
             $user = $this->getDataGenerator()->create_and_enrol($course, 'student');
             $activity = $this->getDataGenerator()->create_module('h5pactivity', ['course' => $course]);
 
-            $activitycontext = \context_module::instance($activity->cmid);
+            $activitycontext = \context_system::instance($activity->cmid);
             $info['activity'] = item_activity::create_from_id($activitycontext->id);
             $params['activity'] = $info['activity'];
             $this->setUser($user);

@@ -134,7 +134,7 @@ abstract class testing_module_generator extends component_generator_base {
         $instance = $DB->get_record($this->get_modulename(), array('id'=>$id), '*', MUST_EXIST);
 
         $cm = get_coursemodule_from_id($this->get_modulename(), $cmid, $instance->course, true, MUST_EXIST);
-        context_module::instance($cm->id);
+        context_system::instance($cm->id);
 
         $instance->cmid = $cm->id;
 
@@ -273,7 +273,7 @@ abstract class testing_module_generator extends component_generator_base {
             debugging('Did you forget to enable completion tracking for the course before generating module with completion tracking?', DEBUG_DEVELOPER);
         }
 
-        if (!empty($record->lang) && !has_capability('moodle/course:setforcedlanguage', context_course::instance($course->id))) {
+        if (!empty($record->lang) && !has_capability('moodle/course:setforcedlanguage', context_system::instance($course->id))) {
             throw new coding_exception('Attempt to generate an activity when the current user does not have ' .
                     'permission moodle/course:setforcedlanguage. This does not work.');
         }
@@ -291,7 +291,7 @@ abstract class testing_module_generator extends component_generator_base {
             $instance,
             $record,
             $modulename,
-            \context_module::instance($instance->cmid),
+            \context_system::instance($instance->cmid),
             "mod_{$modulename}",
             'intro',
             0

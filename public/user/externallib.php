@@ -1045,7 +1045,7 @@ class core_user_external extends \core_external\external_api {
             }
             context_helper::preload_from_record($user);
             $course = $courses[$courseids[$user->id]];
-            $context = context_course::instance($courseids[$user->id], IGNORE_MISSING);
+            $context = context_system::instance($courseids[$user->id], IGNORE_MISSING);
             self::validate_context($context);
             if ($userarray = user_get_user_details($user, $course)) {
                 $result[] = $userarray;
@@ -1457,7 +1457,7 @@ class core_user_external extends \core_external\external_api {
         if ($course->id == SITEID) {
             $context = context_system::instance();
         } else {
-            $context = context_course::instance($course->id);
+            $context = context_system::instance($course->id);
         }
         self::validate_context($context);
 
@@ -1537,7 +1537,7 @@ class core_user_external extends \core_external\external_api {
         if ($course->id == SITEID) {
             $coursecontext = context_system::instance();;
         } else {
-            $coursecontext = context_course::instance($course->id);
+            $coursecontext = context_system::instance($course->id);
         }
         self::validate_context($coursecontext);
 

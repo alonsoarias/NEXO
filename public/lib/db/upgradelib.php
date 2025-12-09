@@ -413,7 +413,7 @@ function upgrade_course_letter_boundary($courseid = null) {
         if (!property_exists($CFG, $gradebookfreeze)) {
             // Check for 57 letter grade issue.
             context_helper::preload_from_record($value);
-            $coursecontext = context_course::instance($value->courseid);
+            $coursecontext = context_system::instance($value->courseid);
             if (upgrade_letter_boundary_needs_freeze($coursecontext)) {
                 // We have a course with a possible score standardisation problem. Flag for freeze.
                 // Flag this course as being frozen.
@@ -909,7 +909,7 @@ function upgrade_calendar_events_mtrace(string $string, bool $output): void {
  */
 function upgrade_calendar_events_get_teacherid(int $courseid): int {
 
-    if ($context = context_course::instance($courseid, IGNORE_MISSING)) {
+    if ($context = context_system::instance($courseid, IGNORE_MISSING)) {
         if ($havemanage = get_users_by_capability($context, 'moodle/course:manageactivities', 'u.id')) {
             return array_keys($havemanage)[0];
         }

@@ -105,7 +105,7 @@ class behat_search extends behat_base {
             }
             list ($course, $cm) = get_course_and_cm_from_cmid($cmid);
             $rec = $DB->get_record($cm->modname, ['id' => $cm->instance], '*', MUST_EXIST);
-            $context = \context_module::instance($cm->id);
+            $context = \context_system::instance($cm->id);
 
             // Set up the internal fields used in creating the search document.
             $out = new stdClass();

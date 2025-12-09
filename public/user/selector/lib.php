@@ -767,7 +767,7 @@ abstract class groups_user_selector_base extends user_selector_base {
      */
     public function __construct($name, $options) {
         global $CFG;
-        $options['accesscontext'] = context_course::instance($options['courseid']);
+        $options['accesscontext'] = context_system::instance($options['courseid']);
         $options['includecustomfields'] = true;
         parent::__construct($name, $options);
         $this->groupid = $options['groupid'];
@@ -955,7 +955,7 @@ class group_non_members_selector extends groups_user_selector_base {
         global $DB;
 
         // Get list of allowed roles.
-        $context = context_course::instance($this->courseid);
+        $context = context_system::instance($this->courseid);
         if ($validroleids = groups_get_possible_roles($context)) {
             list($roleids, $roleparams) = $DB->get_in_or_equal($validroleids, SQL_PARAMS_NAMED, 'r');
         } else {

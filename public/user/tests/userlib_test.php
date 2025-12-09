@@ -44,7 +44,7 @@ final class userlib_test extends \advanced_testcase {
         $user3 = $this->getDataGenerator()->create_user();
 
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course1->id);
+        $coursecontext = \context_system::instance($course1->id);
         $teacherrole = $DB->get_record('role', array('shortname' => 'teacher'));
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
         $this->getDataGenerator()->enrol_user($user2->id, $course1->id);
@@ -610,7 +610,7 @@ final class userlib_test extends \advanced_testcase {
 
         // Course without sections.
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         $this->setAdminUser();
 
@@ -678,7 +678,7 @@ final class userlib_test extends \advanced_testcase {
          // Create two courses.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course2->id);
+        $coursecontext = \context_system::instance($course2->id);
         // Prepare another course with separate groups and groupmodeforce set to true.
         $record = new \stdClass();
         $record->groupmode = 1;
@@ -808,7 +808,7 @@ final class userlib_test extends \advanced_testcase {
         assign_capability('moodle/user:viewalldetails', CAP_PREVENT, $managerrole->id, $systemcontext, true);
 
         // And override these to 'Allow' in a specific course.
-        $course4context = \context_course::instance($course4->id);
+        $course4context = \context_system::instance($course4->id);
         assign_capability('moodle/user:viewalldetails', CAP_ALLOW, $managerrole->id, $course4context, true);
         assign_capability('moodle/user:viewdetails', CAP_ALLOW, $managerrole->id, $course4context, true);
 
@@ -839,7 +839,7 @@ final class userlib_test extends \advanced_testcase {
         $studentfullname = fullname($student);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course1->id);
+        $coursecontext = \context_system::instance($course1->id);
         $teacherrole = $DB->get_record('role', array('shortname' => 'teacher'));
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($teacher->id, $course1->id);
@@ -945,7 +945,7 @@ final class userlib_test extends \advanced_testcase {
         $student1fullname = fullname($student1);
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id);
         $this->getDataGenerator()->enrol_user($student1->id, $course->id);
         $this->getDataGenerator()->enrol_user($student2->id, $course->id);
@@ -1018,7 +1018,7 @@ final class userlib_test extends \advanced_testcase {
         $student2 = $this->getDataGenerator()->create_user();
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id);
         $this->getDataGenerator()->enrol_user($student1->id, $course->id);
         $this->getDataGenerator()->enrol_user($student2->id, $course->id);

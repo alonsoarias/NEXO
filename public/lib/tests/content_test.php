@@ -38,15 +38,15 @@ final class content_test extends \advanced_testcase {
     /**
      * A test to confirm only valid cases allow exporting of course content.
      */
-    public function test_can_export_context_course(): void {
+    public function test_can_export_context_system(): void {
         global $DB;
 
         $this->resetAfterTest();
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
-        $course2context = \context_course::instance($course2->id);
+        $course1context = \context_system::instance($course1->id);
+        $course2context = \context_system::instance($course2->id);
 
         // Enrol user as student in course1 only.
         $user = $this->getDataGenerator()->create_and_enrol($course1, 'student');

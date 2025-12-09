@@ -67,7 +67,7 @@ final class grade_deleted_test extends \advanced_testcase {
         $grade = $event->get_grade();
         $this->assertInstanceOf('grade_grade', $grade);
         $this->assertInstanceOf('\core\event\grade_deleted', $event);
-        $this->assertEquals(\context_course::instance($course->id), $event->get_context());
+        $this->assertEquals(\context_system::instance($course->id), $event->get_context());
         $this->assertSame($event->objecttable, 'grade_grades');
         $this->assertEquals($event->objectid, $gradegrade->id);
         $this->assertEquals($event->other['itemid'], $gradeitem->id);

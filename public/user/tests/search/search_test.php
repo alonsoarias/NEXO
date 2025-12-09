@@ -93,7 +93,7 @@ final class search_test extends \advanced_testcase {
         $recordset->close();
 
         // Context support; first, try an unsupported context type.
-        $coursecontext = \context_course::instance($SITE->id);
+        $coursecontext = \context_system::instance($SITE->id);
         $this->assertNull($searcharea->get_document_recordset(0, $coursecontext));
 
         // Try a specific user, will only return 1 record (that user).

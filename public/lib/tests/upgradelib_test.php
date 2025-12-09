@@ -410,7 +410,7 @@ final class upgradelib_test extends advanced_testcase {
         $contexts = array();
         for ($i = 0; $i < 45; $i++) {
             $course = $this->getDataGenerator()->create_course();
-            $context = context_course::instance($course->id);
+            $context = context_system::instance($course->id);
             if (in_array($i, array(2, 5, 10, 13, 14, 19, 23, 25, 30, 34, 36))) {
                 // Assign good letter boundaries.
                 $this->assign_good_letter_boundary($context->id);
@@ -611,7 +611,7 @@ final class upgradelib_test extends advanced_testcase {
         $contexts = array();
         for ($i = 0; $i < 3; $i++) {
             $courses[] = $this->getDataGenerator()->create_course();
-            $contexts[] = context_course::instance($courses[$i]->id);
+            $contexts[] = context_system::instance($courses[$i]->id);
         }
 
         // Course one is not using a letter boundary.

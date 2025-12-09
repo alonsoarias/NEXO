@@ -59,7 +59,7 @@ final class online_users_test extends \advanced_testcase {
         $groupid = $this->data['group1']->id;
         $now = time();
         $timetoshowusers = $CFG->block_online_users_timetosee * 60;
-        $context = \context_course::instance($this->data['course1']->id);
+        $context = \context_system::instance($this->data['course1']->id);
         $courseid = $this->data['course1']->id;
         $onlineusers = new fetcher($groupid, $now, $timetoshowusers, $context, false, $courseid);
 
@@ -99,7 +99,7 @@ final class online_users_test extends \advanced_testcase {
         $currentgroup = null;
         $now = time();
         $timetoshowusers = $CFG->block_online_users_timetosee * 60;
-        $context = \context_course::instance($this->data['course1']->id);
+        $context = \context_system::instance($this->data['course1']->id);
         $courseid = $this->data['course1']->id;
         $onlineusers = new fetcher($currentgroup, $now, $timetoshowusers, $context, false, $courseid);
 
@@ -149,7 +149,7 @@ final class online_users_test extends \advanced_testcase {
         $groupid = $this->data['group1']->id;
         $now = time();
         $timetoshowusers = $CFG->block_online_users_timetosee * 60;
-        $context = \context_course::instance($this->data['course1']->id);
+        $context = \context_system::instance($this->data['course1']->id);
         $courseid = $this->data['course1']->id;
         $user1 = $this->data['user1'];
         $user2 = $this->data['user2'];
@@ -204,7 +204,7 @@ final class online_users_test extends \advanced_testcase {
         $currentgroup = null;
         $now = time();
         $timetoshowusers = $CFG->block_online_users_timetosee * 60;
-        $context = \context_course::instance($this->data['course1']->id);
+        $context = \context_system::instance($this->data['course1']->id);
         $courseid = $this->data['course1']->id;
         $user1 = $this->data['user1'];
         $user2 = $this->data['user2'];

@@ -77,7 +77,7 @@ if ($course->id != SITEID) {
     }
 }
 
-$context = context_course::instance($course->id);
+$context = context_system::instance($course->id);
 
 $fs = get_file_storage();
 

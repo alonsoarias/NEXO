@@ -77,7 +77,7 @@ final class get_available_in_context_test extends \core_external\tests\externall
         $this->assertEquals(TEXTFILTER_ON, $result['filters'][0]['inheritedstate']); // In the parent context is available.
 
         // Set off the same filter at local context level.
-        filter_set_local_state($firstfilter, \context_coursecat::instance($category->id)->id, TEXTFILTER_OFF);
+        filter_set_local_state($firstfilter, \context_systemcat::instance($category->id)->id, TEXTFILTER_OFF);
         $result = get_available_in_context::execute([['contextlevel' => 'coursecat', 'instanceid' => $category->id]]);
         $result = external_api::clean_returnvalue(get_available_in_context::execute_returns(), $result);
         $this->assertEmpty($result['warnings']);
@@ -87,9 +87,9 @@ final class get_available_in_context_test extends \core_external\tests\externall
     }
 
     /**
-     * Test get_available_in_context_course
+     * Test get_available_in_context_system
      */
-    public function test_get_available_in_context_course(): void {
+    public function test_get_available_in_context_system(): void {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -121,7 +121,7 @@ final class get_available_in_context_test extends \core_external\tests\externall
         $this->assertEquals(TEXTFILTER_ON, $result['filters'][0]['inheritedstate']); // In the parent context is available.
 
         // Set off the same filter at local context level.
-        filter_set_local_state($firstfilter, \context_course::instance($course->id)->id, TEXTFILTER_OFF);
+        filter_set_local_state($firstfilter, \context_system::instance($course->id)->id, TEXTFILTER_OFF);
         $result = get_available_in_context::execute([['contextlevel' => 'course', 'instanceid' => $course->id]]);
         $result = external_api::clean_returnvalue(get_available_in_context::execute_returns(), $result);
         $this->assertEmpty($result['warnings']);
@@ -131,9 +131,9 @@ final class get_available_in_context_test extends \core_external\tests\externall
     }
 
     /**
-     * Test get_available_in_context_module
+     * Test get_available_in_context_system
      */
-    public function test_get_available_in_context_module(): void {
+    public function test_get_available_in_context_system(): void {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -167,7 +167,7 @@ final class get_available_in_context_test extends \core_external\tests\externall
         $this->assertEquals(TEXTFILTER_ON, $result['filters'][0]['inheritedstate']); // In the parent context is available.
 
         // Set off the same filter at local context level.
-        filter_set_local_state($firstfilter, \context_module::instance($forum->cmid)->id, TEXTFILTER_OFF);
+        filter_set_local_state($firstfilter, \context_system::instance($forum->cmid)->id, TEXTFILTER_OFF);
         $result = get_available_in_context::execute([['contextlevel' => 'module', 'instanceid' => $forum->cmid]]);
         $result = external_api::clean_returnvalue(get_available_in_context::execute_returns(), $result);
         $this->assertEmpty($result['warnings']);
@@ -207,9 +207,9 @@ final class get_available_in_context_test extends \core_external\tests\externall
 
         // Set some filters at particular levels.
         $course = self::getDataGenerator()->create_course();
-        filter_set_local_state($firstfilter, \context_course::instance($course->id)->id, TEXTFILTER_ON);
+        filter_set_local_state($firstfilter, \context_system::instance($course->id)->id, TEXTFILTER_ON);
         $forum = self::getDataGenerator()->create_module('forum', (object) ['course' => $course->id]);
-        filter_set_local_state($firstfilter, \context_module::instance($forum->cmid)->id, TEXTFILTER_OFF);
+        filter_set_local_state($firstfilter, \context_system::instance($forum->cmid)->id, TEXTFILTER_OFF);
 
         $result = get_all_states::execute();
         $result = external_api::clean_returnvalue(get_all_states::execute_returns(), $result);

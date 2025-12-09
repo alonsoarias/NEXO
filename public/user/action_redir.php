@@ -56,7 +56,7 @@ if ($formaction == 'bulkchange.php') {
     $dataformat = $url->param('dataformat');
 
     $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
-    $context = context_course::instance($id);
+    $context = context_system::instance($id);
     $PAGE->set_context($context);
 
     $userids = optional_param_array('userid', array(), PARAM_INT);

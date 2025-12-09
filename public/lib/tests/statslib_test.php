@@ -581,8 +581,8 @@ final class statslib_test extends \advanced_testcase {
         stats_temp_table_create();
 
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
-        $fcontext = \context_course::instance(SITEID);
+        $context = \context_system::instance($course->id);
+        $fcontext = \context_system::instance(SITEID);
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 

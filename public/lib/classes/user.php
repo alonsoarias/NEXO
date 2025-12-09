@@ -17,7 +17,7 @@
 namespace core;
 
 use core\context\user as context_user;
-use core\context\course as context_course;
+use core\context\course as context_system;
 use core\context\system as context_system;
 use core_user\fields;
 use core\exception\invalid_parameter_exception;
@@ -236,14 +236,14 @@ class user {
      * user identity fields.
      *
      * @param string $query Search query text
-     * @param context_course|null $coursecontext Course context or null if system-wide
+     * @param context_system|null $coursecontext Course context or null if system-wide
      * @param int $max Max number of users to return, default 30 (zero = no limit)
      * @param int $querylimit Max number of database queries, default 5 (zero = no limit)
      * @return array Array of user objects with limited fields
      */
     public static function search(
         $query,
-        ?context_course $coursecontext = null,
+        ?context_system $coursecontext = null,
         $max = 30,
         $querylimit = 5
     ) {
@@ -425,7 +425,7 @@ class user {
         foreach ($courses as $course) {
             // Get SQL to list user ids enrolled in this course.
             context_helper::preload_from_record($course);
-             [$sql, $params] = get_enrolled_sql(context_course::instance($course->id));
+             [$sql, $params] = get_enrolled_sql(context_system::instance($course->id));
 
             // Combine to a big union query.
             if ($unionsql) {

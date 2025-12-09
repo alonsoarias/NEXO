@@ -49,7 +49,7 @@ class enrol_instance_deleted extends base {
      */
     final public static function create_from_record($enrol) {
         $event = static::create(array(
-            'context'  => \context_course::instance($enrol->courseid),
+            'context'  => \context_system::instance($enrol->courseid),
             'objectid' => $enrol->id,
             'other'    => array('enrol' => $enrol->enrol)
         ));

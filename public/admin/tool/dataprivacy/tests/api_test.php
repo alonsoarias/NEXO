@@ -300,7 +300,7 @@ final class api_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course([]);
 
-        $coursecontext1 = \context_course::instance($course->id);
+        $coursecontext1 = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($s1->id, $course->id, 'student');
 
@@ -356,7 +356,7 @@ final class api_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - YEARSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -973,9 +973,9 @@ final class api_test extends \advanced_testcase {
 
         $generator->create_discussion($record);
 
-        $coursecontext1 = \context_course::instance($course->id);
+        $coursecontext1 = \context_system::instance($course->id);
 
-        $forumcontext1 = \context_module::instance($forum->cmid);
+        $forumcontext1 = \context_system::instance($forum->cmid);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -1239,8 +1239,8 @@ final class api_test extends \advanced_testcase {
 
         list($purposes, $categories, $courses, $modules) = $this->add_purposes_and_categories();
 
-        $coursecontext1 = \context_course::instance($courses[0]->id);
-        $coursecontext2 = \context_course::instance($courses[1]->id);
+        $coursecontext1 = \context_system::instance($courses[0]->id);
+        $coursecontext2 = \context_system::instance($courses[1]->id);
 
         $record1 = (object)['contextid' => $coursecontext1->id, 'purposeid' => $purposes[0]->get('id'),
             'categoryid' => $categories[0]->get('id')];
@@ -1477,10 +1477,10 @@ final class api_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         $contextsystem = \context_system::instance();
-        $contextcat = \context_coursecat::instance($cat->id);
-        $contextsubcat = \context_coursecat::instance($subcat->id);
-        $contextcourse = \context_course::instance($course->id);
-        $contextforum = \context_module::instance($forumcm->id);
+        $contextcat = \context_systemcat::instance($cat->id);
+        $contextsubcat = \context_systemcat::instance($subcat->id);
+        $contextcourse = \context_system::instance($course->id);
+        $contextforum = \context_system::instance($forumcm->id);
         $contextuser = \context_user::instance($user->id);
 
         // Initially everything is set to Inherit.
@@ -1755,10 +1755,10 @@ final class api_test extends \advanced_testcase {
         list(, $forumcm) = get_course_and_cm_from_instance($forum->id, 'forum');
 
         $contextsystem = \context_system::instance();
-        $contextcat = \context_coursecat::instance($cat->id);
-        $contextsubcat = \context_coursecat::instance($subcat->id);
-        $contextcourse = \context_course::instance($course->id);
-        $contextforum = \context_module::instance($forumcm->id);
+        $contextcat = \context_systemcat::instance($cat->id);
+        $contextsubcat = \context_systemcat::instance($subcat->id);
+        $contextcourse = \context_system::instance($course->id);
+        $contextforum = \context_system::instance($forumcm->id);
 
         // Initially everything is set to Inherit.
         $this->assertEquals($systemdata->purpose, api::get_effective_context_purpose($contextsystem));
@@ -1867,11 +1867,11 @@ final class api_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - YEARSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         list(, $forumcm) = get_course_and_cm_from_instance($forum->id, 'forum');
-        $contextforum = \context_module::instance($forumcm->id);
+        $contextforum = \context_system::instance($forumcm->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -1911,7 +1911,7 @@ final class api_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - YEARSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -1944,7 +1944,7 @@ final class api_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time()]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -1977,7 +1977,7 @@ final class api_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time()]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -2052,14 +2052,14 @@ final class api_test extends \advanced_testcase {
         $assign = $generator->create_module('assign', ['course' => $course->id]);
         $forum = $generator->create_module('forum', ['course' => $course->id]);
 
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
+        $coursecontext = \context_system::instance($course->id);
         $blockcontext = \context_block::instance($block->id);
 
         list($course, $assigncm) = get_course_and_cm_from_instance($assign->id, 'assign');
         list($course, $forumcm) = get_course_and_cm_from_instance($forum->id, 'forum');
-        $assigncontext = \context_module::instance($assigncm->id);
-        $forumcontext = \context_module::instance($forumcm->id);
+        $assigncontext = \context_system::instance($assigncm->id);
+        $forumcontext = \context_system::instance($forumcm->id);
 
         // Generate purposes and categories.
         $category1 = api::create_category((object)['name' => 'Test category 1']);
@@ -2585,11 +2585,11 @@ final class api_test extends \advanced_testcase {
         $record->forum = $forum2->id;
         $generator->create_discussion($record);
 
-        $coursecontext1 = \context_course::instance($course->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
-        $forumcontext1 = \context_module::instance($forum->cmid);
-        $forumcontext2 = \context_module::instance($forum2->cmid);
+        $forumcontext1 = \context_system::instance($forum->cmid);
+        $forumcontext2 = \context_system::instance($forum2->cmid);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($user->id, $course2->id, 'student');
@@ -2647,9 +2647,9 @@ final class api_test extends \advanced_testcase {
         $record->forum = $forum->id;
         $generator->create_discussion($record);
 
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
-        $forumcontext = \context_module::instance($forum->cmid);
+        $forumcontext = \context_system::instance($forum->cmid);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -2690,8 +2690,8 @@ final class api_test extends \advanced_testcase {
         $record->course = $course->id;
         $record->userid = $user->id;
 
-        $coursecontext1 = \context_course::instance($course->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($user->id, $course2->id, 'student');

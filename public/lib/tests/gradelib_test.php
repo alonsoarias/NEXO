@@ -133,7 +133,7 @@ final class gradelib_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         // Add a grade letter to the course.
         $letter = new \stdClass();
@@ -180,7 +180,7 @@ final class gradelib_test extends \advanced_testcase {
         $letter = new \stdClass();
         $letter->letter = 'M';
         $letter->lowerboundary = '100';
-        $letter->contextid = \context_coursecat::instance($category->id)->id;
+        $letter->contextid = \context_systemcat::instance($category->id)->id;
         $DB->insert_record('grade_letters', $letter);
 
         grade_course_category_delete($category->id, '', false);
@@ -322,7 +322,7 @@ final class gradelib_test extends \advanced_testcase {
 
         // Setup some basics.
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         $cache = \cache::make('core', 'grade_letters');
         $letters = $cache->get($context->id);
@@ -347,7 +347,7 @@ final class gradelib_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         $cache = \cache::make('core', 'grade_letters');
         $letters = $cache->get($context->id);

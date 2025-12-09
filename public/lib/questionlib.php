@@ -487,7 +487,7 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
  * @return boolean
  */
 function question_delete_activity($cm, $notused = false, bool $coursedeletion = false): bool {
-    $modcontext = context_module::instance($cm->id);
+    $modcontext = context_system::instance($cm->id);
     question_delete_context($modcontext->id, $coursedeletion);
     return true;
 }

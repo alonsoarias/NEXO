@@ -218,7 +218,7 @@ final class repositorylib_test extends \advanced_testcase {
 
         $syscontext = \context_system::instance();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $roleid = create_role('A role', 'arole', 'A role', '');
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -298,17 +298,17 @@ final class repositorylib_test extends \advanced_testcase {
 
         $syscontext = \context_system::instance();
         $course1 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
+        $course1context = \context_system::instance($course1->id);
         $course2 = $this->getDataGenerator()->create_course();
-        $course2context = \context_course::instance($course2->id);
+        $course2context = \context_system::instance($course2->id);
 
         $forumdata = new \stdClass();
         $forumdata->course = $course1->id;
         $forumc1 = $this->getDataGenerator()->create_module('forum', $forumdata);
-        $forumc1context = \context_module::instance($forumc1->cmid);
+        $forumc1context = \context_system::instance($forumc1->cmid);
         $forumdata->course = $course2->id;
         $forumc2 = $this->getDataGenerator()->create_module('forum', $forumdata);
-        $forumc2context = \context_module::instance($forumc2->cmid);
+        $forumc2context = \context_system::instance($forumc2->cmid);
 
         $blockdata = new \stdClass();
         $blockdata->parentcontextid = $course1context->id;
@@ -527,7 +527,7 @@ final class repositorylib_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->create_repository_type('flickr_public');
         $this->getDataGenerator()->create_repository_type('filesystem');
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $usercontext = \context_user::instance($user->id);
 
         // Creating course instances.
@@ -566,7 +566,7 @@ final class repositorylib_test extends \advanced_testcase {
 
         // Checking deletion upon course context deletion.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $repo = $this->getDataGenerator()->create_repository('flickr_public', array('contextid' => $coursecontext->id));
         $courserepo = repository::get_repository_by_id($repo->id, $coursecontext);
         $this->assertEquals(1, $DB->count_records('repository_instances', array('contextid' => $coursecontext->id)));
@@ -584,7 +584,7 @@ final class repositorylib_test extends \advanced_testcase {
 
         // Checking deletion upon course deletion.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $repo = $this->getDataGenerator()->create_repository('flickr_public', array('contextid' => $coursecontext->id));
         $courserepo = repository::get_repository_by_id($repo->id, $coursecontext);
         $this->assertEquals(1, $DB->count_records('repository_instances', array('contextid' => $coursecontext->id)));

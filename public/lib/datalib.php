@@ -190,7 +190,7 @@ function search_users($courseid, $groupid, $searchtext, $sort='', ?array $except
             return $DB->get_records_sql($sql, $params);
 
         } else {
-            $context = context_course::instance($courseid);
+            $context = context_system::instance($courseid);
 
             // We want to query both the current context and parent contexts.
             list($relatedctxsql, $relatedctxparams) = $DB->get_in_or_equal($context->get_parent_context_ids(true), SQL_PARAMS_NAMED, 'relatedctx');
@@ -813,7 +813,7 @@ function get_courses_search($searchterms, $sort, $page, $recordsperpage, &$total
     foreach($rs as $course) {
         // Preload contexts only for hidden courses or courses we need to return.
         context_helper::preload_from_record($course);
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         if (!array_key_exists($course->id, $mycourses) && !core_course_category::can_view_course_info($course)) {
             continue;
         }
@@ -918,7 +918,7 @@ function fix_course_sortorder() {
         $defaultcat = reset($topcats);
         foreach ($frontcourses as $course) {
             $DB->set_field('course', 'category', $defaultcat->id, array('id'=>$course->id));
-            $context = context_course::instance($course->id);
+            $context = context_system::instance($course->id);
             $fixcontexts[$context->id] = $context;
             $cacheevents['changesincourse'] = true;
         }
@@ -1081,7 +1081,7 @@ function _fix_course_cats($children, &$sortorder, $parent, $depth, $path, &$fixc
             $update = true;
 
             // make sure context caches are rebuild and dirty contexts marked
-            $context = context_coursecat::instance($cat->id);
+            $context = context_systemcat::instance($cat->id);
             $fixcontexts[$context->id] = $context;
         }
         if ($cat->sortorder != $sortorder) {
@@ -1119,7 +1119,7 @@ function get_scales_menu($courseid=0) {
     $scales = array();
     $results = $DB->get_records_sql($sql, $params);
     foreach ($results as $index => $record) {
-        $context = empty($record->courseid) ? context_system::instance() : context_course::instance($record->courseid);
+        $context = empty($record->courseid) ? context_system::instance() : context_system::instance($record->courseid);
         $scales[$index] = format_string($record->name, false, ["context" => $context]);
     }
     // Format: [id => 'scale name'].
@@ -1991,7 +1991,7 @@ function user_can_create_courses() {
     global $DB;
     $catsrs = $DB->get_recordset('course_categories');
     foreach ($catsrs as $cat) {
-        if (has_capability('moodle/course:create', context_coursecat::instance($cat->id))) {
+        if (has_capability('moodle/course:create', context_systemcat::instance($cat->id))) {
             $catsrs->close();
             return true;
         }

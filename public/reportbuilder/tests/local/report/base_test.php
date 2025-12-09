@@ -185,7 +185,7 @@ final class base_test extends advanced_testcase {
         $this->assertEquals(context_system::instance(), $systemreport->get_context());
 
         $course = $this->getDataGenerator()->create_course();
-        $contextcourse = \context_course::instance($course->id);
+        $contextcourse = \context_system::instance($course->id);
         $systemreport2 = system_report_factory::create(system_report_available::class, $contextcourse);
         $this->assertEquals($contextcourse, $systemreport2->get_context());
     }

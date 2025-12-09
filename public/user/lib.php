@@ -348,7 +348,7 @@ function user_get_user_details($user, $course = null, array $userfields = array(
     }
 
     if (!empty($course)) {
-        $context = context_course::instance($course->id);
+        $context = context_system::instance($course->id);
         $usercontext = context_user::instance($user->id);
     } else {
         $context = context_user::instance($user->id);
@@ -603,7 +603,7 @@ function user_get_user_details($user, $course = null, array $userfields = array(
         if ($mycourses = enrol_get_users_courses($user->id, true)) {
             foreach ($mycourses as $mycourse) {
                 if ($mycourse->category) {
-                    $coursecontext = context_course::instance($mycourse->id);
+                    $coursecontext = context_system::instance($mycourse->id);
                     $enrolledcourse = array();
                     $enrolledcourse['id'] = $mycourse->id;
                     $enrolledcourse['fullname'] = format_string($mycourse->fullname, true, array('context' => $coursecontext));
@@ -699,7 +699,7 @@ function can_view_user_details_cap($user, $course = null) {
     $result = has_capability('moodle/user:viewdetails', $usercontext);
     // Otherwise can $USER see them at course context.
     if (!$result && !empty($course)) {
-        $context = context_course::instance($course->id);
+        $context = context_system::instance($course->id);
         $result = has_capability('moodle/user:viewdetails', $context);
     }
     return $result;
@@ -884,7 +884,7 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
     $course = $page->course;
 
     // Query the environment.
-    $context = context_course::instance($course->id);
+    $context = context_system::instance($course->id);
 
     // Get basic user metadata.
     $returnobject->metadata['userid'] = $user->id;
@@ -1233,7 +1233,7 @@ function user_can_view_profile($user, $course = null, $usercontext = null) {
     // If we're only checking the capabilities in the single provided course.
     if (isset($course)) {
         // Confirm that $user is enrolled in the $course we're checking.
-        if (is_enrolled(context_course::instance($course->id), $user)) {
+        if (is_enrolled(context_system::instance($course->id), $user)) {
             $userscourses = array($course);
         }
     } else {
@@ -1254,7 +1254,7 @@ function user_can_view_profile($user, $course = null, $usercontext = null) {
 
     foreach ($userscourses as $userscourse) {
         context_helper::preload_from_record($userscourse);
-        $coursecontext = context_course::instance($userscourse->id);
+        $coursecontext = context_system::instance($userscourse->id);
         if (has_capability('moodle/user:viewdetails', $coursecontext) ||
             has_capability('moodle/user:viewalldetails', $coursecontext)) {
             if (!groups_user_groups_visible($userscourse, $user->id)) {

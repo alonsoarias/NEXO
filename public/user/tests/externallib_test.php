@@ -84,7 +84,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $generatedusers[$user1->id] = $user1;
         $generatedusers[$user2->id] = $user2;
 
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $roleid = $this->assignUserCapability('moodle/user:viewdetails', $context->id);
 
         // Enrol the users in the course.
@@ -237,7 +237,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $generatedusers[$user1->id] = $user1;
         $generatedusers[$user2->id] = $user2;
 
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $roleid = $this->assignUserCapability('moodle/user:viewdetails', $context->id);
 
         // Enrol the users in the course.
@@ -400,7 +400,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         }
         $return->user2 = self::getDataGenerator()->create_user();
 
-        $context = \context_course::instance($return->course->id);
+        $context = \context_system::instance($return->course->id);
         $return->roleid = $this->assignUserCapability($capability, $context->id);
 
         // Enrol the users in the course.

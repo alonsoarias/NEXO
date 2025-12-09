@@ -209,7 +209,7 @@ final class user_test extends \advanced_testcase {
         $this->assertEquals('Augustus', $result[2]->firstname);
 
         // But if we search within course 2 we'll get Audrey and Augustus first.
-        $course2context = \context_course::instance($course2->id);
+        $course2context = \context_system::instance($course2->id);
         $result = \core_user::search('au', $course2context);
         $this->assertCount(3, $result);
         $this->assertEquals('Audrey', $result[0]->firstname);
@@ -918,7 +918,7 @@ final class user_test extends \advanced_testcase {
 
         // Display profile url at course context.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $this->assertEquals("https://www.example.com/moodle/user/view.php?id={$user->id}&amp;course={$course->id}",
             \core_user::get_profile_url($user, $coursecontext));
 

@@ -25,7 +25,7 @@
 namespace core\hub;
 defined('MOODLE_INTERNAL') || die();
 
-use context_course;
+use context_system;
 use stdClass;
 use html_writer;
 use moodle_url;

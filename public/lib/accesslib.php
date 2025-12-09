@@ -22,7 +22,7 @@
  * General users probably only care about
  *
  * Context handling
- * - context_coursecat::instance($catid)
+ * - context_systemcat::instance($catid)
  * - context::instance_by_id($contextid)
  * - $context->get_parent_contexts();
  * - $context->get_child_contexts();
@@ -4650,7 +4650,7 @@ function role_change_permission($roleid, $context, $capname, $permission) {
 class_alias(core\context_helper::class, 'context_helper', true);
 class_alias(core\context::class, 'context', true);
 class_alias(core\context\block::class, 'context_block');
-class_alias(core\context\coursecat::class, 'context_coursecat');
+class_alias(core\context\coursecat::class, 'context_systemcat');
 class_alias(core\context\system::class, 'context_system', true);
 class_alias(core\context\user::class, 'context_user', true);
 

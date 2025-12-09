@@ -552,7 +552,7 @@ final class manager_test extends \advanced_testcase {
         // Index forum 1 only.
         $search = \testable_core_search::instance();
         $buffer = new \progress_trace_buffer(new \text_progress_trace(), false);
-        $result = $search->index_context(\context_module::instance($forum1->cmid), '', 0, $buffer);
+        $result = $search->index_context(\context_system::instance($forum1->cmid), '', 0, $buffer);
         $this->assertTrue($result->complete);
         $log = $buffer->get_buffer();
         $buffer->reset_buffer();
@@ -569,7 +569,7 @@ final class manager_test extends \advanced_testcase {
         $this->assertNotFalse(strpos($log, "area: Page\n  No documents"));
 
         // Index whole course.
-        $result = $search->index_context(\context_course::instance($course->id), '', 0, $buffer);
+        $result = $search->index_context(\context_system::instance($course->id), '', 0, $buffer);
         $this->assertTrue($result->complete);
         $log = $buffer->get_buffer();
         $buffer->reset_buffer();
@@ -585,7 +585,7 @@ final class manager_test extends \advanced_testcase {
         $this->assertNotFalse(strpos($log, "area: Page\n  Processed 1 "));
 
         // Index whole course, but only forum posts.
-        $result = $search->index_context(\context_course::instance($course->id), 'mod_forum-post',
+        $result = $search->index_context(\context_system::instance($course->id), 'mod_forum-post',
                 0, $buffer);
         $this->assertTrue($result->complete);
         $log = $buffer->get_buffer();
@@ -597,13 +597,13 @@ final class manager_test extends \advanced_testcase {
 
         // Set time limit and retry index of whole course, taking 3 tries to complete it.
         $search->get_engine()->set_add_delay(0.4);
-        $result = $search->index_context(\context_course::instance($course->id), '', 1, $buffer);
+        $result = $search->index_context(\context_system::instance($course->id), '', 1, $buffer);
         $log = $buffer->get_buffer();
         $buffer->reset_buffer();
         $this->assertFalse($result->complete);
         $this->assertNotFalse(strpos($log, "area: Forum - activity information\n  Processed 2 "));
 
-        $result = $search->index_context(\context_course::instance($course->id), '', 1, $buffer,
+        $result = $search->index_context(\context_system::instance($course->id), '', 1, $buffer,
                 $result->startfromarea, $result->startfromtime);
         $log = $buffer->get_buffer();
         $buffer->reset_buffer();
@@ -611,7 +611,7 @@ final class manager_test extends \advanced_testcase {
         $this->assertNotFalse(strpos($log, "area: Forum - posts\n  Processed 2 "));
         $this->assertFalse($result->complete);
 
-        $result = $search->index_context(\context_course::instance($course->id), '', 1, $buffer,
+        $result = $search->index_context(\context_system::instance($course->id), '', 1, $buffer,
                 $result->startfromarea, $result->startfromtime);
         $log = $buffer->get_buffer();
         $buffer->reset_buffer();
@@ -630,13 +630,13 @@ final class manager_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $frontpage = $DB->get_record('course', array('id' => SITEID));
-        $frontpagectx = \context_course::instance($frontpage->id);
+        $frontpagectx = \context_system::instance($frontpage->id);
         $course1 = $this->getDataGenerator()->create_course();
-        $course1ctx = \context_course::instance($course1->id);
+        $course1ctx = \context_system::instance($course1->id);
         $course2 = $this->getDataGenerator()->create_course();
-        $course2ctx = \context_course::instance($course2->id);
+        $course2ctx = \context_system::instance($course2->id);
         $course3 = $this->getDataGenerator()->create_course();
-        $course3ctx = \context_course::instance($course3->id);
+        $course3ctx = \context_system::instance($course3->id);
         $teacher = $this->getDataGenerator()->create_user();
         $teacherctx = \context_user::instance($teacher->id);
         $student = $this->getDataGenerator()->create_user();
@@ -650,12 +650,12 @@ final class manager_test extends \advanced_testcase {
         $forum1 = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
         $forum2 = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
         $forum3 = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
-        $frontpageforumcontext = \context_module::instance($frontpageforum->cmid);
-        $context1 = \context_module::instance($forum1->cmid);
-        $context2 = \context_module::instance($forum2->cmid);
-        $context3 = \context_module::instance($forum3->cmid);
+        $frontpageforumcontext = \context_system::instance($frontpageforum->cmid);
+        $context1 = \context_system::instance($forum1->cmid);
+        $context2 = \context_system::instance($forum2->cmid);
+        $context3 = \context_system::instance($forum3->cmid);
         $forum4 = $this->getDataGenerator()->create_module('forum', array('course' => $course3->id));
-        $context4 = \context_module::instance($forum4->cmid);
+        $context4 = \context_system::instance($forum4->cmid);
 
         $search = \testable_core_search::instance();
         $mockareaid = \core_search\manager::generate_areaid('core_mocksearch', 'mock_search_area');
@@ -665,7 +665,7 @@ final class manager_test extends \advanced_testcase {
         $this->setAdminUser();
         $this->assertEquals((object)['everything' => true], $search->get_areas_user_accesses());
 
-        $sitectx = \context_course::instance(SITEID);
+        $sitectx = \context_system::instance(SITEID);
 
         // Can access the frontpage ones.
         $this->setUser($noaccess);
@@ -782,7 +782,7 @@ final class manager_test extends \advanced_testcase {
         // Create course and add HTML block.
         $generator = $this->getDataGenerator();
         $course1 = $generator->create_course();
-        $context1 = \context_course::instance($course1->id);
+        $context1 = \context_system::instance($course1->id);
         $page = new \moodle_page();
         $page->set_context($context1);
         $page->set_course($course1);
@@ -794,7 +794,7 @@ final class manager_test extends \advanced_testcase {
         // Create another course with HTML blocks only in some weird page or a module page (not
         // yet supported, so both these blocks will be ignored).
         $course2 = $generator->create_course();
-        $context2 = \context_course::instance($course2->id);
+        $context2 = \context_system::instance($course2->id);
         $page = new \moodle_page();
         $page->set_context($context2);
         $page->set_course($course2);
@@ -804,7 +804,7 @@ final class manager_test extends \advanced_testcase {
         $page->blocks->add_block_at_end_of_default_region('html');
 
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
-        $forumcontext = \context_module::instance($forum->cmid);
+        $forumcontext = \context_system::instance($forum->cmid);
         $page = new \moodle_page();
         $page->set_context($forumcontext);
         $page->set_course($course2);
@@ -815,7 +815,7 @@ final class manager_test extends \advanced_testcase {
 
         // The third course has 2 HTML blocks.
         $course3 = $generator->create_course();
-        $context3 = \context_course::instance($course3->id);
+        $context3 = \context_system::instance($course3->id);
         $page = new \moodle_page();
         $page->set_context($context3);
         $page->set_course($course3);
@@ -903,7 +903,7 @@ final class manager_test extends \advanced_testcase {
         $search->add_core_search_areas();
 
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         // Limit courses to search to only those the user is enrolled in.
         set_config('searchallavailablecourses', 0);
@@ -938,22 +938,22 @@ final class manager_test extends \advanced_testcase {
         // Front page, including a forum.
         $frontpage = $DB->get_record('course', array('id' => SITEID));
         $forumfront = $this->getDataGenerator()->create_module('forum', array('course' => $frontpage->id));
-        $forumfrontctx = \context_module::instance($forumfront->cmid);
+        $forumfrontctx = \context_system::instance($forumfront->cmid);
 
         // Course 1 does not allow guest access.
         $course1 = $this->getDataGenerator()->create_course((object)array(
                 'enrol_guest_status_0' => ENROL_INSTANCE_DISABLED,
                 'enrol_guest_password_0' => ''));
         $forum1 = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
-        $forum1ctx = \context_module::instance($forum1->cmid);
+        $forum1ctx = \context_system::instance($forum1->cmid);
 
         // Course 2 does not allow guest but is accessible by all users.
         $course2 = $this->getDataGenerator()->create_course((object)array(
                 'enrol_guest_status_0' => ENROL_INSTANCE_DISABLED,
                 'enrol_guest_password_0' => ''));
-        $course2ctx = \context_course::instance($course2->id);
+        $course2ctx = \context_system::instance($course2->id);
         $forum2 = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
-        $forum2ctx = \context_module::instance($forum2->cmid);
+        $forum2ctx = \context_system::instance($forum2->cmid);
         assign_capability('moodle/course:view', CAP_ALLOW, $CFG->defaultuserroleid, $course2ctx->id);
 
         // Course 3 allows guest access without password.
@@ -961,7 +961,7 @@ final class manager_test extends \advanced_testcase {
                 'enrol_guest_status_0' => ENROL_INSTANCE_ENABLED,
                 'enrol_guest_password_0' => ''));
         $forum3 = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
-        $forum3ctx = \context_module::instance($forum3->cmid);
+        $forum3ctx = \context_system::instance($forum3->cmid);
 
         // Student user is enrolled in course 1.
         $student = $this->getDataGenerator()->create_user();
@@ -1026,13 +1026,13 @@ final class manager_test extends \advanced_testcase {
         $group3 = $generator->create_group(['courseid' => $course2->id]);
         $group4 = $generator->create_group(['courseid' => $course2->id]);
         $forum1s = $generator->create_module('forum', ['course' => $course1->id, 'groupmode' => SEPARATEGROUPS]);
-        $id1s = \context_module::instance($forum1s->cmid)->id;
+        $id1s = \context_system::instance($forum1s->cmid)->id;
         $forum1v = $generator->create_module('forum', ['course' => $course1->id, 'groupmode' => VISIBLEGROUPS]);
-        $id1v = \context_module::instance($forum1v->cmid)->id;
+        $id1v = \context_system::instance($forum1v->cmid)->id;
         $forum2s = $generator->create_module('forum', ['course' => $course2->id, 'groupmode' => SEPARATEGROUPS]);
-        $id2s = \context_module::instance($forum2s->cmid)->id;
+        $id2s = \context_system::instance($forum2s->cmid)->id;
         $forum2n = $generator->create_module('forum', ['course' => $course2->id, 'groupmode' => NOGROUPS]);
-        $id2n = \context_module::instance($forum2n->cmid)->id;
+        $id2n = \context_system::instance($forum2n->cmid)->id;
 
         // Get search instance.
         $search = \testable_core_search::instance();
@@ -1132,13 +1132,13 @@ final class manager_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course1ctx = \context_course::instance($course1->id);
+        $course1ctx = \context_system::instance($course1->id);
         $course2 = $this->getDataGenerator()->create_course();
-        $course2ctx = \context_course::instance($course2->id);
+        $course2ctx = \context_system::instance($course2->id);
         $forum1 = $this->getDataGenerator()->create_module('forum', ['course' => $course1->id]);
-        $forum1ctx = \context_module::instance($forum1->cmid);
+        $forum1ctx = \context_system::instance($forum1->cmid);
         $forum2 = $this->getDataGenerator()->create_module('forum', ['course' => $course2->id]);
-        $forum2ctx = \context_module::instance($forum2->cmid);
+        $forum2ctx = \context_system::instance($forum2->cmid);
 
         // Initially no requests.
         $this->assertEquals(0, $DB->count_records('search_index_requests'));
@@ -1265,9 +1265,9 @@ final class manager_test extends \advanced_testcase {
 
         // Make 2 index requests.
         \testable_core_search::fake_current_time($now - 3);
-        $search::request_index(\context_course::instance($course->id), 'mod_label-activity');
+        $search::request_index(\context_system::instance($course->id), 'mod_label-activity');
         \testable_core_search::fake_current_time($now - 2);
-        $search::request_index(\context_module::instance($forum1->cmid));
+        $search::request_index(\context_system::instance($forum1->cmid));
 
         // Run with no time limit.
         $search->process_index_requests(0.0, $progress);
@@ -1289,9 +1289,9 @@ final class manager_test extends \advanced_testcase {
 
         // Request indexing the course a couple of times.
         \testable_core_search::fake_current_time($now - 3);
-        $search::request_index(\context_course::instance($course->id), 'mod_forum-activity');
+        $search::request_index(\context_system::instance($course->id), 'mod_forum-activity');
         \testable_core_search::fake_current_time($now - 2);
-        $search::request_index(\context_course::instance($course->id), 'mod_forum-post');
+        $search::request_index(\context_system::instance($course->id), 'mod_forum-post');
 
         // Do the processing again with a time limit and indexing delay. The time limit is too
         // small; because of the way the logic works, this means it will index 2 activities.
@@ -1330,10 +1330,10 @@ final class manager_test extends \advanced_testcase {
 
         // Make 2 requests - first one is low priority.
         \testable_core_search::fake_current_time($now - 3);
-        $search::request_index(\context_module::instance($forum1->cmid), 'mod_forum-activity',
+        $search::request_index(\context_system::instance($forum1->cmid), 'mod_forum-activity',
                 \core_search\manager::INDEX_PRIORITY_REINDEXING);
         \testable_core_search::fake_current_time($now - 2);
-        $search::request_index(\context_module::instance($forum2->cmid), 'mod_forum-activity');
+        $search::request_index(\context_system::instance($forum2->cmid), 'mod_forum-activity');
 
         // Process with short time limit and confirm it does the second one first.
         $search->process_index_requests(0.1, $progress);
@@ -1351,7 +1351,7 @@ final class manager_test extends \advanced_testcase {
 
         // Make a request for a course context...
         $course = $generator->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $search::request_index($context);
 
         // ...but then delete it (note: delete_course spews output, so we throw it away).
@@ -1587,14 +1587,14 @@ final class manager_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
         $course1 = $generator->create_course();
         $page1 = $generator->create_module('page', ['course' => $course1]);
-        $context1 = \context_module::instance($page1->cmid);
+        $context1 = \context_system::instance($page1->cmid);
         $page2 = $generator->create_module('page', ['course' => $course1]);
         $page3 = $generator->create_module('page', ['course' => $course1]);
-        $context3 = \context_module::instance($page3->cmid);
+        $context3 = \context_system::instance($page3->cmid);
         $page4 = $generator->create_module('page', ['course' => $course1]);
         $course2 = $generator->create_course();
         $page5 = $generator->create_module('page', ['course' => $course2]);
-        $context5 = \context_module::instance($page5->cmid);
+        $context5 = \context_system::instance($page5->cmid);
 
         // Also create a user.
         $user = $generator->create_user();

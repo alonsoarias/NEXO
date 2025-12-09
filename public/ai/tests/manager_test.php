@@ -759,7 +759,7 @@ final class manager_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         $manager = \core\di::get(manager::class);
         $aitoolsenabled = $manager::is_ai_tools_enabled_in_course($context);
@@ -799,7 +799,7 @@ final class manager_test extends \advanced_testcase {
         ]);
 
         // Set the page context to the module context.
-        $ctx = \context_module::instance($module->cmid);
+        $ctx = \context_system::instance($module->cmid);
         $PAGE->set_context($ctx);
 
         // Get all enabled actions in a course module.
@@ -832,7 +832,7 @@ final class manager_test extends \advanced_testcase {
         ]);
 
         // Set the page context to the module context.
-        $modulecontext = \context_module::instance($module->cmid);
+        $modulecontext = \context_system::instance($module->cmid);
         $PAGE->set_context($modulecontext);
 
         // Only the generate text action should be available.

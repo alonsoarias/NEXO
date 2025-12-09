@@ -17,7 +17,7 @@
 namespace core\event;
 
 use advanced_testcase;
-use context_course;
+use context_system;
 use context_system;
 use Exception;
 use moodle_url;
@@ -43,7 +43,7 @@ final class course_module_instance_list_viewed_test extends advanced_testcase {
 
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
-        $context = context_course::instance($course->id);
+        $context = context_system::instance($course->id);
 
         // Trigger the page view event.
         $sink = $this->redirectEvents();

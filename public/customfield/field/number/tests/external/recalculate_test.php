@@ -48,7 +48,7 @@ final class recalculate_test extends \core_external\tests\externallib_testcase {
         $field->set('configdata', json_encode($configdata));
         $field->save();
 
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $roleid = $DB->get_field('role', 'id', ['shortname' => 'editingteacher']);
         $this->unassignUserCapability('moodle/course:changelockedcustomfields', $context->id, $roleid);
 

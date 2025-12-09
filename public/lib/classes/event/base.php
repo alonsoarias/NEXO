@@ -458,10 +458,10 @@ abstract class base implements \IteratorAggregate {
         $context = false;
         $component = 'legacy';
         if ($legacy->cmid) {
-            $context = \context_module::instance($legacy->cmid, IGNORE_MISSING);
+            $context = \context_system::instance($legacy->cmid, IGNORE_MISSING);
             $component = 'mod_'.$legacy->module;
         } else if ($legacy->course) {
-            $context = \context_course::instance($legacy->course, IGNORE_MISSING);
+            $context = \context_system::instance($legacy->course, IGNORE_MISSING);
         }
         if (!$context) {
             $context = \context_system::instance();

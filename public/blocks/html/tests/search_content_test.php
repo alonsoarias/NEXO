@@ -60,7 +60,7 @@ final class search_content_test extends \advanced_testcase {
      * @return \moodle_page Page object representing course view
      */
     protected static function construct_page($course) {
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $page = new \moodle_page();
         $page->set_context($context);
         $page->set_course($course);

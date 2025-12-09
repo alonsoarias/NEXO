@@ -34,9 +34,9 @@ require_once("$CFG->libdir/filebrowser/virtual_root_file.php");
 // description of available areas in each context level
 require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
 require_once("$CFG->libdir/filebrowser/file_info_context_user.php");
-require_once("$CFG->libdir/filebrowser/file_info_context_coursecat.php");
-require_once("$CFG->libdir/filebrowser/file_info_context_course.php");
-require_once("$CFG->libdir/filebrowser/file_info_context_module.php");
+require_once("$CFG->libdir/filebrowser/file_info_context_systemcat.php");
+require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
+require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
 
 /**
  * This class provides the main entry point for other code wishing to get information about files.
@@ -84,11 +84,11 @@ class file_browser {
             case CONTEXT_USER:
                 return $this->get_file_info_context_user($context, $component, $filearea, $itemid, $filepath, $filename);
             case CONTEXT_SYSTEMCAT:
-                return $this->get_file_info_context_coursecat($context, $component, $filearea, $itemid, $filepath, $filename);
+                return $this->get_file_info_context_systemcat($context, $component, $filearea, $itemid, $filepath, $filename);
             case CONTEXT_SYSTEM:
-                return $this->get_file_info_context_course($context, $component, $filearea, $itemid, $filepath, $filename);
+                return $this->get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename);
             case CONTEXT_SYSTEM:
-                return $this->get_file_info_context_module($context, $component, $filearea, $itemid, $filepath, $filename);
+                return $this->get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename);
         }
 
         return null;
@@ -155,14 +155,14 @@ class file_browser {
      * @param string $filename file name
      * @return file_info|null file_info instance or null if not found or access not allowed
      */
-    private function get_file_info_context_coursecat($context, $component, $filearea, $itemid, $filepath, $filename) {
+    private function get_file_info_context_systemcat($context, $component, $filearea, $itemid, $filepath, $filename) {
         global $DB;
 
         if (!$category = $DB->get_record('course_categories', array('id'=>$context->instanceid))) {
             return null;
         }
 
-        $level = new file_info_context_coursecat($this, $context, $category);
+        $level = new file_info_context_systemcat($this, $context, $category);
         return $level->get_file_info($component, $filearea, $itemid, $filepath, $filename);
     }
 
@@ -177,7 +177,7 @@ class file_browser {
      * @param string $filename file name
      * @return file_info|null file_info instance or null if not found or access not allowed
      */
-    private function get_file_info_context_course($context, $component, $filearea, $itemid, $filepath, $filename) {
+    private function get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename) {
         global $DB, $COURSE;
 
         if ($context->instanceid == $COURSE->id) {
@@ -186,7 +186,7 @@ class file_browser {
             return null;
         }
 
-        $level = new file_info_context_course($this, $context, $course);
+        $level = new file_info_context_system($this, $context, $course);
         return $level->get_file_info($component, $filearea, $itemid, $filepath, $filename);
     }
 
@@ -201,8 +201,8 @@ class file_browser {
      * @param string $filename file name
      * @return file_info|null file_info instance or null if not found or access not allowed
      */
-    private function get_file_info_context_module($context, $component, $filearea, $itemid, $filepath, $filename) {
-        if (!($context instanceof context_module)) {
+    private function get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename) {
+        if (!($context instanceof context_system)) {
             return null;
         }
         $coursecontext = $context->get_course_context();
@@ -213,7 +213,7 @@ class file_browser {
             return null;
         }
 
-        $level = new file_info_context_module($this, $context, $cm->get_course(), $cm, $cm->modname);
+        $level = new file_info_context_system($this, $context, $cm->get_course(), $cm, $cm->modname);
         return $level->get_file_info($component, $filearea, $itemid, $filepath, $filename);
     }
 

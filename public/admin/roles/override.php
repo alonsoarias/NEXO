@@ -57,7 +57,7 @@ $PAGE->set_pagelayout('admin');
 
 if ($context->contextlevel == CONTEXT_USER and $USER->id != $context->instanceid) {
     $PAGE->navigation->extend_for_user($user);
-    $PAGE->set_context(context_course::instance($course->id));
+    $PAGE->set_context(context_system::instance($course->id));
     navigation_node::override_active_url(new moodle_url('/admin/roles/permissions.php',
         array('contextid'=>$context->id, 'userid'=>$context->instanceid, 'courseid'=>$course->id)));
 

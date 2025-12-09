@@ -54,9 +54,9 @@ final class grading_external_test extends \core_external\tests\externallib_testc
         $enrolid = $DB->insert_record('enrol', $manualenroldata);
 
         // Create a teacher and give them capabilities.
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $roleid = $this->assignUserCapability('moodle/course:viewparticipants', $coursecontext->id, 3);
-        $modulecontext = \context_module::instance($cm->cmid);
+        $modulecontext = \context_system::instance($cm->cmid);
         $this->assignUserCapability('mod/assign:grade', $modulecontext->id, $roleid);
 
         // Create the teacher's enrolment record.
@@ -198,9 +198,9 @@ final class grading_external_test extends \core_external\tests\externallib_testc
         $enrolid = $DB->insert_record('enrol', $manualenroldata);
 
         // Create a teacher and give them capabilities.
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $roleid = $this->assignUserCapability('moodle/course:viewparticipants', $coursecontext->id, 3);
-        $modulecontext = \context_module::instance($assign->cmid);
+        $modulecontext = \context_system::instance($assign->cmid);
         $this->assignUserCapability('mod/assign:grade', $modulecontext->id, $roleid);
 
         // Create the teacher's enrolment record.
@@ -317,8 +317,8 @@ final class grading_external_test extends \core_external\tests\externallib_testc
         $params['course'] = $course->id;
         $instance = $generator->create_instance($params);
         $cm = get_coursemodule_from_instance('assign', $instance->id);
-        $context = \context_module::instance($cm->id);
-        $coursecontext = \context_course::instance($course->id);
+        $context = \context_system::instance($cm->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Create the teacher.
         $teacher = self::getDataGenerator()->create_user();
@@ -556,8 +556,8 @@ final class grading_external_test extends \core_external\tests\externallib_testc
         $params['course'] = $course->id;
         $instance = $generator->create_instance($params);
         $cm = get_coursemodule_from_instance('assign', $instance->id);
-        $context = \context_module::instance($cm->id);
-        $coursecontext = \context_course::instance($course->id);
+        $context = \context_system::instance($cm->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Create the teacher.
         $teacher = self::getDataGenerator()->create_user();

@@ -17,7 +17,7 @@
 namespace core_external;
 
 use context;
-use context_course;
+use context_system;
 use context_helper;
 use context_system;
 use core_user;
@@ -93,7 +93,7 @@ class util {
         foreach ($courseids as $cid) {
             // Check the user can function in this context.
             try {
-                $context = context_course::instance($cid);
+                $context = context_system::instance($cid);
                 external_api::validate_context($context);
 
                 if ($addcontext) {

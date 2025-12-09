@@ -61,7 +61,7 @@ $PAGE->set_url($pageurl);
 if ($context->contextlevel == CONTEXT_USER and $USER->id != $context->instanceid) {
     $PAGE->navbar->includesettingsbase = true;
     $PAGE->navigation->extend_for_user($user);
-    $PAGE->set_context(context_course::instance($course->id));
+    $PAGE->set_context(context_system::instance($course->id));
 } else {
     $PAGE->set_context($context);
 }

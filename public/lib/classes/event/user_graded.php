@@ -59,7 +59,7 @@ class user_graded extends base {
      */
     public static function create_from_grade(\grade_grade $grade, $userid = null) {
         $gradedata = array(
-            'context'       => \context_course::instance($grade->grade_item->courseid),
+            'context'       => \context_system::instance($grade->grade_item->courseid),
             'objectid'      => $grade->id,
             'relateduserid' => $grade->userid,
             'other'         => array(

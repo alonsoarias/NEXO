@@ -57,9 +57,9 @@ final class context_block_test extends \advanced_testcase {
         $contextlist = [
             \context_system::instance(),
             \context_user::instance($user->id),
-            \context_coursecat::instance($coursecat->id),
-            \context_course::instance($course->id),
-            \context_module::instance($activity->cmid),
+            \context_systemcat::instance($coursecat->id),
+            \context_system::instance($course->id),
+            \context_system::instance($activity->cmid),
         ];
 
         // Create a number of blocks of different types in the DB only.

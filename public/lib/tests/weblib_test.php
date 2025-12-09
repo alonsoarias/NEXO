@@ -350,7 +350,7 @@ final class weblib_test extends advanced_testcase {
 
         $syscontext = context_system::instance();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'editingteacher');
@@ -434,7 +434,7 @@ final class weblib_test extends advanced_testcase {
         $sanitised = purify_html($exploit);
 
         $course = $this->getDataGenerator()->create_course();
-        $context = context_course::instance($course->id);
+        $context = context_system::instance($course->id);
 
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $rolename);

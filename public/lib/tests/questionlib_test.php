@@ -58,7 +58,7 @@ final class questionlib_test extends \advanced_testcase {
     protected function create_course_and_question_bank(): \core\context\module {
         $course = self::getDataGenerator()->create_course();
         $qbank = self::getDataGenerator()->create_module('qbank', ['course' => $course->id]);
-        return \context_module::instance($qbank->cmid);
+        return \context_system::instance($qbank->cmid);
     }
 
     /**
@@ -87,7 +87,7 @@ final class questionlib_test extends \advanced_testcase {
         /** @var \core_question_generator $qgen */
         $qgen = $this->getDataGenerator()->get_plugin_generator('core_question');
 
-        $context = \context_module::instance($quiz->cmid);
+        $context = \context_system::instance($quiz->cmid);
 
         $qcat = $qgen->create_question_category(array('contextid' => $context->id));
 
@@ -167,8 +167,8 @@ final class questionlib_test extends \advanced_testcase {
         $modqbank2 = $this->getDataGenerator()->create_module('qbank', ['course' => $course2->id]);
 
         // Create a couple of categories and questions.
-        $context1 = \context_module::instance($modqbank1->cmid);
-        $context2 = \context_module::instance($modqbank2->cmid);
+        $context1 = \context_system::instance($modqbank1->cmid);
+        $context2 = \context_system::instance($modqbank2->cmid);
         /** @var \core_question_generator $questiongenerator */
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $questioncat1 = question_get_default_category($context1->id);
@@ -193,7 +193,7 @@ final class questionlib_test extends \advanced_testcase {
 
         // Now test moving them back.
         question_move_category_to_context($questioncat1->id, $questioncat2->contextid,
-            \context_module::instance($modqbank1->cmid)->id);
+            \context_system::instance($modqbank1->cmid)->id);
 
         // Test that all tag_instances are now reset to how they were initially.
         $this->assertEquals(4, $DB->count_records('tag_instance', ['component' => 'core_question',
@@ -206,7 +206,7 @@ final class questionlib_test extends \advanced_testcase {
         $modqbank3 = $this->getDataGenerator()->create_module('qbank', ['course' => $course->id]);
 
         // Create some question categories and questions in this course.
-        $modcontext = \context_module::instance($modqbank3->cmid);
+        $modcontext = \context_system::instance($modqbank3->cmid);
         $questioncat = question_get_default_category($modcontext->id);
         $question1 = $questiongenerator->create_question('shortanswer', null, ['category' => $questioncat->id]);
         $question2 = $questiongenerator->create_question('shortanswer', null, ['category' => $questioncat->id]);
@@ -396,7 +396,7 @@ final class questionlib_test extends \advanced_testcase {
         $this->assertNotEquals($qcat->id, $savedquestion->id);
         $newcategory = $DB->get_record('question_categories', ['id' => $savedquestion->questioncategoryid], strictness: MUST_EXIST);
         $newcategorycontext = context::instance_by_id($newcategory->contextid);
-        $this->assertEquals(\context_module::LEVEL, $newcategorycontext->contextlevel);
+        $this->assertEquals(\context_system::LEVEL, $newcategorycontext->contextlevel);
         [$newcourse, $newcm] = get_course_and_cm_from_cmid($newcategorycontext->instanceid);
         $this->assertEquals($newcm->modname, 'qbank');
         $this->assertEquals(question_bank_helper::TYPE_SYSTEM, $DB->get_field('qbank', 'type', ['id' => $newcm->instance]));
@@ -462,7 +462,7 @@ final class questionlib_test extends \advanced_testcase {
 
         [$category, $course, $quiz, $qcat, $questions] = $this->setup_quiz_and_questions();
         $qbank = self::getDataGenerator()->create_module('qbank', ['course' => $course->id]);
-        $qbankcontext = \context_module::instance($qbank->cmid);
+        $qbankcontext = \context_system::instance($qbank->cmid);
 
         $context = \context::instance_by_id($qcat->contextid);
 
@@ -488,7 +488,7 @@ final class questionlib_test extends \advanced_testcase {
 
         [$category, $course, $quiz, $qcat, $questions] = $this->setup_quiz_and_questions();
         $qbank = self::getDataGenerator()->create_module('qbank', ['course' => $course->id]);
-        $qbankcontext = \context_module::instance($qbank->cmid);
+        $qbankcontext = \context_system::instance($qbank->cmid);
 
         // Moodle doesn't allow you to enter a name longer than 255 characters.
         $quiz->name = shorten_text(str_repeat('123456789 ', 26), 255);
@@ -632,7 +632,7 @@ final class questionlib_test extends \advanced_testcase {
         $question1 = $questions[0];
         $question2 = $questions[1];
         $qcontext = \context::instance_by_id($qcat->contextid);
-        $newcontext = \context_module::instance($qbank->cmid);
+        $newcontext = \context_system::instance($qbank->cmid);
 
         foreach ($questions as $question) {
             $question->contextid = $qcat->contextid;
@@ -859,7 +859,7 @@ final class questionlib_test extends \advanced_testcase {
         $otheruser = $this->getDataGenerator()->create_user();
         $roleid = $this->getDataGenerator()->create_role();
         $category = $this->getDataGenerator()->create_category();
-        $context = \context_coursecat::instance($category->id);
+        $context = \context_systemcat::instance($category->id);
 
         // Assign the user to the role.
         role_assign($roleid, $user->id, $context->id);
@@ -1050,7 +1050,7 @@ final class questionlib_test extends \advanced_testcase {
         ]);
 
         $qbank2 = $generator->create_module('qbank', ['course' => $coursecontext->instanceid]);
-        $newcontext = \context_module::instance($qbank2->cmid);
+        $newcontext = \context_system::instance($qbank2->cmid);
         $newquestioncat = $questiongenerator->create_question_category([
             'contextid' => $newcontext->id,
         ]);
@@ -1180,7 +1180,7 @@ final class questionlib_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
         $category = $generator->create_category();
-        $context = \context_coursecat::instance($category->id);
+        $context = \context_systemcat::instance($category->id);
 
         $role = $generator->create_role();
         role_assign($role, $user->id, $context->id);
@@ -1246,11 +1246,11 @@ final class questionlib_test extends \advanced_testcase {
         // Create a category tree.
         $course = $this->getDataGenerator()->create_course();
         $qbank1 = self::getDataGenerator()->create_module('qbank', ['course' => $course->id]);
-        $bank1context = \context_module::instance($qbank1->cmid);
+        $bank1context = \context_system::instance($qbank1->cmid);
         $qbank2 = self::getDataGenerator()->create_module('qbank', ['course' => $course->id]);
         /** @var \core_question_generator $questiongenerator */
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
-        $wrongcontext = \context_module::instance($qbank2->cmid);
+        $wrongcontext = \context_system::instance($qbank2->cmid);
 
         $top = question_get_top_category($bank1context->id, true);
         $cat1 = question_get_default_category($bank1context->id);
@@ -1302,7 +1302,7 @@ final class questionlib_test extends \advanced_testcase {
         $bank1context = $this->create_course_and_question_bank();
         $coursecontext = $bank1context->get_course_context();
         $qbank2 = self::getDataGenerator()->create_module('qbank', ['course' => $coursecontext->instanceid]);
-        $bank2context = \context_module::instance($qbank2->cmid);
+        $bank2context = \context_system::instance($qbank2->cmid);
 
         // Create a top category.
         $cat0 = question_get_top_category($bank1context->id, true);
@@ -1613,8 +1613,8 @@ final class questionlib_test extends \advanced_testcase {
 
         // Get the question generator and the context of the activities.
         $generator = self::getDataGenerator()->get_plugin_generator('core_question');
-        $context1 = \context_module::instance($quiz1->cmid);
-        $context2 = \context_module::instance($quiz2->cmid);
+        $context1 = \context_system::instance($quiz1->cmid);
+        $context2 = \context_system::instance($quiz2->cmid);
 
         // Create a question category within our first quiz activity.
         $category = $generator->create_question_category(['contextid' => $context1->id]);
@@ -1682,9 +1682,9 @@ final class questionlib_test extends \advanced_testcase {
         // Create a course with a quiz containing a random question from a qbank context.
         $randomcourse = self::getDataGenerator()->create_course(['shortname' => 'Random']);
         $qbank1 = self::getDataGenerator()->get_plugin_generator('mod_qbank')->create_instance(['course' => $randomcourse->id]);
-        $context1 = \context_module::instance($qbank1->cmid);
+        $context1 = \context_system::instance($qbank1->cmid);
         $qbank2 = self::getDataGenerator()->get_plugin_generator('mod_qbank')->create_instance(['course' => $randomcourse->id]);
-        $context2 = \context_module::instance($qbank2->cmid);
+        $context2 = \context_system::instance($qbank2->cmid);
         $topcategory = question_get_top_category($context1->id, true);
         $randomcategory = self::getDataGenerator()->get_plugin_generator('core_question')->create_question_category(
             ['parent' => $topcategory->id],
@@ -1736,9 +1736,9 @@ final class questionlib_test extends \advanced_testcase {
         // Create a course with a quiz containing a random question from a qbank context.
         $randomcourse = self::getDataGenerator()->create_course(['shortname' => 'Random']);
         $qbank1 = self::getDataGenerator()->get_plugin_generator('mod_qbank')->create_instance(['course' => $randomcourse->id]);
-        $context1 = \context_module::instance($qbank1->cmid);
+        $context1 = \context_system::instance($qbank1->cmid);
         $qbank2 = self::getDataGenerator()->get_plugin_generator('mod_qbank')->create_instance(['course' => $randomcourse->id]);
-        $context2 = \context_module::instance($qbank2->cmid);
+        $context2 = \context_system::instance($qbank2->cmid);
         $topcategory1 = question_get_top_category($context1->id, true);
         $topcategory2 = question_get_top_category($context2->id, true);
         $randomquiz = self::getDataGenerator()->get_plugin_generator('mod_quiz')->create_instance(

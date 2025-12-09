@@ -121,7 +121,7 @@ class data_registry_page implements renderable, templatable {
      */
     private function get_default_tree_structure() {
 
-        $frontpage = \context_course::instance(SITEID);
+        $frontpage = \context_system::instance(SITEID);
 
         $categorybranches = $this->get_all_category_branches();
 
@@ -173,7 +173,7 @@ class data_registry_page implements renderable, templatable {
         while (count($categories) > 0) {
             foreach ($categories as $key => $category) {
 
-                $context = \context_coursecat::instance($category->id);
+                $context = \context_systemcat::instance($category->id);
                 $newnode = [
                     'text' => shorten_text(format_string($category->name, true, ['context' => $context])),
                     'categoryid' => $category->id,
@@ -231,7 +231,7 @@ class data_registry_page implements renderable, templatable {
 
         foreach ($courses as $course) {
 
-            $coursecontext = \context_course::instance($course->id);
+            $coursecontext = \context_system::instance($course->id);
 
             $coursenode = [
                 'text' => shorten_text(format_string($course->shortname, true, ['context' => $coursecontext])),

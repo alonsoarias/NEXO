@@ -177,7 +177,7 @@ final class moodle_page_test extends \advanced_testcase {
     public function test_set_context(): void {
         // Setup fixture.
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         // Exercise SUT.
         $this->testpage->set_context($context);
         // Validated.
@@ -406,7 +406,7 @@ final class moodle_page_test extends \advanced_testcase {
     public function test_setting_course_sets_context(): void {
         // Setup fixture.
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         // Exercise SUT.
         $this->testpage->set_course($course);
@@ -424,7 +424,7 @@ final class moodle_page_test extends \advanced_testcase {
         $this->testpage->set_category_by_id($cat->id);
         // Validated.
         $this->assertEquals($catdbrecord, $this->testpage->category);
-        $this->assertSame(\context_coursecat::instance($cat->id), $this->testpage->context);
+        $this->assertSame(\context_systemcat::instance($cat->id), $this->testpage->context);
     }
 
     public function test_set_nested_categories(): void {
@@ -477,7 +477,7 @@ final class moodle_page_test extends \advanced_testcase {
         // Exercise SUT.
         $this->testpage->set_cm($cm);
         // Validated.
-        $this->assertSame(\context_module::instance($cm->id), $this->testpage->context);
+        $this->assertSame(\context_system::instance($cm->id), $this->testpage->context);
     }
 
     public function test_activity_record_loaded_if_not_set(): void {

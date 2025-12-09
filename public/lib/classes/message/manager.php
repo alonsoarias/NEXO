@@ -179,7 +179,7 @@ class manager {
             }
 
             $s = new \stdClass();
-            $s->sitename = format_string($SITE->shortname, true, array('context' => \context_course::instance(SITEID)));
+            $s->sitename = format_string($SITE->shortname, true, array('context' => \context_system::instance(SITEID)));
             $s->url = $CFG->wwwroot.'/message/index.php?id='.$eventdata->userfrom->id;
             $emailtagline = get_string_manager()->get_string('emailtagline', 'message', $s, $recipient->lang);
 

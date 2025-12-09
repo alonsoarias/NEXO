@@ -94,7 +94,7 @@ class external extends \core_external\external_api {
 
         // Get course object too.
         if ($courseid) {
-            $coursecontext = \context_course::instance($courseid);
+            $coursecontext = \context_system::instance($courseid);
         } else {
             $coursecontext = null;
         }

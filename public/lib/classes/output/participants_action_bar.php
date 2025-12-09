@@ -16,7 +16,7 @@
 
 namespace core\output;
 
-use core\context\course as context_course;
+use core\context\course as context_system;
 use moodle_page;
 use navigation_node;
 use moodle_url;
@@ -103,7 +103,7 @@ class participants_action_bar implements renderable {
                 $this->page->context->contextlevel != CONTEXT_SYSTEMCAT
         ) {
             // Pre-populate the formatted tertiary nav items with the "Enrolled users" node if user can view the participants page.
-            $coursecontext = context_course::instance($this->course->id);
+            $coursecontext = context_system::instance($this->course->id);
             $canviewparticipants = course_can_view_participants($coursecontext);
             if ($canviewparticipants) {
                 $participantsurl = (new moodle_url('/user/index.php', ['id' => $this->course->id]))->out();

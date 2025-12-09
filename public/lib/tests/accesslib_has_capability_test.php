@@ -99,9 +99,9 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat1a = $generator->create_category(['parent' => $cat1->id]);
         $cat1b = $generator->create_category(['parent' => $cat1->id]);
 
-        $contexts->cat1 = \context_coursecat::instance($cat1->id);
-        $contexts->cat1a = \context_coursecat::instance($cat1a->id);
-        $contexts->cat1b = \context_coursecat::instance($cat1b->id);
+        $contexts->cat1 = \context_systemcat::instance($cat1->id);
+        $contexts->cat1a = \context_systemcat::instance($cat1a->id);
+        $contexts->cat1b = \context_systemcat::instance($cat1b->id);
 
         $cat1course1 = $generator->create_course(['category' => $cat1->id]);
         $cat1course2 = $generator->create_course(['category' => $cat1->id]);
@@ -110,12 +110,12 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat1bcourse1 = $generator->create_course(['category' => $cat1b->id]);
         $cat1bcourse2 = $generator->create_course(['category' => $cat1b->id]);
 
-        $contexts->cat1course1 = \context_course::instance($cat1course1->id);
-        $contexts->cat1acourse1 = \context_course::instance($cat1acourse1->id);
-        $contexts->cat1bcourse1 = \context_course::instance($cat1bcourse1->id);
-        $contexts->cat1course2 = \context_course::instance($cat1course2->id);
-        $contexts->cat1acourse2 = \context_course::instance($cat1acourse2->id);
-        $contexts->cat1bcourse2 = \context_course::instance($cat1bcourse2->id);
+        $contexts->cat1course1 = \context_system::instance($cat1course1->id);
+        $contexts->cat1acourse1 = \context_system::instance($cat1acourse1->id);
+        $contexts->cat1bcourse1 = \context_system::instance($cat1bcourse1->id);
+        $contexts->cat1course2 = \context_system::instance($cat1course2->id);
+        $contexts->cat1acourse2 = \context_system::instance($cat1acourse2->id);
+        $contexts->cat1bcourse2 = \context_system::instance($cat1bcourse2->id);
 
         $cat1block = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat1->id]);
         $cat1ablock = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat1a->id]);
@@ -265,9 +265,9 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat1a = $generator->create_category(['parent' => $cat1->id]);
         $cat1b = $generator->create_category(['parent' => $cat1->id]);
 
-        $contexts->cat1 = \context_coursecat::instance($cat1->id);
-        $contexts->cat1a = \context_coursecat::instance($cat1a->id);
-        $contexts->cat1b = \context_coursecat::instance($cat1b->id);
+        $contexts->cat1 = \context_systemcat::instance($cat1->id);
+        $contexts->cat1a = \context_systemcat::instance($cat1a->id);
+        $contexts->cat1b = \context_systemcat::instance($cat1b->id);
 
         $cat1course1 = $generator->create_course(['category' => $cat1->id]);
         $cat1course2 = $generator->create_course(['category' => $cat1->id]);
@@ -276,12 +276,12 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat1bcourse1 = $generator->create_course(['category' => $cat1b->id]);
         $cat1bcourse2 = $generator->create_course(['category' => $cat1b->id]);
 
-        $contexts->cat1course1 = \context_course::instance($cat1course1->id);
-        $contexts->cat1acourse1 = \context_course::instance($cat1acourse1->id);
-        $contexts->cat1bcourse1 = \context_course::instance($cat1bcourse1->id);
-        $contexts->cat1course2 = \context_course::instance($cat1course2->id);
-        $contexts->cat1acourse2 = \context_course::instance($cat1acourse2->id);
-        $contexts->cat1bcourse2 = \context_course::instance($cat1bcourse2->id);
+        $contexts->cat1course1 = \context_system::instance($cat1course1->id);
+        $contexts->cat1acourse1 = \context_system::instance($cat1acourse1->id);
+        $contexts->cat1bcourse1 = \context_system::instance($cat1bcourse1->id);
+        $contexts->cat1course2 = \context_system::instance($cat1course2->id);
+        $contexts->cat1acourse2 = \context_system::instance($cat1acourse2->id);
+        $contexts->cat1bcourse2 = \context_system::instance($cat1bcourse2->id);
 
         $cat1block = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat1->id]);
         $cat1ablock = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat1a->id]);
@@ -615,9 +615,9 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat1a = $generator->create_category(['parent' => $cat1->id]);
         $cat1b = $generator->create_category(['parent' => $cat1->id]);
 
-        $contexts->cat1 = \context_coursecat::instance($cat1->id);
-        $contexts->cat1a = \context_coursecat::instance($cat1a->id);
-        $contexts->cat1b = \context_coursecat::instance($cat1b->id);
+        $contexts->cat1 = \context_systemcat::instance($cat1->id);
+        $contexts->cat1a = \context_systemcat::instance($cat1a->id);
+        $contexts->cat1b = \context_systemcat::instance($cat1b->id);
 
         $cat1course1 = $generator->create_course(['category' => $cat1->id]);
         $cat1course2 = $generator->create_course(['category' => $cat1->id]);
@@ -626,12 +626,12 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat1bcourse1 = $generator->create_course(['category' => $cat1b->id]);
         $cat1bcourse2 = $generator->create_course(['category' => $cat1b->id]);
 
-        $contexts->cat1course1 = \context_course::instance($cat1course1->id);
-        $contexts->cat1acourse1 = \context_course::instance($cat1acourse1->id);
-        $contexts->cat1bcourse1 = \context_course::instance($cat1bcourse1->id);
-        $contexts->cat1course2 = \context_course::instance($cat1course2->id);
-        $contexts->cat1acourse2 = \context_course::instance($cat1acourse2->id);
-        $contexts->cat1bcourse2 = \context_course::instance($cat1bcourse2->id);
+        $contexts->cat1course1 = \context_system::instance($cat1course1->id);
+        $contexts->cat1acourse1 = \context_system::instance($cat1acourse1->id);
+        $contexts->cat1bcourse1 = \context_system::instance($cat1bcourse1->id);
+        $contexts->cat1course2 = \context_system::instance($cat1course2->id);
+        $contexts->cat1acourse2 = \context_system::instance($cat1acourse2->id);
+        $contexts->cat1bcourse2 = \context_system::instance($cat1bcourse2->id);
 
         $cat1block = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat1->id]);
         $cat1ablock = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat1a->id]);
@@ -657,9 +657,9 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat2a = $generator->create_category(['parent' => $cat2->id]);
         $cat2b = $generator->create_category(['parent' => $cat2->id]);
 
-        $contexts->cat2 = \context_coursecat::instance($cat2->id);
-        $contexts->cat2a = \context_coursecat::instance($cat2a->id);
-        $contexts->cat2b = \context_coursecat::instance($cat2b->id);
+        $contexts->cat2 = \context_systemcat::instance($cat2->id);
+        $contexts->cat2a = \context_systemcat::instance($cat2a->id);
+        $contexts->cat2b = \context_systemcat::instance($cat2b->id);
 
         $cat2course1 = $generator->create_course(['category' => $cat2->id]);
         $cat2course2 = $generator->create_course(['category' => $cat2->id]);
@@ -668,12 +668,12 @@ final class accesslib_has_capability_test extends \advanced_testcase {
         $cat2bcourse1 = $generator->create_course(['category' => $cat2b->id]);
         $cat2bcourse2 = $generator->create_course(['category' => $cat2b->id]);
 
-        $contexts->cat2course1 = \context_course::instance($cat2course1->id);
-        $contexts->cat2acourse1 = \context_course::instance($cat2acourse1->id);
-        $contexts->cat2bcourse1 = \context_course::instance($cat2bcourse1->id);
-        $contexts->cat2course2 = \context_course::instance($cat2course2->id);
-        $contexts->cat2acourse2 = \context_course::instance($cat2acourse2->id);
-        $contexts->cat2bcourse2 = \context_course::instance($cat2bcourse2->id);
+        $contexts->cat2course1 = \context_system::instance($cat2course1->id);
+        $contexts->cat2acourse1 = \context_system::instance($cat2acourse1->id);
+        $contexts->cat2bcourse1 = \context_system::instance($cat2bcourse1->id);
+        $contexts->cat2course2 = \context_system::instance($cat2course2->id);
+        $contexts->cat2acourse2 = \context_system::instance($cat2acourse2->id);
+        $contexts->cat2bcourse2 = \context_system::instance($cat2bcourse2->id);
 
         $cat2block = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat2->id]);
         $cat2ablock = $generator->create_block('online_users', ['parentcontextid' => $contexts->cat2a->id]);

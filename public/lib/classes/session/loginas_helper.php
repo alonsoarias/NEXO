@@ -17,7 +17,7 @@
 namespace core\session;
 
 use core\context;
-use core\context\course as context_course;
+use core\context\course as context_system;
 use core\context\system as context_system;
 use core\session\manager as sessionmanager;
 use stdClass;
@@ -72,7 +72,7 @@ class loginas_helper {
         }
 
         if (!empty($course)) {
-            $coursecontext = context_course::instance($course->id);
+            $coursecontext = context_system::instance($course->id);
 
             if (
                 // Reject all that do not have loginas capability.

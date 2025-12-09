@@ -19,8 +19,8 @@ declare(strict_types=1);
 namespace core_user\table;
 
 use advanced_testcase;
-use context_course;
-use context_coursecat;
+use context_system;
+use context_systemcat;
 use core_table\local\filter\filter;
 use core_table\local\filter\integer_filter;
 use core_table\local\filter\string_filter;
@@ -96,7 +96,7 @@ final class participants_search_test extends advanced_testcase {
             'norole' => [],
         ];
 
-        $data->context = context_course::instance($data->course->id);
+        $data->context = context_system::instance($data->course->id);
 
         $data->editingteachers = $this->create_and_enrol_users($data->course, $editingteachers, 'editingteacher');
         $data->teachers = $this->create_and_enrol_users($data->course, $teachers, 'teacher');
@@ -124,10 +124,10 @@ final class participants_search_test extends advanced_testcase {
         set_config('roleid', 0, 'enrol_manual');
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
 
         $category = $DB->get_record('course_categories', ['id' => $course->category]);
-        $categorycontext = context_coursecat::instance($category->id);
+        $categorycontext = context_systemcat::instance($category->id);
 
         $users = [];
 
@@ -782,7 +782,7 @@ final class participants_search_test extends advanced_testcase {
         $filterset->add_filter(new string_filter('country', $jointype, $countries));
 
         // Run the search, assert count matches the number of expected users.
-        $search = new participants_search($course, context_course::instance($course->id), $filterset);
+        $search = new participants_search($course, context_system::instance($course->id), $filterset);
         $rs = $search->get_participants();
         $totalparticipants = $rs->current()->fullcount ?? 0;
         $this->assertEquals(count($expectedusers), $totalparticipants);
@@ -936,7 +936,7 @@ final class participants_search_test extends advanced_testcase {
         global $DB;
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $users = [];
 
         // Create the custom user profile field and put it into showuseridentity.
@@ -1483,7 +1483,7 @@ final class participants_search_test extends advanced_testcase {
      */
     public function test_status_filter(array $usersdata, array $statuses, int $jointype, int $count, array $expectedusers): void {
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $users = [];
 
         // Ensure sufficient capabilities to view all statuses.
@@ -1740,7 +1740,7 @@ final class participants_search_test extends advanced_testcase {
             array $expectedusers): void {
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $users = [];
 
         // Ensure all enrolment methods enabled and mapped for setting the filter later.
@@ -1955,7 +1955,7 @@ final class participants_search_test extends advanced_testcase {
             array $expectedusers): void {
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $users = [];
 
         // Prepare data for filtering by users in no groups.
@@ -2276,7 +2276,7 @@ final class participants_search_test extends advanced_testcase {
             int $count, array $expectedusers, string $loginusername): void {
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $users = [];
 
         // Enable separate groups mode on the course.
@@ -2677,7 +2677,7 @@ final class participants_search_test extends advanced_testcase {
             array $expectedusers): void {
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $users = [];
 
         foreach ($usersdata as $username => $userdata) {
@@ -2982,7 +2982,7 @@ final class participants_search_test extends advanced_testcase {
         set_config('roleid', 0, 'enrol_manual');
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $roles = $DB->get_records_menu('role', [], '', 'shortname, id');
         $users = [];
 
@@ -3521,7 +3521,7 @@ final class participants_search_test extends advanced_testcase {
         $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
 
         // Generate users with their role.
         $this->getDataGenerator()->create_and_enrol($course, 'teacher');

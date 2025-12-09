@@ -47,7 +47,7 @@ final class analysers_test extends \advanced_testcase {
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course1->id);
+        $coursecontext = \context_system::instance($course1->id);
 
         $target = new test_target_shortname();
         $analyser = new \core\analytics\analyser\courses(1, $target, [], [], []);
@@ -55,7 +55,7 @@ final class analysers_test extends \advanced_testcase {
 
         $this->assertInstanceOf('\core_analytics\course', $analyser->get_sample_analysable($course1->id));
 
-        $this->assertInstanceOf('\context_course', $analyser->sample_access_context($course1->id));
+        $this->assertInstanceOf('\context_system', $analyser->sample_access_context($course1->id));
 
         // Just 1 sample per course.
         $class = new \ReflectionClass('\core\analytics\analyser\courses');
@@ -75,9 +75,9 @@ final class analysers_test extends \advanced_testcase {
 
         // Context restriction.
         $category1 = $this->getDataGenerator()->create_category();
-        $category1context = \context_coursecat::instance($category1->id);
+        $category1context = \context_systemcat::instance($category1->id);
         $category2 = $this->getDataGenerator()->create_category();
-        $category2context = \context_coursecat::instance($category2->id);
+        $category2context = \context_systemcat::instance($category2->id);
         $course2 = $this->getDataGenerator()->create_course(['category' => $category1->id]);
         $course3 = $this->getDataGenerator()->create_course(['category' => $category2->id]);
         $this->assertCount(2, $analyser->get_analysables_iterator(false, [$category1context, $category2context]));
@@ -113,7 +113,7 @@ final class analysers_test extends \advanced_testcase {
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
+        $course1context = \context_system::instance($course1->id);
 
         $target = new test_target_shortname();
         $analyser = new \core\analytics\analyser\site_courses(1, $target, [], [], []);
@@ -155,7 +155,7 @@ final class analysers_test extends \advanced_testcase {
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
+        $course1context = \context_system::instance($course1->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -174,7 +174,7 @@ final class analysers_test extends \advanced_testcase {
         $analysable = new \core_analytics\course($course1);
 
         $this->assertInstanceOf('\core_analytics\course', $analyser->get_sample_analysable($ue1->id));
-        $this->assertInstanceOf('\context_course', $analyser->sample_access_context($ue1->id));
+        $this->assertInstanceOf('\context_system', $analyser->sample_access_context($ue1->id));
 
         $class = new \ReflectionClass('\core\analytics\analyser\student_enrolments');
         $method = $class->getMethod('get_all_samples');
@@ -202,9 +202,9 @@ final class analysers_test extends \advanced_testcase {
 
         // Context restriction.
         $category1 = $this->getDataGenerator()->create_category();
-        $category1context = \context_coursecat::instance($category1->id);
+        $category1context = \context_systemcat::instance($category1->id);
         $category2 = $this->getDataGenerator()->create_category();
-        $category2context = \context_coursecat::instance($category2->id);
+        $category2context = \context_systemcat::instance($category2->id);
         $course2 = $this->getDataGenerator()->create_course(['category' => $category1->id]);
         $course3 = $this->getDataGenerator()->create_course(['category' => $category2->id]);
         $this->assertCount(2, $analyser->get_analysables_iterator(false, [$category1context, $category2context]));

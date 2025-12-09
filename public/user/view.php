@@ -49,7 +49,7 @@ $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $currentuser = ($user->id == $USER->id);
 
 $systemcontext = context_system::instance();
-$coursecontext = context_course::instance($course->id);
+$coursecontext = context_system::instance($course->id);
 $usercontext   = context_user::instance($user->id, IGNORE_MISSING);
 
 // Check we are not trying to view guest's profile.

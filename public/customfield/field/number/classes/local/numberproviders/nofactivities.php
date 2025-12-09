@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace customfield_number\local\numberproviders;
 
-use context_course;
+use context_system;
 use core_plugin_manager;
 use customfield_number\data_controller;
 use customfield_number\provider_base;
@@ -131,7 +131,7 @@ class nofactivities extends provider_base {
                 // Stored value is out of date.
                 $data = $this->field->get_handler()->get_instance_fields_data(
                     [$fieldid => $this->field], (int)$record->id)[$fieldid];
-                $data->set('contextid', context_course::instance($record->id)->id);
+                $data->set('contextid', context_system::instance($record->id)->id);
                 $data->set('decvalue', $value);
                 $data->save();
             }

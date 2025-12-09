@@ -77,7 +77,7 @@ if ($token === "$inttoken") {
 
         foreach ($modinfo->get_instances_of($componentname) as $modinstanceid => $cm) {
             if ($modinstanceid == $instanceid) {
-                $context = context_module::instance($cm->id, IGNORE_MISSING);
+                $context = context_system::instance($cm->id, IGNORE_MISSING);
                 break;
             }
         }

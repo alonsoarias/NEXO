@@ -16,7 +16,7 @@
 
 namespace core\moodlenet;
 
-use context_course;
+use context_system;
 use stdClass;
 use testing_data_generator;
 
@@ -36,8 +36,8 @@ final class utilities_test extends \advanced_testcase {
     /** @var stdClass Activity object, */
     private stdClass $course;
 
-    /** @var context_course Course context instance. */
-    private context_course $coursecontext;
+    /** @var context_system Course context instance. */
+    private context_system $coursecontext;
 
     /**
      * Set up function for tests.
@@ -48,7 +48,7 @@ final class utilities_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->generator = $this->getDataGenerator();
         $this->course = $this->generator->create_course();
-        $this->coursecontext = context_course::instance($this->course->id);
+        $this->coursecontext = context_system::instance($this->course->id);
     }
 
     /**

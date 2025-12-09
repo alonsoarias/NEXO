@@ -58,7 +58,7 @@ final class events_test extends \advanced_testcase {
      */
     public function test_comment_created(): void {
         // Comment on course page.
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
         $args = new \stdClass;
         $args->context = $context;
         $args->course = $this->course;
@@ -85,7 +85,7 @@ final class events_test extends \advanced_testcase {
         $this->assertEquals($url, $event->get_url());
 
         // Comments when block is on module (wiki) page.
-        $context = \context_module::instance($this->wiki->cmid);
+        $context = \context_system::instance($this->wiki->cmid);
         $args = new \stdClass;
         $args->context   = $context;
         $args->course    = $this->course;
@@ -118,7 +118,7 @@ final class events_test extends \advanced_testcase {
      */
     public function test_comment_deleted(): void {
         // Comment on course page.
-        $context = \context_course::instance($this->course->id);
+        $context = \context_system::instance($this->course->id);
         $args = new \stdClass;
         $args->context   = $context;
         $args->course    = $this->course;
@@ -146,7 +146,7 @@ final class events_test extends \advanced_testcase {
         $this->assertEquals($url, $event->get_url());
 
         // Comments when block is on module (wiki) page.
-        $context = \context_module::instance($this->wiki->cmid);
+        $context = \context_system::instance($this->wiki->cmid);
         $args = new \stdClass;
         $args->context   = $context;
         $args->course    = $this->course;

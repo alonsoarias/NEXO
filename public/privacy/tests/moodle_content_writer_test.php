@@ -569,13 +569,13 @@ final class moodle_content_writer_test extends advanced_testcase {
      * @param   string      $desc Description
      * @covers ::export_user_preference
      */
-    public function test_export_user_preference_context_coursecat($component, $key, $value, $desc): void {
+    public function test_export_user_preference_context_systemcat($component, $key, $value, $desc): void {
         global $DB;
 
         $categories = $DB->get_records('course_categories');
         $firstcategory = reset($categories);
 
-        $context = \context_coursecat::instance($firstcategory->id);
+        $context = \context_systemcat::instance($firstcategory->id);
         $writer = $this->get_writer_instance()
             ->set_context($context)
             ->export_user_preference($component, $key, $value, $desc);
@@ -603,14 +603,14 @@ final class moodle_content_writer_test extends advanced_testcase {
      * @param   string      $desc Description
      * @covers ::export_user_preference
      */
-    public function test_export_user_preference_context_course($component, $key, $value, $desc): void {
+    public function test_export_user_preference_context_system($component, $key, $value, $desc): void {
         global $DB;
 
         $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
 
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $writer = $this->get_writer_instance()
             ->set_context($context)
             ->export_user_preference($component, $key, $value, $desc);
@@ -638,7 +638,7 @@ final class moodle_content_writer_test extends advanced_testcase {
      * @param   string      $desc Description
      * @covers ::export_user_preference
      */
-    public function test_export_user_preference_context_module($component, $key, $value, $desc): void {
+    public function test_export_user_preference_context_system($component, $key, $value, $desc): void {
         global $DB;
 
         $this->resetAfterTest();
@@ -646,7 +646,7 @@ final class moodle_content_writer_test extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
 
-        $context = \context_module::instance($forum->cmid);
+        $context = \context_system::instance($forum->cmid);
         $writer = $this->get_writer_instance()
             ->set_context($context)
             ->export_user_preference($component, $key, $value, $desc);
@@ -710,7 +710,7 @@ final class moodle_content_writer_test extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $block1 = $generator->create_block('online_users', ['parentcontextid' => $coursecontext->id]);
         $block2 = $generator->create_block('online_users', ['parentcontextid' => $coursecontext->id]);
         $block1context = context_block::instance($block1->id);
@@ -1338,12 +1338,12 @@ final class moodle_content_writer_test extends advanced_testcase {
         $writer->set_context($context)->export_data(['paper'], $data);
 
         $coursecategory = $this->getDataGenerator()->create_category();
-        $categorycontext = \context_coursecat::instance($coursecategory->id);
+        $categorycontext = \context_systemcat::instance($coursecategory->id);
         $course = $this->getDataGenerator()->create_course();
-        $misccoursecxt = \context_coursecat::instance($course->category);
-        $coursecontext = \context_course::instance($course->id);
+        $misccoursecxt = \context_systemcat::instance($course->category);
+        $coursecontext = \context_system::instance($course->id);
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course->id]);
-        $modulecontext = \context_module::instance($cm->cmid);
+        $modulecontext = \context_system::instance($cm->cmid);
 
         $writer->set_context($modulecontext)->export_data([], $data);
         $writer->set_context($coursecontext)->export_data(['grades'], $data);

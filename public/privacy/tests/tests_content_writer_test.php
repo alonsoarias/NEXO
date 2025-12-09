@@ -235,7 +235,7 @@ final class tests_content_writer_test extends advanced_testcase {
     public function test_export_user_preference_no_context_clash(): void {
         $writer = $this->get_writer_instance();
         $context = \context_system::instance();
-        $coursecontext = \context_course::instance(SITEID);
+        $coursecontext = \context_system::instance(SITEID);
         $adminuser = \core_user::get_user_by_username('admin');
         $usercontext = \context_user::instance($adminuser->id);
 

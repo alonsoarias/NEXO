@@ -142,7 +142,7 @@ class MoodleQuickForm_filepicker extends HTML_QuickForm_input implements templat
         if ($COURSE->id == SITEID) {
             $context = context_system::instance();
         } else {
-            $context = context_course::instance($COURSE->id);
+            $context = context_system::instance($COURSE->id);
         }
 
         $client_id = uniqid();

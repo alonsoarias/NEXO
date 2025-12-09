@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class file_info_context_coursecat extends file_info {
+class file_info_context_systemcat extends file_info {
     /** @var stdClass Category object */
     protected $category;
 
@@ -65,7 +65,7 @@ class file_info_context_coursecat extends file_info {
             if (empty($component)) {
                 // we can not list the category contents, so try parent, or top system
                 if ($this->category->parent and $pc = $DB->get_record('course_categories', array('id'=>$this->category->parent))) {
-                    $parent = context_coursecat::instance($pc->id, IGNORE_MISSING);
+                    $parent = context_systemcat::instance($pc->id, IGNORE_MISSING);
                     return $this->browser->get_file_info($parent);
                 } else {
                     return $this->browser->get_file_info();
@@ -170,7 +170,7 @@ class file_info_context_coursecat extends file_info {
 
         list($coursecats, $hiddencats) = $this->get_categories();
         foreach ($coursecats as $category) {
-            $context = context_coursecat::instance($category->id);
+            $context = context_systemcat::instance($category->id);
             $children[] = new self($this->browser, $context, $category);
         }
 
@@ -213,7 +213,7 @@ class file_info_context_coursecat extends file_info {
         // Second statement uses only context paths.
         $orcond = [];
         foreach ($hiddencats as $category) {
-            $catcontext = context_coursecat::instance($category->id);
+            $catcontext = context_systemcat::instance($category->id);
 
             // Case- and accent-sensitive search is not necessary for paths.
             // If we do without it, this will lead to an enormous performance boost on large scale tables.
@@ -266,12 +266,12 @@ class file_info_context_coursecat extends file_info {
      * Returns the file info element for a given course or null if course is not accessible
      *
      * @param stdClass $course may contain context fields for preloading
-     * @return file_info_context_course|null
+     * @return file_info_context_system|null
      */
     protected function get_child_course($course) {
         context_helper::preload_from_record($course);
-        $context = context_course::instance($course->id);
-        $child = new file_info_context_course($this->browser, $context, $course);
+        $context = context_system::instance($course->id);
+        $child = new file_info_context_system($this->browser, $context, $course);
         return $child->get_file_info(null, null, null, null, null);
     }
 
@@ -294,8 +294,8 @@ class file_info_context_coursecat extends file_info {
 
         list($coursecats, $hiddencats) = $this->get_categories();
         foreach ($coursecats as $category) {
-            $context = context_coursecat::instance($category->id);
-            $child = new file_info_context_coursecat($this->browser, $context, $category);
+            $context = context_systemcat::instance($category->id);
+            $child = new file_info_context_systemcat($this->browser, $context, $category);
             $cnt += $child->count_non_empty_children($extensions) ? 1 : 0;
             if ($cnt >= $limit) {
                 return $cnt;

@@ -16,7 +16,7 @@
 
 namespace core_user\output;
 
-use context_course;
+use context_system;
 use core_user;
 use core_external\external_api;
 use coding_exception;
@@ -153,7 +153,7 @@ class user_roles_editable extends \core\output\inplace_editable {
         }
 
         // Check user is enrolled in the course.
-        $context = context_course::instance($courseid);
+        $context = context_system::instance($courseid);
         external_api::validate_context($context);
 
         // Check permissions.

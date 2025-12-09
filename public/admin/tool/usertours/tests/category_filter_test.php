@@ -16,8 +16,8 @@
 
 namespace tool_usertours;
 
-use context_course;
-use context_coursecat;
+use context_system;
+use context_systemcat;
 use context_system;
 use tool_usertours\local\filter\category;
 use context;
@@ -137,8 +137,8 @@ final class category_filter_test extends \advanced_testcase {
 
         return match ($contextlevel) {
             'system' => context_system::instance(),
-            'category' => context_coursecat::instance($instanceid),
-            'course' => context_course::instance($instanceid)
+            'category' => context_systemcat::instance($instanceid),
+            'course' => context_system::instance($instanceid)
         };
     }
 

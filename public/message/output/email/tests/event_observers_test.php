@@ -54,7 +54,7 @@ final class event_observers_test extends \advanced_testcase {
             'core_group',
             'groups',
             $group1->id,
-            \context_course::instance($course->id)->id
+            \context_system::instance($course->id)->id
         );
 
         $message = new \core\message\message();

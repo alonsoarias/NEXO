@@ -2437,10 +2437,10 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     if ($course->id == SITEID) {
         $coursecontext = $sysctx;
     } else {
-        $coursecontext = context_course::instance($course->id, MUST_EXIST);
+        $coursecontext = context_system::instance($course->id, MUST_EXIST);
     }
     if ($cm) {
-        $cmcontext = context_module::instance($cm->id, MUST_EXIST);
+        $cmcontext = context_system::instance($cm->id, MUST_EXIST);
     } else {
         $cmcontext = null;
     }
@@ -4608,7 +4608,7 @@ function delete_course($courseorid, $showfeedback = true) {
             return false;
         }
     }
-    $context = context_course::instance($courseid);
+    $context = context_system::instance($courseid);
 
     // Frontpage course can not be deleted!!
     if ($courseid == SITEID) {
@@ -4709,7 +4709,7 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
     $options = (array)$options;
 
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-    $coursecontext = context_course::instance($courseid);
+    $coursecontext = context_system::instance($courseid);
     $fs = get_file_storage();
 
     // Delete course blocks in any all child contexts,
@@ -4942,7 +4942,7 @@ function reset_course_userdata($data) {
     require_once($CFG->dirroot.'/group/lib.php');
 
     $data->courseid = $data->id;
-    $context = context_course::instance($data->courseid);
+    $context = context_system::instance($data->courseid);
 
     $eventparams = array(
         'context' => $context,

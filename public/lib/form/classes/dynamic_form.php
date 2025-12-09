@@ -83,7 +83,7 @@ abstract class dynamic_form extends \moodleform {
      *
      * Example:
      *     $cmid = $this->optional_param('cmid', 0, PARAM_INT);
-     *     return context_module::instance($cmid);
+     *     return context_system::instance($cmid);
      *
      * @return context
      */

@@ -84,7 +84,7 @@ if ($editurl = $userauth->edit_profile_url()) {
 if ($course->id == SITEID) {
     $coursecontext = context_system::instance();   // SYSTEM context.
 } else {
-    $coursecontext = context_course::instance($course->id);   // Course context.
+    $coursecontext = context_system::instance($course->id);   // Course context.
 }
 $systemcontext   = context_system::instance();
 $personalcontext = context_user::instance($user->id);

@@ -78,12 +78,12 @@ final class provider_test extends provider_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $coursecat = $this->getDataGenerator()->create_category();
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course->id]);
-        $cmcontext = \context_module::instance($cm->cmid);
+        $cmcontext = \context_system::instance($cm->cmid);
         $page = $this->getDataGenerator()->create_module('page', array('course' => $course->id));
-        $cmcontext2 = \context_module::instance($page->cmid);
-        $coursecontext = \context_course::instance($course->id);
-        $coursecontext2 = \context_course::instance($course2->id);
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
+        $cmcontext2 = \context_system::instance($page->cmid);
+        $coursecontext = \context_system::instance($course->id);
+        $coursecontext2 = \context_system::instance($course2->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
         $systemcontext = \context_system::instance();
         $block = $this->getDataGenerator()->create_block('online_users');
         $blockcontext = \context_block::instance($block->id);
@@ -126,12 +126,12 @@ final class provider_test extends provider_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $coursecat = $this->getDataGenerator()->create_category();
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course->id]);
-        $cmcontext = \context_module::instance($cm->cmid);
+        $cmcontext = \context_system::instance($cm->cmid);
         $page = $this->getDataGenerator()->create_module('page', array('course' => $course->id));
-        $cmcontext2 = \context_module::instance($page->cmid);
-        $coursecontext = \context_course::instance($course->id);
-        $coursecontext2 = \context_course::instance($course2->id);
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
+        $cmcontext2 = \context_system::instance($page->cmid);
+        $coursecontext = \context_system::instance($course->id);
+        $coursecontext2 = \context_system::instance($course2->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
         $systemcontext = \context_system::instance();
         $block = $this->getDataGenerator()->create_block('online_users');
         $blockcontext = \context_block::instance($block->id);
@@ -253,12 +253,12 @@ final class provider_test extends provider_testcase {
         $usercontext2 = \context_user::instance($user2->id);
         $user3 = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $coursecat = $this->getDataGenerator()->create_category();
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
         $systemcontext = \context_system::instance();
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course->id]);
-        $cmcontext = \context_module::instance($cm->cmid);
+        $cmcontext = \context_system::instance($cm->cmid);
         $student = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);
         $manager = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
         $block = $this->getDataGenerator()->create_block('online_users');
@@ -342,14 +342,14 @@ final class provider_test extends provider_testcase {
         $course = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
-        $coursecontext2 = \context_course::instance($course2->id);
-        $coursecontext3 = \context_course::instance($course3->id);
+        $coursecontext = \context_system::instance($course->id);
+        $coursecontext2 = \context_system::instance($course2->id);
+        $coursecontext3 = \context_system::instance($course3->id);
         $coursecat = $this->getDataGenerator()->create_category();
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
         $systemcontext = \context_system::instance();
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course->id]);
-        $cmcontext = \context_module::instance($cm->cmid);
+        $cmcontext = \context_system::instance($cm->cmid);
         $student = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);
         $manager = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
         $block = $this->getDataGenerator()->create_block('online_users');
@@ -495,13 +495,13 @@ final class provider_test extends provider_testcase {
         $usercontext2 = \context_user::instance($user2->id);
         // Create course1.
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
+        $coursecontext1 = \context_system::instance($course1->id);
         // Create course category.
         $coursecat = $this->getDataGenerator()->create_category();
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
         // Create assignment module.
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course1->id]);
-        $cmcontext = \context_module::instance($cm->cmid);
+        $cmcontext = \context_system::instance($cm->cmid);
 
         $systemcontext = \context_system::instance();
         // Create a block.
@@ -615,13 +615,13 @@ final class provider_test extends provider_testcase {
         $usercontext2 = \context_user::instance($user2->id);
         // Create course1.
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
+        $coursecontext1 = \context_system::instance($course1->id);
         // Create course category.
         $coursecat = $this->getDataGenerator()->create_category();
-        $coursecatcontext = \context_coursecat::instance($coursecat->id);
+        $coursecatcontext = \context_systemcat::instance($coursecat->id);
         // Create assignment module.
         $cm = $this->getDataGenerator()->create_module('assign', ['course' => $course1->id]);
-        $cmcontext = \context_module::instance($cm->cmid);
+        $cmcontext = \context_system::instance($cm->cmid);
 
         $systemcontext = \context_system::instance();
         // Create a block.

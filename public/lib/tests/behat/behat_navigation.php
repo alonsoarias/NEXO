@@ -845,7 +845,7 @@ class behat_navigation extends behat_base {
                 if (!$courseid) {
                     throw $coursenotfoundexception;
                 }
-                $context = context_course::instance($courseid);
+                $context = context_system::instance($courseid);
                 return new moodle_url('/backup/restorefile.php', ['contextid' => $context->id]);
             case 'reset':
                 $courseid = $this->get_course_id($identifier);
@@ -882,7 +882,7 @@ class behat_navigation extends behat_base {
                 if (!$courseid) {
                     throw $coursenotfoundexception;
                 }
-                $context = context_course::instance($courseid);
+                $context = context_system::instance($courseid);
                 return new moodle_url('/admin/roles/permissions.php', ['contextid' => $context->id]);
             case 'enrolment methods':
                 $courseid = $this->get_course_id($identifier);
@@ -1071,7 +1071,7 @@ class behat_navigation extends behat_base {
         }
 
         $courseid = $this->get_course_id($coursefullname);
-        $context = context_course::instance($courseid);
+        $context = context_system::instance($courseid);
         $courseurl = new moodle_url('/course/view.php', ['id' => $courseid]);
 
         $editmodeurl = new moodle_url('/editmode.php', [

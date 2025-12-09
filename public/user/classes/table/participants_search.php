@@ -56,7 +56,7 @@ class participants_search {
     protected $course;
 
     /**
-     * @var context_course $context The course context being searched.
+     * @var context_system $context The course context being searched.
      */
     protected $context;
 

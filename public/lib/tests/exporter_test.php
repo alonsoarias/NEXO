@@ -155,7 +155,7 @@ final class exporter_test extends \advanced_testcase {
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $syscontext = \context_system::instance();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         external_settings::get_instance()->set_filter(true);
         filter_set_global_state('urltolink', TEXTFILTER_OFF);

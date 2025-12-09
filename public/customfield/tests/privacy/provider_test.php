@@ -119,8 +119,8 @@ final class provider_test extends provider_testcase {
             $sql, $params);
         $this->assertEqualsCanonicalizing(
             [
-                \context_course::instance($courses[1]->id)->id,
-                \context_course::instance($courses[2]->id)->id,
+                \context_system::instance($courses[1]->id)->id,
+                \context_system::instance($courses[2]->id)->id,
             ],
             array_values($r->get_contextids()),
         );
@@ -152,7 +152,7 @@ final class provider_test extends provider_testcase {
         $invalidfieldid = $cffields[21]->get('id');
         $DB->update_record('customfield_field', ['id' => $invalidfieldid, 'type' => 'invalid']);
 
-        $context = \context_course::instance($courses[1]->id);
+        $context = \context_system::instance($courses[1]->id);
         $contextlist = new approved_contextlist($USER, 'core_customfield', [$context->id]);
         provider::export_customfields_data($contextlist, 'core_course', 'course', '=0', '=:i', ['i' => $courses[1]->id]);
         /** @var core_privacy\tests\request\content_writer $writer */
@@ -190,7 +190,7 @@ final class provider_test extends provider_testcase {
             'courses' => $courses,
         ] = $this->generate_test_data();
 
-        $approvedcontexts = new approved_contextlist($USER, 'core_course', [\context_course::instance($courses[1]->id)->id]);
+        $approvedcontexts = new approved_contextlist($USER, 'core_course', [\context_system::instance($courses[1]->id)->id]);
         provider::delete_customfields_data($approvedcontexts, 'core_course', 'course');
         $this->assertEmpty($DB->get_records('customfield_data', ['instanceid' => $courses[1]->id]));
         $this->assertNotEmpty($DB->get_records('customfield_data', ['instanceid' => $courses[2]->id]));
@@ -283,7 +283,7 @@ final class provider_test extends provider_testcase {
         ] = $this->generate_test_data();
 
         provider::delete_customfields_data_for_context('core_course', 'course',
-            \context_course::instance($courses[1]->id));
+            \context_system::instance($courses[1]->id));
         $fids2 = $DB->get_fieldset_select('customfield_field', 'id', '1=1', []);
         list($fsql, $fparams) = $DB->get_in_or_equal($fids2, SQL_PARAMS_NAMED);
         $fparams['course1'] = $courses[1]->id;

@@ -227,7 +227,7 @@ final class external_externallib_test extends \core_external\tests\externallib_t
         $res = external_api::clean_returnvalue(\core_external::update_inplace_editable_returns(), $res);
 
         // Format original data.
-        $context = \context_module::instance($forum->cmid);
+        $context = \context_system::instance($forum->cmid);
         $newname = \core_external\util::format_string($newname, $context);
         $editlabel = get_string('newactivityname', '', $newname);
 

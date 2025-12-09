@@ -627,7 +627,7 @@ class behat_core_generator extends behat_generator_base {
         // If the provided course shortname is the site shortname we consider it a system role assign.
         if ($data['courseid'] == $SITE->id) {
             // Frontpage course assign.
-            $context = context_course::instance($data['courseid']);
+            $context = context_system::instance($data['courseid']);
             role_assign($data['roleid'], $data['userid'], $context->id);
 
         } else {
@@ -913,7 +913,7 @@ class behat_core_generator extends behat_generator_base {
         }
 
         $group = $DB->get_record('groups', ['id' => $data['groupid']]);
-        $coursecontext = context_course::instance($group->courseid);
+        $coursecontext = context_system::instance($group->courseid);
         if (!$conversation = \core_message\api::get_conversation_by_area('core_group', 'groups', $data['groupid'],
                 $coursecontext->id)) {
             $members = $DB->get_records_menu('groups_members', ['groupid' => $data['groupid']], '', 'userid, id');
@@ -960,7 +960,7 @@ class behat_core_generator extends behat_generator_base {
      */
     protected function process_mute_group_conversations(array $data) {
         if (groups_is_member($data['groupid'], $data['userid'])) {
-            $context = context_course::instance($data['courseid']);
+            $context = context_system::instance($data['courseid']);
             $conversation = \core_message\api::get_conversation_by_area(
                     'core_group',
                     'groups',

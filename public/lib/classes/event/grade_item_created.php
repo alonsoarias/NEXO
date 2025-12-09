@@ -69,7 +69,7 @@ class grade_item_created extends base {
         $event = self::create([
             'objectid' => $gradeitem->id,
             'courseid' => $gradeitem->courseid,
-            'context' => \context_course::instance($gradeitem->courseid),
+            'context' => \context_system::instance($gradeitem->courseid),
             'other' => [
                 'itemname' => $gradeitem->itemname,
                 'itemtype' => $gradeitem->itemtype,

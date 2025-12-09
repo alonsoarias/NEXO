@@ -56,7 +56,7 @@ abstract class datafilter implements renderable, templatable {
         $this->context = $context;
         $this->tableregionid = $tableregionid;
 
-        if ($context instanceof \context_course) {
+        if ($context instanceof \context_system) {
             $this->course = get_course($context->instanceid);
         }
     }

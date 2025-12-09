@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/filebrowser/file_info_context_coursecat.php');
+require_once($CFG->libdir.'/filebrowser/file_info_context_systemcat.php');
 
 /**
  * Represents the system context in the tree navigated by {@link file_browser}.
@@ -34,7 +34,7 @@ require_once($CFG->libdir.'/filebrowser/file_info_context_coursecat.php');
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class file_info_context_system extends file_info_context_coursecat {
+class file_info_context_system extends file_info_context_systemcat {
 
     /**
      * Constructor

@@ -62,7 +62,7 @@ final class provider_test extends provider_testcase {
         $admin = \core_user::get_user(2);
         $u1 = $this->getDataGenerator()->create_user();
         $c1 = $this->getDataGenerator()->create_course();
-        $c1ctx = \context_course::instance($c1->id);
+        $c1ctx = \context_system::instance($c1->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -79,7 +79,7 @@ final class provider_test extends provider_testcase {
         $u1 = $this->getDataGenerator()->create_user();
         $u2 = $this->getDataGenerator()->create_user();
         $c1 = $this->getDataGenerator()->create_course();
-        $c1ctx = \context_course::instance($c1->id);
+        $c1ctx = \context_system::instance($c1->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -113,7 +113,7 @@ final class provider_test extends provider_testcase {
         $u1 = $this->getDataGenerator()->create_user();
         $u2 = $this->getDataGenerator()->create_user();
         $c1 = $this->getDataGenerator()->create_course();
-        $c1ctx = \context_course::instance($c1->id);
+        $c1ctx = \context_system::instance($c1->id);
 
         $this->enable_logging();
         $manager = get_log_manager(true);
@@ -146,7 +146,7 @@ final class provider_test extends provider_testcase {
         $admin = \core_user::get_user(2);
         $u1 = $this->getDataGenerator()->create_user();
         $c1 = $this->getDataGenerator()->create_course();
-        $c1ctx = \context_course::instance($c1->id);
+        $c1ctx = \context_system::instance($c1->id);
 
         $path = [get_string('privacy:path:logs', 'tool_log'), get_string('pluginname', 'logstore_standard')];
         $this->enable_logging();

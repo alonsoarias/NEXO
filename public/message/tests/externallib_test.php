@@ -4318,7 +4318,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $conversations = $result['conversations'];
 
         // Format original data.
-        $coursecontext = \context_course::instance($course1->id);
+        $coursecontext = \context_system::instance($course1->id);
         $coursename = \core_external\util::format_string($coursename, $coursecontext->id);
         $groupname = \core_external\util::format_string($groupname, $coursecontext->id);
 
@@ -4942,7 +4942,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $user3 = self::getDataGenerator()->create_user();
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course1context = \context_course::instance($course1->id);
+        $course1context = \context_system::instance($course1->id);
 
         // Create a group with a linked conversation and a valid image.
         $this->setAdminUser();
@@ -5854,7 +5854,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
 
         // Create a course and enrol the users.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'editingteacher');
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($user3->id, $course->id, 'student');
@@ -5873,7 +5873,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
             'core_group',
             'groups',
             $group1->id,
-            \context_course::instance($course->id)->id
+            \context_system::instance($course->id)->id
         );
 
         // Create and individual conversation.

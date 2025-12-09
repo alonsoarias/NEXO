@@ -190,7 +190,7 @@ function message_search_users($courseids, $searchtext, $sort='', $exceptions='')
         // Getting the context IDs or each course.
         $contextids = array();
         foreach ($courseids as $courseid) {
-            $context = context_course::instance($courseid);
+            $context = context_system::instance($courseid);
             $contextids = array_merge($contextids, $context->get_parent_context_ids(true));
         }
         list($contextwhere, $contextparams) = $DB->get_in_or_equal(array_unique($contextids), SQL_PARAMS_NAMED, 'context');

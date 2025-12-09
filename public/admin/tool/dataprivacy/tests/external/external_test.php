@@ -504,7 +504,7 @@ final class external_test extends \core_external\tests\externallib_testcase {
         $course = $generator->create_course(['category' => $coursecat->id]);
         $assign = $generator->create_module('assign', ['course' => $course->id]);
         list($course, $assigncm) = get_course_and_cm_from_instance($assign->id, 'assign');
-        $assigncontext = \context_module::instance($assigncm->id);
+        $assigncontext = \context_system::instance($assigncm->id);
 
         // Generate purpose and category.
         $category1 = api::create_category((object)['name' => 'Test category 1']);

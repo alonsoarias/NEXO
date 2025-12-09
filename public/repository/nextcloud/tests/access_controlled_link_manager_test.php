@@ -216,11 +216,11 @@ XML;
      * @param bool $returnestedcontext Name of the folder that is simulated to be checked/created
      * @param bool $callmkcol Also mock creation of the folder
      * @param int $returnmkcol Return value mocking the result of invoking mkcol
-     * @return array ['mockcontext' context_module mock, 'mockclient' => webdav client mock]
+     * @return array ['mockcontext' context_system mock, 'mockclient' => webdav client mock]
      */
     protected function set_up_mocks_for_create_folder_path($returnisdir, $returnestedcontext, $callmkcol = false,
                                                            $returnmkcol = 201) {
-        $mockcontext = $this->createMock(\context_module::class);
+        $mockcontext = $this->createMock(\context_system::class);
         $mockclient = $this->getMockBuilder(\webdav_client::class
         )->disableOriginalConstructor()->disableOriginalClone()->getMock();
         $parsedwebdavurl = parse_url($this->issuer->get_endpoint_url('webdav'));

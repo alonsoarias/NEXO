@@ -43,7 +43,7 @@ final class request_helper_test extends advanced_testcase {
      *
      * @covers ::get_context_data
      */
-    public function test_get_context_data_context_module(): void {
+    public function test_get_context_data_context_system(): void {
         $this->resetAfterTest();
 
         // Setup.
@@ -53,7 +53,7 @@ final class request_helper_test extends advanced_testcase {
         $forum = $this->getDataGenerator()->create_module('forum', [
                 'course' => $course->id,
             ]);
-        $context = context_module::instance($forum->cmid);
+        $context = context_system::instance($forum->cmid);
         $modinfo = get_fast_modinfo($course->id);
         $cm = $modinfo->cms[$context->instanceid];
 
@@ -103,7 +103,7 @@ final class request_helper_test extends advanced_testcase {
      *
      * @covers ::get_context_data
      */
-    public function test_get_context_data_context_module_completion(): void {
+    public function test_get_context_data_context_system_completion(): void {
         $this->resetAfterTest();
 
         // Create a module and set completion.
@@ -111,7 +111,7 @@ final class request_helper_test extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
         $assign = $this->getDataGenerator()->create_module('assign', ['course' => $course->id, 'completion' => 1]);
-        $context = context_module::instance($assign->cmid);
+        $context = context_system::instance($assign->cmid);
         $cm = get_coursemodule_from_id('assign', $assign->cmid);
 
         // Fetch context data.
@@ -138,7 +138,7 @@ final class request_helper_test extends advanced_testcase {
      *
      * @covers ::export_context_files
      */
-    public function test_export_context_files_context_module_no_files(): void {
+    public function test_export_context_files_context_system_no_files(): void {
         $this->resetAfterTest();
 
         // Setup.
@@ -148,7 +148,7 @@ final class request_helper_test extends advanced_testcase {
         $forum = $this->getDataGenerator()->create_module('forum', [
                 'course' => $course->id,
             ]);
-        $context = context_module::instance($forum->cmid);
+        $context = context_system::instance($forum->cmid);
         $modinfo = get_fast_modinfo($course->id);
         $cm = $modinfo->cms[$context->instanceid];
 
@@ -164,13 +164,13 @@ final class request_helper_test extends advanced_testcase {
      *
      * @covers ::export_context_files
      */
-    public function test_export_context_files_context_course_no_files(): void {
+    public function test_export_context_files_context_system_no_files(): void {
         $this->resetAfterTest();
 
         // Setup.
         $course = $this->getDataGenerator()->create_course();
         $user = \core_user::get_user_by_username('admin');
-        $context = context_course::instance($course->id);
+        $context = context_system::instance($course->id);
 
         // Fetch the data.
         helper::export_context_files($context, $user);
@@ -184,14 +184,14 @@ final class request_helper_test extends advanced_testcase {
      *
      * @covers ::export_context_files
      */
-    public function test_export_context_files_context_course_intro_files(): void {
+    public function test_export_context_files_context_system_intro_files(): void {
         $this->resetAfterTest();
 
         // Setup.
         $course = $this->getDataGenerator()->create_course();
         $user = \core_user::get_user_by_username('admin');
         $assign = $this->getDataGenerator()->create_module('assign', ['course' => $course->id]);
-        $context = context_module::instance($assign->cmid);
+        $context = context_system::instance($assign->cmid);
 
         // File details.
         $filerecord = array(

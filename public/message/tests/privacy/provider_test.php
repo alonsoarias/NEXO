@@ -304,7 +304,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
         // Create course.
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
+        $coursecontext1 = \context_system::instance($course1->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -793,8 +793,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -1524,8 +1524,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create courses.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -1600,8 +1600,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create courses.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Test nothing is found before group conversations is created or message is sent.
         $userlist1 = new \core_privacy\local\request\userlist($coursecontext1, 'core_message');
@@ -1673,8 +1673,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -1912,8 +1912,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create course2.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -2100,8 +2100,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create course2.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -2268,8 +2268,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create course2.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -2438,8 +2438,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create course.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -2636,8 +2636,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         // Create course.
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         // Enrol users to courses.
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id);

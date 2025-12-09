@@ -67,7 +67,7 @@ final class locallib_test extends \advanced_testcase {
         $systcontext = \context_system::instance();
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $studentroleid = $DB->get_field('role', 'id', ['shortname' => 'student']);
         role_change_permission($studentroleid, $coursecontext, 'mod/quiz:attempt', CAP_PREVENT);
         // This is where we simulate the breakage.

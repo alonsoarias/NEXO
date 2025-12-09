@@ -3142,7 +3142,7 @@ function initialise_filepicker($args) {
     $contexts = array($user_context, context_system::instance());
     if (!empty($course)) {
         // adding course context
-        $contexts[] = context_course::instance($course->id);
+        $contexts[] = context_system::instance($course->id);
     }
     $externallink = (int)get_config(null, 'repositoryallowexternallinks');
     $repositories = repository::get_instances(array(

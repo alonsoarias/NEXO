@@ -20,7 +20,7 @@ namespace core\content\export\exportable_items;
 
 use advanced_testcase;
 use context;
-use context_module;
+use context_system;
 use context_system;
 use core\content\export\zipwriter;
 use moodle_url;
@@ -85,7 +85,7 @@ final class exportable_textarea_test extends advanced_testcase {
             'contentformat' => FORMAT_HTML,
         ]);
 
-        $context = context_module::instance($page->cmid);
+        $context = context_system::instance($page->cmid);
         $expectedfiles = $this->create_files($context, 'mod_page', 'content', (int) $page->id, 5);
 
         // Unexpected files.
@@ -132,7 +132,7 @@ final class exportable_textarea_test extends advanced_testcase {
             'contentformat' => FORMAT_HTML,
         ]);
 
-        $context = context_module::instance($page->cmid);
+        $context = context_system::instance($page->cmid);
         $expectedfiles = $this->create_files($context, 'mod_page', 'content', (int) $page->id, 5);
 
         // Unexpected files.
@@ -186,7 +186,7 @@ EOF;
 
         $this->setUser($user);
 
-        $context = context_module::instance($page->cmid);
+        $context = context_system::instance($page->cmid);
         $expectedfiles = $this->create_files(
             $context,
             'mod_page',

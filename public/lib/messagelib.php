@@ -625,7 +625,7 @@ function message_get_providers_for_user($userid) {
                " OR ".$DB->sql_concat('cctx.path', "'/'")." LIKE ".$DB->sql_concat('actx.path', "'/%'").")";
 
     if (!empty($CFG->defaultfrontpageroleid)) {
-        $frontpagecontext = context_course::instance(SITEID);
+        $frontpagecontext = context_system::instance(SITEID);
 
         list($capcondition2, $params2) = $DB->get_in_or_equal(
                 array_keys($unsurecapabilities), SQL_PARAMS_NAMED);

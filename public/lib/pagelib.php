@@ -1155,7 +1155,7 @@ class moodle_page {
             if ($this->_course->id == $SITE->id) {
                 $this->set_context(context_system::instance());
             } else {
-                $this->set_context(context_course::instance($this->_course->id));
+                $this->set_context(context_system::instance($this->_course->id));
             }
         }
 
@@ -1231,7 +1231,7 @@ class moodle_page {
         // Unfortunately the context setting is a mess.
         // Let's try to work around some common block problems and show some debug messages.
         if (empty($this->_context) or $this->_context->contextlevel != CONTEXT_BLOCK) {
-            $context = context_module::instance($cm->id);
+            $context = context_system::instance($cm->id);
             $this->set_context($context);
         }
 
@@ -1447,7 +1447,7 @@ class moodle_page {
         $this->ensure_theme_not_set();
         $this->set_course($SITE);
         $this->load_category($categoryid);
-        $this->set_context(context_coursecat::instance($categoryid));
+        $this->set_context(context_systemcat::instance($categoryid));
     }
 
     /**

@@ -237,7 +237,7 @@ final class api_test extends \advanced_testcase {
         }
 
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course1->id);
+        $coursecontext = \context_system::instance($course1->id);
 
         // Enrol a few users in the same course, but leave them as non-contacts.
         $this->setAdminUser();
@@ -3372,7 +3372,7 @@ final class api_test extends \advanced_testcase {
         $this->assertFalse(api::can_send_message($user1->id, $teacher1->id));
 
         // Remove the messageanyuser capability from the course1 for teachers.
-        $coursecontext = \context_course::instance($course1->id);
+        $coursecontext = \context_system::instance($course1->id);
         $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher']);
         assign_capability('moodle/site:messageanyuser', CAP_PROHIBIT, $teacherrole->id, $coursecontext->id);
         $coursecontext->mark_dirty();
@@ -3473,7 +3473,7 @@ final class api_test extends \advanced_testcase {
             'moodle/site:messageanyuser',
             CAP_ALLOW,
             $editingteacherrole->id,
-            \context_course::instance($course->id),
+            \context_system::instance($course->id),
             true
         );
 
@@ -5068,7 +5068,7 @@ final class api_test extends \advanced_testcase {
         $teacher = self::getDataGenerator()->create_user();
         $course = self::getDataGenerator()->create_course();
 
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($student->id, $course->id);
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
@@ -6455,7 +6455,7 @@ final class api_test extends \advanced_testcase {
         $this->setAdminUser();
 
         $course1 = $this->getDataGenerator()->create_course();
-        $coursecontext1 = \context_course::instance($course1->id);
+        $coursecontext1 = \context_system::instance($course1->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -6747,7 +6747,7 @@ final class api_test extends \advanced_testcase {
 
         // Create a course and enrol the users.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
         $this->getDataGenerator()->enrol_user($student1->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($student2->id, $course->id, 'student');
@@ -6767,7 +6767,7 @@ final class api_test extends \advanced_testcase {
             'core_group',
             'groups',
             $group1->id,
-            \context_course::instance($course->id)->id
+            \context_system::instance($course->id)->id
         );
 
         // Create and individual conversation.

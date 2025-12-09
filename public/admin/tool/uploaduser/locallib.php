@@ -380,7 +380,7 @@ function uu_supported_auths() {
  */
 function uu_allowed_roles() {
     // let's cheat a bit, frontpage is guaranteed to exist and has the same list of roles ;-)
-    $roles = get_assignable_roles(context_course::instance(SITEID), ROLENAME_ORIGINALANDSHORT);
+    $roles = get_assignable_roles(context_system::instance(SITEID), ROLENAME_ORIGINALANDSHORT);
     return array_reverse($roles, true);
 }
 
@@ -396,11 +396,11 @@ function uu_allowed_roles_cache(?int $categoryid = null, ?int $courseid = null):
     if (!is_null($categoryid) && !is_null($courseid)) {
         return [];
     } else if (is_null($categoryid) && !is_null($courseid)) {
-        $allowedroles = get_assignable_roles(context_course::instance($courseid), ROLENAME_SHORT);
+        $allowedroles = get_assignable_roles(context_system::instance($courseid), ROLENAME_SHORT);
     } else if (is_null($courseid) && !is_null($categoryid)) {
-        $allowedroles = get_assignable_roles(context_coursecat::instance($categoryid), ROLENAME_SHORT);
+        $allowedroles = get_assignable_roles(context_systemcat::instance($categoryid), ROLENAME_SHORT);
     } else {
-        $allowedroles = get_assignable_roles(context_course::instance(SITEID), ROLENAME_SHORT);
+        $allowedroles = get_assignable_roles(context_system::instance(SITEID), ROLENAME_SHORT);
     }
 
     $rolecache = [];

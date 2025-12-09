@@ -185,7 +185,7 @@ final class generator_test extends \advanced_testcase {
 
         // Course context.
         $record = new \stdClass();
-        $record->contextid = \context_course::instance($course->id)->id;
+        $record->contextid = \context_system::instance($course->id)->id;
         $instance = $this->getDataGenerator()->create_repository('webdav', $record);
         $this->assertEquals(2, $DB->count_records('repository_instances', array('typeid' => $type->id)));
         $this->assertEquals($record->contextid, $instance->contextid);

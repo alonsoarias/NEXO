@@ -37,7 +37,7 @@ final class primary_test extends \advanced_testcase {
         $pagecourse = $this->getDataGenerator()->create_course();
         $assign = $this->getDataGenerator()->create_module('assign', ['course' => $pagecourse->id]);
         $cm = get_coursemodule_from_id('assign', $assign->cmid);
-        $contextrecord = \context_module::instance($cm->id);
+        $contextrecord = \context_system::instance($cm->id);
         $pageurl = new \moodle_url('/mod/assign/view.php', ['id' => $cm->instance]);
         $PAGE->set_cm($cm);
         $PAGE->set_url($pageurl);

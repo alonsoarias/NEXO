@@ -273,7 +273,7 @@ final class external_api_test extends \advanced_testcase {
     public function test_get_context_from_params(): void {
         $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
-        $realcontext = \context_course::instance($course->id);
+        $realcontext = \context_system::instance($course->id);
 
         // Use context id.
         $fetchedcontext = $this->get_context_from_params(["contextid" => $realcontext->id]);
@@ -429,7 +429,7 @@ final class external_api_test extends \advanced_testcase {
         $this->setAdminUser();
         $category = $this->getDataGenerator()->create_category();
         $params = [
-            'contextid' => \context_coursecat::instance($category->id)->id,
+            'contextid' => \context_systemcat::instance($category->id)->id,
             'name' => 'aaagrrryyy',
             'idnumber' => '',
             'description' => '',

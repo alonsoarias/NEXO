@@ -18,8 +18,8 @@ namespace tool_uploaduser;
 
 use advanced_testcase;
 use context_system;
-use context_course;
-use context_coursecat;
+use context_system;
+use context_systemcat;
 use stdClass;
 use tool_uploaduser\cli_helper;
 use tool_uploaduser\local\text_progress_tracker;
@@ -55,9 +55,9 @@ final class upload_users_test extends advanced_testcase {
 
         // Create category and course.
         $coursecat = $this->getDataGenerator()->create_category();
-        $coursecatcontext = context_coursecat::instance($coursecat->id);
+        $coursecatcontext = context_systemcat::instance($coursecat->id);
         $course = $this->getDataGenerator()->create_course(['shortname' => 'course01', 'category' => $coursecat->id]);
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
 
         // Create user.
         $user = $this->getDataGenerator()->create_user();
@@ -117,13 +117,13 @@ EOF;
 
         // Create category and courses.
         $coursecat = $this->getDataGenerator()->create_category();
-        $coursecatcontext = context_coursecat::instance($coursecat->id);
+        $coursecatcontext = context_systemcat::instance($coursecat->id);
         $course1 = $this->getDataGenerator()->create_course(['shortname' => 'course01', 'category' => $coursecat->id]);
-        $course1context = context_course::instance($course1->id);
+        $course1context = context_system::instance($course1->id);
         // Change the default role to 'teacher'.
         set_config('roleid', 4, 'enrol_manual');
         $course2 = $this->getDataGenerator()->create_course(['shortname' => 'course02', 'category' => $coursecat->id]);
-        $course2context = context_course::instance($course2->id);
+        $course2context = context_system::instance($course2->id);
 
         // Create user.
         $user = $this->getDataGenerator()->create_user();

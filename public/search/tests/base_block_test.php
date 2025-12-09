@@ -49,18 +49,18 @@ final class base_block_test extends \advanced_testcase {
         // Create course and activity module.
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $page = $generator->create_module('page', ['course' => $course->id]);
-        $pagecontext = \context_module::instance($page->cmid);
+        $pagecontext = \context_system::instance($page->cmid);
 
         // Create another 2 courses (in same category and in a new category).
-        $cat1context = \context_coursecat::instance($course->category);
+        $cat1context = \context_systemcat::instance($course->category);
         $course2 = $generator->create_course();
-        $course2context = \context_course::instance($course2->id);
+        $course2context = \context_system::instance($course2->id);
         $cat2 = $generator->create_category();
-        $cat2context = \context_coursecat::instance($cat2->id);
+        $cat2context = \context_systemcat::instance($cat2->id);
         $course3 = $generator->create_course(['category' => $cat2->id]);
-        $course3context = \context_course::instance($course3->id);
+        $course3context = \context_system::instance($course3->id);
 
         // Add blocks by hacking table (because it's not a real block type).
 
@@ -82,7 +82,7 @@ final class base_block_test extends \advanced_testcase {
 
         // 3. Block on site context.
         $sitecourse = get_site();
-        $sitecontext = \context_course::instance($sitecourse->id);
+        $sitecontext = \context_system::instance($sitecourse->id);
         $instance->parentcontextid = $sitecontext->id;
         $instance->pagetypepattern = 'site-index';
         $instance->timemodified = 3;
@@ -253,9 +253,9 @@ final class base_block_test extends \advanced_testcase {
         // Create course and activity module.
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $page = $generator->create_module('page', ['course' => $course->id]);
-        $pagecontext = \context_module::instance($page->cmid);
+        $pagecontext = \context_system::instance($page->cmid);
 
         // Create block on course page.
         $configdata = base64_encode(serialize(new \stdClass()));
@@ -273,7 +273,7 @@ final class base_block_test extends \advanced_testcase {
 
         // Repeat with block on site page.
         $sitecourse = get_site();
-        $sitecontext = \context_course::instance($sitecourse->id);
+        $sitecontext = \context_system::instance($sitecourse->id);
         $instance->pagetypepattern = 'site-index';
         $instance->parentcontextid = $sitecontext->id;
         $block2id = $DB->insert_record('block_instances', $instance);
@@ -335,9 +335,9 @@ final class base_block_test extends \advanced_testcase {
         // Create course and activity module.
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $page = $generator->create_module('page', ['course' => $course->id]);
-        $pagecontext = \context_module::instance($page->cmid);
+        $pagecontext = \context_system::instance($page->cmid);
 
         // Create block on course page.
         $configdata = base64_encode(serialize(new \stdClass()));
@@ -390,9 +390,9 @@ final class base_block_test extends \advanced_testcase {
         // Create course and activity module.
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $page = $generator->create_module('page', ['course' => $course->id]);
-        $pagecontext = \context_module::instance($page->cmid);
+        $pagecontext = \context_system::instance($page->cmid);
 
         // Create blocks on course page, with time modified non-sequential.
         $configdata = base64_encode(serialize(new \stdClass()));

@@ -93,7 +93,7 @@ final class base_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course->id));
-        $context = \context_module::instance($forum->cmid);
+        $context = \context_system::instance($forum->cmid);
         $event = \core_tests\event\unittest_executed::create(array('context' => $context, 'objectid' => 5));
 
         // Check guessed course ID, and default properties.
@@ -892,7 +892,7 @@ and nothing else.";
 
         $course  = $this->getDataGenerator()->create_course();
         $feed    = $this->getDataGenerator()->create_module('feedback', ['course' => $course->id]);
-        $context = \context_module::instance($feed->cmid);
+        $context = \context_system::instance($feed->cmid);
         $data    = [
             'context'  => $context,
             'courseid' => $course->id,

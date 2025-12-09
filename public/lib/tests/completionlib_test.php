@@ -1597,7 +1597,7 @@ final class completionlib_test extends advanced_testcase {
         $this->assertCompletionEquals($forum->cmid,
             $event->get_record_snapshot('course_modules_completion', $event->objectid)->coursemoduleid);
         $this->assertCompletionEquals($current, $event->get_record_snapshot('course_modules_completion', $event->objectid));
-        $this->assertCompletionEquals(context_module::instance($forum->cmid), $event->get_context());
+        $this->assertCompletionEquals(context_system::instance($forum->cmid), $event->get_context());
         $this->assertCompletionEquals($USER->id, $event->userid);
         $this->assertCompletionEquals($this->user->id, $event->relateduserid);
         $this->assertInstanceOf('moodle_url', $event->get_url());
@@ -1628,7 +1628,7 @@ final class completionlib_test extends advanced_testcase {
         $this->assertCompletionEquals($this->course->id, $event->courseid);
         $this->assertCompletionEquals($USER->id, $event->userid);
         $this->assertCompletionEquals($this->user->id, $event->relateduserid);
-        $this->assertCompletionEquals(context_course::instance($this->course->id), $event->get_context());
+        $this->assertCompletionEquals(context_system::instance($this->course->id), $event->get_context());
         $this->assertInstanceOf('moodle_url', $event->get_url());
     }
 
@@ -1667,7 +1667,7 @@ final class completionlib_test extends advanced_testcase {
      */
     public function test_course_completion_updated_event(): void {
         $this->setup_data();
-        $coursecontext = context_course::instance($this->course->id);
+        $coursecontext = context_system::instance($this->course->id);
         $coursecompletionevent = \core\event\course_completion_updated::create(
                 array(
                     'courseid' => $this->course->id,

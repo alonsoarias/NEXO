@@ -71,7 +71,7 @@ final class data_controller_test extends \advanced_testcase {
         $fielddata->type = 'textarea';
         $field4 = $this->get_generator()->create_field($fielddata);
 
-        $params = ['instanceid' => $course->id, 'contextid' => \context_course::instance($course->id)->id];
+        $params = ['instanceid' => $course->id, 'contextid' => \context_system::instance($course->id)->id];
 
         // Generate new data_controller records for these fields, specifying field controller or fieldid or both.
         $data0 = data_controller::create(0, (object)$params, $field0);
@@ -130,7 +130,7 @@ final class data_controller_test extends \advanced_testcase {
         $field = $this->get_generator()->create_field(['categoryid' => $category->get('id')]);
         $course = $this->getDataGenerator()->create_course();
         $data = data_controller::create(0, (object)['instanceid' => $course->id,
-            'contextid' => \context_course::instance($course->id)->id], $field);
+            'contextid' => \context_system::instance($course->id)->id], $field);
         $data->save();
 
         $datarecord = $DB->get_record(\core_customfield\data::TABLE, ['id' => $data->get('id')], '*', MUST_EXIST);

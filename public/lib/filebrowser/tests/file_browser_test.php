@@ -16,9 +16,9 @@
 
 namespace core;
 
-use file_info_context_course;
-use file_info_context_coursecat;
-use file_info_context_module;
+use file_info_context_system;
+use file_info_context_systemcat;
+use file_info_context_system;
 use file_info_stored;
 use stdClass;
 
@@ -68,10 +68,10 @@ final class file_browser_test extends \advanced_testcase {
         $fileinfo = $browser->get_file_info(\context_system::instance());
         $this->initialnonempty = $fileinfo->count_non_empty_children();
         $this->initialcategories = count(array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_coursecat;
+            return $a instanceof file_info_context_systemcat;
         }));
         $this->initialcourses = count(array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_course;
+            return $a instanceof file_info_context_system;
         }));
         $this->initialcourses -= 1; // This includes the site course by default.
         $this->initialjpg = $fileinfo->count_non_empty_children(['.jpg']);
@@ -82,7 +82,7 @@ final class file_browser_test extends \advanced_testcase {
         $this->course2 = $this->getDataGenerator()->create_course();
 
         // Add a file to course1 summary.
-        $coursecontext1 = \context_course::instance($this->course1->id);
+        $coursecontext1 = \context_system::instance($this->course1->id);
         $this->course1filerecord = array('contextid' => $coursecontext1->id,
             'component' => 'course',
             'filearea' => 'summary',
@@ -119,7 +119,7 @@ final class file_browser_test extends \advanced_testcase {
         $this->assertNotEmpty($fileinfo->count_non_empty_children());
         $this->assertEquals($this->initialnonempty + 1, count($fileinfo->get_non_empty_children()));
         $categorychildren = array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_coursecat;
+            return $a instanceof file_info_context_systemcat;
         });
         $this->assertEquals($this->initialcategories + 1, count($categorychildren));
     }
@@ -140,13 +140,13 @@ final class file_browser_test extends \advanced_testcase {
 
         // Should be 1 category children (empty category).
         $categorychildren = array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_coursecat;
+            return $a instanceof file_info_context_systemcat;
         });
         $this->assertEquals($this->initialcategories, count($categorychildren));
 
         // Should be 2 course children - courses that belonged to hidden subcategory are now direct children of "System".
         $coursechildren = array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_course;
+            return $a instanceof file_info_context_system;
         });
         $this->assertEquals($this->initialcourses + 2, count($coursechildren));
     }
@@ -154,16 +154,16 @@ final class file_browser_test extends \advanced_testcase {
     /**
      * Test "Server files" from the course category context
      */
-    public function test_file_info_context_coursecat(): void {
+    public function test_file_info_context_systemcat(): void {
 
         // There are two non-empty courses.
 
         $browser = get_file_browser();
-        $fileinfo = $browser->get_file_info(\context_coursecat::instance($this->course2->category));
+        $fileinfo = $browser->get_file_info(\context_systemcat::instance($this->course2->category));
         $this->assertNotEmpty($fileinfo->count_non_empty_children());
         $this->assertEquals(2, count($fileinfo->get_non_empty_children()));
         $coursechildren = array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_course;
+            return $a instanceof file_info_context_system;
         });
         $this->assertEquals($this->initialcourses + 2, count($coursechildren));
     }
@@ -171,7 +171,7 @@ final class file_browser_test extends \advanced_testcase {
     /**
      * Test "Server files" from the course category context, only look for .jpg
      */
-    public function test_file_info_context_coursecat_jpg(): void {
+    public function test_file_info_context_systemcat_jpg(): void {
 
         // There is one non-empty category child and two category children.
 
@@ -184,10 +184,10 @@ final class file_browser_test extends \advanced_testcase {
     /**
      * Test "Server files" from the course context (course1)
      */
-    public function test_file_info_context_course_1(): void {
+    public function test_file_info_context_system_1(): void {
 
         $browser = get_file_browser();
-        $fileinfo = $browser->get_file_info(\context_course::instance($this->course1->id));
+        $fileinfo = $browser->get_file_info(\context_system::instance($this->course1->id));
         // Fileinfo element has only one non-empty child - "Course summary" file area.
         $this->assertNotEmpty($fileinfo->count_non_empty_children());
         $nonemptychildren = $fileinfo->get_non_empty_children();
@@ -202,34 +202,34 @@ final class file_browser_test extends \advanced_testcase {
         $allchildren = $fileinfo->get_children();
         $this->assertEquals(7, count($allchildren));
         $modulechildren = array_filter($allchildren, function($a) {
-            return $a instanceof file_info_context_module;
+            return $a instanceof file_info_context_system;
         });
         $this->assertEquals(0, count($modulechildren));
 
         // Admin can see seven course-level file areas.
         $this->setAdminUser();
-        $fileinfo = $browser->get_file_info(\context_course::instance($this->course1->id));
+        $fileinfo = $browser->get_file_info(\context_system::instance($this->course1->id));
         $this->assertEquals(7, count($fileinfo->get_children()));
     }
 
     /**
      * Test "Server files" from the course context (course1)
      */
-    public function test_file_info_context_course_2(): void {
+    public function test_file_info_context_system_2(): void {
 
         // 2. Start from the course level.
         $browser = get_file_browser();
-        $fileinfo = $browser->get_file_info(\context_course::instance($this->course2->id));
+        $fileinfo = $browser->get_file_info(\context_system::instance($this->course2->id));
         $this->assertNotEmpty($fileinfo->count_non_empty_children());
         $nonemptychildren = $fileinfo->get_non_empty_children();
         $this->assertEquals(1, count($nonemptychildren));
         $child = reset($nonemptychildren);
-        $this->assertTrue($child instanceof file_info_context_module);
+        $this->assertTrue($child instanceof file_info_context_system);
         $this->assertEquals($this->module1->name.' (File)', $child->get_visible_name());
         $this->assertEquals(1, count($child->get_non_empty_children()));
         $this->assertEquals(1, $child->count_non_empty_children());
         $modulechildren = array_filter($fileinfo->get_children(), function($a) {
-            return $a instanceof file_info_context_module;
+            return $a instanceof file_info_context_system;
         });
         $this->assertEquals(2, count($modulechildren));
     }
@@ -237,9 +237,9 @@ final class file_browser_test extends \advanced_testcase {
     /**
      * Test "Server files" from the course context (module1)
      */
-    public function test_file_info_context_module_1(): void {
+    public function test_file_info_context_system_1(): void {
 
-        $module1context = \context_module::instance($this->module1->cmid);
+        $module1context = \context_system::instance($this->module1->cmid);
         $browser = get_file_browser();
         $fileinfo = $browser->get_file_info($module1context);
         $this->assertEquals($this->module1->name . ' (File)', $fileinfo->get_visible_name());
@@ -253,9 +253,9 @@ final class file_browser_test extends \advanced_testcase {
     /**
      * Test "Server files" from the course context (module1)
      */
-    public function test_file_info_context_module_2(): void {
+    public function test_file_info_context_system_2(): void {
 
-        $module2context = \context_module::instance($this->module2->cmid);
+        $module2context = \context_system::instance($this->module2->cmid);
         $browser = get_file_browser();
         $fileinfo = $browser->get_file_info($module2context);
         $this->assertEquals($this->module2->name.' (Assignment)', $fileinfo->get_visible_name());

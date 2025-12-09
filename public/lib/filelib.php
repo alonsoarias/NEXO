@@ -2599,7 +2599,7 @@ function send_file($path, $filename, $lifetime = null , $filter=0, $pathisstring
         if ($mimetype == 'text/html' || $mimetype == 'application/xhtml+xml' || file_is_svg_image_from_mimetype($mimetype)) {
             $options = new stdClass();
             $options->noclean = true;
-            $options->context = context_course::instance($COURSE->id);
+            $options->context = context_system::instance($COURSE->id);
 
             if (is_object($path)) {
                 $text = $path->get_content();
@@ -2616,7 +2616,7 @@ function send_file($path, $filename, $lifetime = null , $filter=0, $pathisstring
             $options = new stdClass();
             $options->newlines = false;
             $options->noclean = true;
-            $options->context = context_course::instance($COURSE->id);
+            $options->context = context_system::instance($COURSE->id);
 
             if (is_object($path)) {
                 $text = htmlentities($path->get_content(), ENT_QUOTES, 'UTF-8');
@@ -4532,7 +4532,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             $iscurrentuser = $USER->id == $grade->userid;
 
             if (!$iscurrentuser) {
-                $coursecontext = context_course::instance($course->id);
+                $coursecontext = context_system::instance($course->id);
                 if (!has_capability('moodle/grade:viewall', $coursecontext)) {
                     send_file_not_found();
                 }

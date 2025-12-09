@@ -37,8 +37,8 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
 
     $usercontext = context_user::instance($user->id, MUST_EXIST);
     $systemcontext = context_system::instance();
-    $courseorusercontext = !empty($course) ? context_course::instance($course->id) : $usercontext;
-    $courseorsystemcontext = !empty($course) ? context_course::instance($course->id) : $systemcontext;
+    $courseorusercontext = !empty($course) ? context_system::instance($course->id) : $usercontext;
+    $courseorsystemcontext = !empty($course) ? context_system::instance($course->id) : $systemcontext;
     $courseid = !empty($course) ? $course->id : SITEID;
 
     $contactcategory = new core_user\output\myprofile\category('contact', get_string('userdetails'));
@@ -218,7 +218,7 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
             foreach ($mycourses as $mycourse) {
                 if ($mycourse->category) {
                     context_helper::preload_from_record($mycourse);
-                    $ccontext = context_course::instance($mycourse->id);
+                    $ccontext = context_system::instance($mycourse->id);
                     if (!isset($course) || $mycourse->id != $course->id) {
                         $linkattributes = null;
                         if ($mycourse->visible == 0) {

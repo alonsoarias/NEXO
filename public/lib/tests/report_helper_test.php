@@ -198,9 +198,9 @@ final class report_helper_test extends \advanced_testcase {
                 groups_add_member($groupid, $this->userids[$key]->id);
             }
         }
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         [$course, $cm] = get_course_and_cm_from_instance($assign->id, 'assign');
-        $modulecontext = \context_module::instance($cm->id);
+        $modulecontext = \context_system::instance($cm->id);
         [$hasvalidgroupcourse, $hasvalidgroupmodule, $hasvalidgroupsystem] = $expected;
         $this->assertEquals(
             $hasvalidgroupcourse,

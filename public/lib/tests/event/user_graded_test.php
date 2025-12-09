@@ -62,7 +62,7 @@ final class user_graded_test extends \advanced_testcase {
 
         $event = \core\event\user_graded::create_from_grade($grade_grade);
 
-        $this->assertEquals(\context_course::instance($course->id), $event->get_context());
+        $this->assertEquals(\context_system::instance($course->id), $event->get_context());
         $this->assertSame($event->objecttable, 'grade_grades');
         $this->assertEquals($event->objectid, $grade_grade->id);
         $this->assertEquals($event->other['itemid'], $grade_item->id);

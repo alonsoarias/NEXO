@@ -101,7 +101,7 @@ final class secondary_test extends \advanced_testcase {
         switch ($context) {
             case 'course':
                 $pagecourse = $this->getDataGenerator()->create_course(['format' => $courseformat]);
-                $contextrecord = \context_course::instance($pagecourse->id, MUST_EXIST);
+                $contextrecord = \context_system::instance($pagecourse->id, MUST_EXIST);
                 if ($courseformat === 'singleactivity') {
                     $pageurl = new \moodle_url('/course/edit.php', ['id' => $pagecourse->id]);
                 } else {
@@ -112,7 +112,7 @@ final class secondary_test extends \advanced_testcase {
                 $pagecourse = $this->getDataGenerator()->create_course(['format' => $courseformat]);
                 $assign = $this->getDataGenerator()->create_module('assign', ['course' => $pagecourse->id]);
                 $cm = get_coursemodule_from_id('assign', $assign->cmid);
-                $contextrecord = \context_module::instance($cm->id);
+                $contextrecord = \context_system::instance($cm->id);
                 $pageurl = new \moodle_url('/mod/assign/view.php', ['id' => $cm->id]);
                 $PAGE->set_cm($cm);
                 break;
@@ -669,7 +669,7 @@ final class secondary_test extends \advanced_testcase {
 
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $PAGE->set_context($context);
         $PAGE->set_url('/');
 
@@ -823,7 +823,7 @@ final class secondary_test extends \advanced_testcase {
         ];
 
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $PAGE->set_context($context);
 
         $PAGE->set_url($selectedurl);
@@ -902,7 +902,7 @@ final class secondary_test extends \advanced_testcase {
         $this->setAdminUser();
 
         $pagecourse = $this->getDataGenerator()->create_course();
-        $contextrecord = \context_course::instance($pagecourse->id, MUST_EXIST);
+        $contextrecord = \context_system::instance($pagecourse->id, MUST_EXIST);
 
         $id = ($contextidentifier == 'contextid') ? $contextrecord->id : $pagecourse->id;
 

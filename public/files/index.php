@@ -35,7 +35,7 @@ $filearea  = 'legacy';
 $itemid    = 0;
 
 if (empty($contextid)) {
-    $contextid = context_course::instance(SITEID)->id;
+    $contextid = context_system::instance(SITEID)->id;
 }
 
 $PAGE->set_url('/files/index.php', array('contextid'=>$contextid, 'filepath'=>$filepath, 'filename'=>$filename));

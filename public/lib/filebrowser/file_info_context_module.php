@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class file_info_context_module extends file_info {
+class file_info_context_system extends file_info {
     /** @var stdClass Course object */
     protected $course;
     /** @var cm_info Course module object */

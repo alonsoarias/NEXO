@@ -206,7 +206,7 @@ final class externallib_test extends \advanced_testcase {
         // Insert the information about the file.
         $contentid = $DB->insert_record('data_content', $datacontent);
         // Required information for uploading a file.
-        $context = \context_module::instance($module->cmid);
+        $context = \context_system::instance($module->cmid);
         $usercontext = \context_user::instance($USER->id);
         $component = 'mod_data';
         $filearea = 'content';
@@ -237,7 +237,7 @@ final class externallib_test extends \advanced_testcase {
         $testfilelisting = external_api::clean_returnvalue(core_files_external::get_files_returns(), $testfilelisting);
 
         // With the information that we have provided we should get an object exactly like the one below.
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $testdata = array();
         $testdata['parents'] = array();
         $testdata['parents']['0'] = array('contextid' => 1,

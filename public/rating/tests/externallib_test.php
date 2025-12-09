@@ -115,7 +115,7 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
         $record->scale = 100;
         $this->forum = self::getDataGenerator()->create_module('forum', $record);
 
-        $this->contextid = \context_module::instance($this->forum->cmid)->id;
+        $this->contextid = \context_system::instance($this->forum->cmid)->id;
 
         // Add discussion to the forums.
         $record = new \stdClass();

@@ -68,28 +68,28 @@ final class base_activity_test extends \advanced_testcase {
         // Create course and 2 forums.
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $this->contexts['c1'] = \context_course::instance($course->id);
+        $this->contexts['c1'] = \context_system::instance($course->id);
         $this->forums[1] = $generator->create_module('forum', ['course' => $course->id, 'name' => 'Forum 1',
                 'intro' => '<p>Intro 1</p>', 'introformat' => FORMAT_HTML]);
-        $this->contexts['f1'] = \context_module::instance($this->forums[1]->cmid);
+        $this->contexts['f1'] = \context_system::instance($this->forums[1]->cmid);
         $this->forums[2] = $generator->create_module('forum', ['course' => $course->id, 'name' => 'Forum 2',
                 'intro' => '<p>Intro 2</p>', 'introformat' => FORMAT_HTML]);
-        $this->contexts['f2'] = \context_module::instance($this->forums[2]->cmid);
+        $this->contexts['f2'] = \context_system::instance($this->forums[2]->cmid);
 
         // Create another 2 courses (in same category and in a new category) with one forum each.
-        $this->contexts['cc1']  = \context_coursecat::instance($course->category);
+        $this->contexts['cc1']  = \context_systemcat::instance($course->category);
         $course2 = $generator->create_course();
-        $this->contexts['c2'] = \context_course::instance($course2->id);
+        $this->contexts['c2'] = \context_system::instance($course2->id);
         $this->forums[3] = $generator->create_module('forum', ['course' => $course2->id, 'name' => 'Forum 3',
                 'intro' => '<p>Intro 3</p>', 'introformat' => FORMAT_HTML]);
-        $this->contexts['f3'] = \context_module::instance($this->forums[3]->cmid);
+        $this->contexts['f3'] = \context_system::instance($this->forums[3]->cmid);
         $cat2 = $generator->create_category();
-        $this->contexts['cc2'] = \context_coursecat::instance($cat2->id);
+        $this->contexts['cc2'] = \context_systemcat::instance($cat2->id);
         $course3 = $generator->create_course(['category' => $cat2->id]);
-        $this->contexts['c3'] = \context_course::instance($course3->id);
+        $this->contexts['c3'] = \context_system::instance($course3->id);
         $this->forums[4] = $generator->create_module('forum', ['course' => $course3->id, 'name' => 'Forum 4',
                 'intro' => '<p>Intro 4</p>', 'introformat' => FORMAT_HTML]);
-        $this->contexts['f4'] = \context_module::instance($this->forums[4]->cmid);
+        $this->contexts['f4'] = \context_system::instance($this->forums[4]->cmid);
 
         // Hack about with the time modified values.
         foreach ($this->forums as $index => $forum) {
@@ -131,7 +131,7 @@ final class base_activity_test extends \advanced_testcase {
 
         $course = self::getDataGenerator()->create_course();
         $activity = self::getDataGenerator()->create_module('forum', array('course' => $course->id));
-        $context = \context_module::instance($activity->cmid);
+        $context = \context_system::instance($activity->cmid);
         $contextid = $context->id;
 
         // Create file to add.
@@ -356,13 +356,13 @@ final class base_activity_test extends \advanced_testcase {
         // Check the URL contexts are in date order.
         $urlarea = new \mod_url\search\activity();
         $contexts = iterator_to_array($urlarea->get_contexts_to_reindex(), false);
-        $this->assertEquals([\context_module::instance($url1->cmid),
-                \context_module::instance($url2->cmid)], $contexts);
+        $this->assertEquals([\context_system::instance($url1->cmid),
+                \context_system::instance($url2->cmid)], $contexts);
 
         // Check the Page contexts.
         $pagearea = new \mod_page\search\activity();
         $contexts = iterator_to_array($pagearea->get_contexts_to_reindex(), false);
-        $this->assertEquals([\context_module::instance($page->cmid)], $contexts);
+        $this->assertEquals([\context_system::instance($page->cmid)], $contexts);
 
         // Check another module area that has no instances.
         $glossaryarea = new \mod_glossary\search\activity();

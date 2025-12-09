@@ -405,9 +405,9 @@ final class testing_generator_test extends \advanced_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
 
-        $context1 = \context_course::instance($course1->id);
-        $context2 = \context_course::instance($course2->id);
-        $context3 = \context_course::instance($course3->id);
+        $context1 = \context_system::instance($course1->id);
+        $context2 = \context_system::instance($course2->id);
+        $context3 = \context_system::instance($course3->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

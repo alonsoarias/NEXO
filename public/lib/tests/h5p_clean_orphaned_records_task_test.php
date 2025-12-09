@@ -46,7 +46,7 @@ final class h5p_clean_orphaned_records_task_test extends advanced_testcase {
         // Create h5pactivity.
         $activity = $this->getDataGenerator()->create_module('h5pactivity', $params);
         $activity->filename = 'greeting-card.h5p';
-        $context = context_module::instance($activity->cmid);
+        $context = context_system::instance($activity->cmid);
 
         // Create a fake deploy H5P file.
         /** @var \core_h5p_generator $generator */

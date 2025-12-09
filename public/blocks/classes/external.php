@@ -181,7 +181,7 @@ class core_block_external extends external_api {
             ['courseid' => $courseid, 'returncontents' => $returncontents]);
 
         $course = get_course($params['courseid']);
-        $context = context_course::instance($course->id);
+        $context = context_system::instance($course->id);
         self::validate_context($context);
 
         // Specific layout for frontpage course.

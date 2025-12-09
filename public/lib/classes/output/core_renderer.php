@@ -27,7 +27,7 @@ use core_useragent;
 use core\check\check as check_check;
 use core\check\result as check_result;
 use core\context\system as context_system;
-use core\context\course as context_course;
+use core\context\course as context_system;
 use core\di;
 use core\exception\coding_exception;
 use core\hook\manager as hook_manager;
@@ -635,7 +635,7 @@ class core_renderer extends renderer_base {
             // $course->id is not defined during installation
             return '';
         } else if (isloggedin()) {
-            $context = context_course::instance($course->id);
+            $context = context_system::instance($course->id);
 
             $fullname = fullname($USER);
             // Since Moodle 2.0 this link always goes to the public profile page (not the course profile page)
@@ -1162,10 +1162,10 @@ class core_renderer extends renderer_base {
     /**
      * Get the course pattern image URL.
      *
-     * @param context_course $context course context object
+     * @param context_system $context course context object
      * @return string URL of the course pattern image in SVG format
      */
-    public function get_generated_url_for_course(context_course $context): string {
+    public function get_generated_url_for_course(context_system $context): string {
         return moodle_url::make_pluginfile_url($context->id, 'course', 'generated', null, '/', 'course.svg')->out();
     }
 

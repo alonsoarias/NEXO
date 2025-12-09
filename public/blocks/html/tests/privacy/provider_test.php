@@ -152,7 +152,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
      */
     protected function construct_course_page(\stdClass $course) {
         $page = new \moodle_page();
-        $page->set_context(\context_course::instance($course->id));
+        $page->set_context(\context_system::instance($course->id));
         $page->set_pagelayout('standard');
         $page->set_pagetype('course-view');
         $page->set_course($course);

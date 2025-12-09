@@ -91,13 +91,13 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         ];
 
         // Rate all courses as u1, and something else in the same context.
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_course::instance($course1->id), 25);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 50);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_course::instance($course3->id), 75);
-        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_course::instance($course3->id), 99);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_system::instance($course1->id), 25);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 50);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_system::instance($course3->id), 75);
+        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_system::instance($course3->id), 99);
 
         // Rate course2 as u2, and something else in a different context/component..
-        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 90);
+        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 90);
         $this->rate_as_user($u2->id, 'user', 'user', $u3->id, \context_user::instance($u3->id), 10);
 
         // Return any course which the u1 has rated.
@@ -179,13 +179,13 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         ];
 
         // Rate all courses as u1, and something else in the same context.
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_course::instance($course1->id), 25);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 50);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_course::instance($course3->id), 75);
-        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_course::instance($course3->id), 99);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_system::instance($course1->id), 25);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 50);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_system::instance($course3->id), 75);
+        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_system::instance($course3->id), 99);
 
         // Rate course2 as u2, and something else in a different context/component..
-        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 90);
+        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 90);
         $this->rate_as_user($u2->id, 'user', 'user', $u3->id, \context_user::instance($u3->id), 10);
 
         // Return any course which the u1 has rated.
@@ -266,20 +266,20 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         ];
 
         // Rate all courses as u1, and something else in the same context.
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_course::instance($course1->id), 25);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 50);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_course::instance($course3->id), 75);
-        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_course::instance($course3->id), 99);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_system::instance($course1->id), 25);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 50);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_system::instance($course3->id), 75);
+        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_system::instance($course3->id), 99);
         $this->rate_as_user($u1->id, 'user', 'user', $u3->id, \context_user::instance($u3->id), 10);
 
         // Rate course2 as u2, and something else in a different context/component..
-        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 90);
+        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 90);
         $this->rate_as_user($u2->id, 'user', 'user', $u3->id, \context_user::instance($u3->id), 20);
 
         // Test exports.
         // User 1 rated all three courses, and the core_course, and user 3.
         // User 1::course1 is stored in [] subcontext.
-        $context = \context_course::instance($course1->id);
+        $context = \context_system::instance($course1->id);
         $subcontext = [];
         provider::export_area_ratings($u1->id, $context, $subcontext, 'core_course', 'course', $course1->id, true);
 
@@ -290,7 +290,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assert_has_rating($u1, 25, $rating);
 
         // User 1::course2 is stored in ['foo'] subcontext.
-        $context = \context_course::instance($course2->id);
+        $context = \context_system::instance($course2->id);
         $subcontext = ['foo'];
         provider::export_area_ratings($u1->id, $context, $subcontext, 'core_course', 'course', $course2->id, true);
 
@@ -302,7 +302,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assert_has_rating($u1, 50, $result);
 
         // User 1::course3 is stored in ['foo'] subcontext.
-        $context = \context_course::instance($course3->id);
+        $context = \context_system::instance($course3->id);
         $subcontext = ['foo'];
         provider::export_area_ratings($u1->id, $context, $subcontext, 'core_course', 'course', $course3->id, true);
 
@@ -314,7 +314,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assert_has_rating($u1, 75, $result);
 
         // User 1::course3::files is stored in ['foo', 'files'] subcontext.
-        $context = \context_course::instance($course3->id);
+        $context = \context_system::instance($course3->id);
         $subcontext = ['foo', 'files'];
         provider::export_area_ratings($u1->id, $context, $subcontext, 'core_course', 'files', $course3->id, true);
 
@@ -356,28 +356,28 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $u3 = $this->getDataGenerator()->create_user();
 
         // Rate all courses as u1, and something else in the same context.
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_course::instance($course1->id), 25);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 50);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_course::instance($course3->id), 75);
-        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_course::instance($course3->id), 99);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_system::instance($course1->id), 25);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 50);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_system::instance($course3->id), 75);
+        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_system::instance($course3->id), 99);
         $this->rate_as_user($u1->id, 'core_user', 'user', $u3->id, \context_user::instance($u3->id), 10);
 
         // Rate course2 as u2, and something else in a different context/component..
-        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 90);
+        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 90);
         $this->rate_as_user($u2->id, 'core_user', 'user', $u3->id, \context_user::instance($u3->id), 20);
 
         // Delete all ratings in course1.
         $expectedratingscount = $DB->count_records('rating');
-        provider::delete_ratings(\context_course::instance($course1->id));
+        provider::delete_ratings(\context_system::instance($course1->id));
         $expectedratingscount -= 1;
         $this->assertEquals($expectedratingscount, $DB->count_records('rating'));
 
         // Delete ratings in course2 specifying wrong component.
-        provider::delete_ratings(\context_course::instance($course2->id), 'other_component');
+        provider::delete_ratings(\context_system::instance($course2->id), 'other_component');
         $this->assertEquals($expectedratingscount, $DB->count_records('rating'));
 
         // Delete ratings in course2 specifying correct component.
-        provider::delete_ratings(\context_course::instance($course2->id), 'core_course');
+        provider::delete_ratings(\context_system::instance($course2->id), 'core_course');
         $expectedratingscount -= 2;
         $this->assertEquals($expectedratingscount, $DB->count_records('rating'));
 
@@ -403,20 +403,20 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $u3 = $this->getDataGenerator()->create_user();
 
         // Rate all courses as u1, and something else in the same context.
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_course::instance($course1->id), 25);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 50);
-        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_course::instance($course3->id), 75);
-        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_course::instance($course3->id), 99);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course1->id, \context_system::instance($course1->id), 25);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 50);
+        $this->rate_as_user($u1->id, 'core_course', 'course', $course3->id, \context_system::instance($course3->id), 75);
+        $this->rate_as_user($u1->id, 'core_course', 'files', $course3->id, \context_system::instance($course3->id), 99);
         $this->rate_as_user($u1->id, 'core_user', 'user', $u3->id, \context_user::instance($u3->id), 10);
 
         // Rate course2 as u2, and something else in a different context/component..
-        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_course::instance($course2->id), 90);
+        $this->rate_as_user($u2->id, 'core_course', 'course', $course2->id, \context_system::instance($course2->id), 90);
         $this->rate_as_user($u2->id, 'core_user', 'user', $u3->id, \context_user::instance($u3->id), 20);
 
         // Delete ratings in course1.
         list($sql, $params) = $DB->get_in_or_equal([$course1->id, $course2->id], SQL_PARAMS_NAMED);
         $expectedratingscount = $DB->count_records('rating');
-        provider::delete_ratings_select(\context_course::instance($course1->id),
+        provider::delete_ratings_select(\context_system::instance($course1->id),
             'core_course', 'course', $sql, $params);
         $expectedratingscount -= 1;
         $this->assertEquals($expectedratingscount, $DB->count_records('rating'));

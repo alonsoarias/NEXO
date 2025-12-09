@@ -169,14 +169,14 @@ class repository_local extends repository {
             // do not skip files
             return false;
         }
-        if ($fileinfo instanceof file_info_context_course ||
+        if ($fileinfo instanceof file_info_context_system ||
             $fileinfo instanceof file_info_context_user ||
             $fileinfo instanceof file_info_area_course_legacy ||
-            $fileinfo instanceof file_info_context_module ||
+            $fileinfo instanceof file_info_context_system ||
             $fileinfo instanceof file_info_context_system) {
             // These instances can never be filearea inside an activity, they will never be skipped.
             return false;
-        } else if ($fileinfo instanceof file_info_context_coursecat) {
+        } else if ($fileinfo instanceof file_info_context_systemcat) {
             // This is a course category. For non-admins we do not display categories
             return empty($CFG->navshowmycoursecategories) &&
                             !has_capability('moodle/course:update', context_system::instance());
@@ -190,7 +190,7 @@ class repository_local extends repository {
                     $parent = $fileinfo->get_parent();
                 }
                 // This is a filearea inside an activity, it can be skipped if it has no non-empty siblings
-                if ($parent && ($parent instanceof file_info_context_module)) {
+                if ($parent && ($parent instanceof file_info_context_system)) {
                     if ($parent->count_non_empty_children($extensions, 2) <= 1) {
                         return true;
                     }

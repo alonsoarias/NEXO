@@ -23,8 +23,8 @@
  */
 namespace core\content\export\exporters;
 
-use context_course;
-use context_module;
+use context_system;
+use context_system;
 use core\content\export\exported_item;
 use core\content\export\zipwriter;
 use section_info;
@@ -47,11 +47,11 @@ class course_exporter extends component_exporter {
     /**
      * Constructor for the course exporter.
      *
-     * @param   context_course $context The context of the course to export
+     * @param   context_system $context The context of the course to export
      * @param   stdClass $user
      * @param   zipwriter $archive
      */
-    public function __construct(context_course $context, stdClass $user, zipwriter $archive) {
+    public function __construct(context_system $context, stdClass $user, zipwriter $archive) {
         $this->course = get_course($context->instanceid);
         $this->modinfo = get_fast_modinfo($this->course, $user->id);
 
@@ -217,10 +217,10 @@ class course_exporter extends component_exporter {
     /**
      * Export all exportable content for an activity module.
      *
-     * @param   context_module $modcontect
+     * @param   context_system $modcontect
      * @param   exportable_item[] $export_exportables
      */
-    public function export_mod_content(context_module $modcontext, array $exportables): void {
+    public function export_mod_content(context_system $modcontext, array $exportables): void {
         $cm = $this->modinfo->get_cm($modcontext->instanceid);
         $modname = $cm->modname;
 
@@ -253,10 +253,10 @@ class course_exporter extends component_exporter {
     /**
      * Get the course_module introduction data.
      *
-     * @param   context_module $modcontect
+     * @param   context_system $modcontect
      * @return  null|string The content of the intro area
      */
-    protected function get_mod_intro_data(context_module $modcontext): ?string {
+    protected function get_mod_intro_data(context_system $modcontext): ?string {
         global $DB;
 
         $cm = $this->modinfo->get_cm($modcontext->instanceid);

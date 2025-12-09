@@ -652,7 +652,7 @@ final class manager_test extends \advanced_testcase {
         $this->setUser($user);
         $this->assertNotEquals($adminuser->id, $USER->id);
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Catch event triggered.
         $sink = $this->redirectEvents();

@@ -16,7 +16,7 @@
 
 namespace core;
 
-use context_course;
+use context_system;
 use stdClass;
 
 /**
@@ -111,7 +111,7 @@ class report_helper {
         $course = get_course($courseid);
         $groupmode = groups_get_course_groupmode($course);
         $groupid = $filterparams->groupid ?? 0;
-        $context = context_course::instance($courseid);
+        $context = context_system::instance($courseid);
         if ($groupid || ($groupmode == SEPARATEGROUPS && !has_capability('moodle/site:accessallgroups', $context))) {
             if ($groupid) {
                 $cgroups = [(int) $groupid];
@@ -171,11 +171,11 @@ class report_helper {
 
         $userid = $userid ?? $USER->id;
 
-        if ($context instanceof context_course) {
+        if ($context instanceof context_system) {
             $courseid = $context->instanceid;
             $course = get_course($courseid);
             $groupmode = $course->groupmode;
-        } else if ($context instanceof \context_module) {
+        } else if ($context instanceof \context_system) {
             $courseid = $context->get_course_context()->instanceid;
             $modinfo = get_fast_modinfo($courseid);
             $cm = $modinfo->get_cm($context->instanceid);

@@ -343,8 +343,8 @@ final class filterlib_test extends \advanced_testcase {
     protected function setup_available_in_context_tests() {
         $course = $this->getDataGenerator()->create_course(array('category' => 1));
 
-        $childcontext = \context_coursecat::instance(1);
-        $childcontext2 = \context_course::instance($course->id);
+        $childcontext = \context_systemcat::instance(1);
+        $childcontext2 = \context_system::instance($course->id);
         $syscontext = \context_system::instance();
 
         return [
@@ -571,13 +571,13 @@ final class filterlib_test extends \advanced_testcase {
 
     protected function setup_preload_activities_test() {
         $syscontext = \context_system::instance();
-        $catcontext = \context_coursecat::instance(1);
+        $catcontext = \context_systemcat::instance(1);
         $course = $this->getDataGenerator()->create_course(array('category' => 1));
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $page1 = $this->getDataGenerator()->create_module('page', array('course' => $course->id));
-        $activity1context = \context_module::instance($page1->cmid);
+        $activity1context = \context_system::instance($page1->cmid);
         $page2 = $this->getDataGenerator()->create_module('page', array('course' => $course->id));
-        $activity2context = \context_module::instance($page2->cmid);
+        $activity2context = \context_system::instance($page2->cmid);
         return [
             'syscontext' => $syscontext,
             'catcontext' => $catcontext,

@@ -37,7 +37,7 @@ final class outputrenderers_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $course = self::getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id, IGNORE_MISSING);
+        $context = \context_system::instance($course->id, IGNORE_MISSING);
 
         // Get the image with correct course context.
         $courseimage = $OUTPUT->get_generated_url_for_course($context);

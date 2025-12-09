@@ -34,11 +34,11 @@ use core\url;
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class file_info_context_course extends file_info {
+class file_info_context_system extends file_info {
     /** @var stdClass course object */
     protected $course;
 
-    /** @var file_info_context_module[] cached child modules. See {@link get_child_module()} */
+    /** @var file_info_context_system[] cached child modules. See {@link get_child_module()} */
     protected $childrenmodules = [];
 
     /**
@@ -435,7 +435,7 @@ class file_info_context_course extends file_info {
      * Returns the child module if it is accessible by the current user
      *
      * @param cm_info|int $cm
-     * @return file_info_context_module|null
+     * @return file_info_context_system|null
      */
     protected function get_child_module($cm) {
         $cmid = is_object($cm) ? $cm->id : $cm;
@@ -446,7 +446,7 @@ class file_info_context_course extends file_info {
                 $cm = array_key_exists($cmid, $cms) ? $cms[$cmid] : null;
             }
             if ($cm && $cm->uservisible) {
-                $this->childrenmodules[$cmid] = new file_info_context_module($this->browser,
+                $this->childrenmodules[$cmid] = new file_info_context_system($this->browser,
                     $cm->context, $this->course, $cm, $cm->modname);
             }
         }
@@ -718,7 +718,7 @@ class file_info_area_course_legacy extends file_info_stored {
 class file_info_area_course_section extends file_info {
     /** @var stdClass course object */
     protected $course;
-    /** @var file_info_context_course course file info object */
+    /** @var file_info_context_system course file info object */
     protected $courseinfo;
 
     /**
@@ -727,9 +727,9 @@ class file_info_area_course_section extends file_info {
      * @param file_browser $browser file browser instance
      * @param stdClass $context context object
      * @param stdClass $course course object
-     * @param file_info_context_course $courseinfo file info instance
+     * @param file_info_context_system $courseinfo file info instance
      */
-    public function __construct($browser, $context, $course, file_info_context_course $courseinfo) {
+    public function __construct($browser, $context, $course, file_info_context_system $courseinfo) {
         parent::__construct($browser, $context);
         $this->course     = $course;
         $this->courseinfo = $courseinfo;
@@ -867,7 +867,7 @@ class file_info_area_course_section extends file_info {
 class file_info_area_backup_section extends file_info {
     /** @var stdClass course object */
     protected $course;
-    /** @var file_info_context_course course file info object */
+    /** @var file_info_context_system course file info object */
     protected $courseinfo;
 
     /**
@@ -876,9 +876,9 @@ class file_info_area_backup_section extends file_info {
      * @param file_browser $browser file browser instance
      * @param stdClass $context context object
      * @param stdClass $course course object
-     * @param file_info_context_course $courseinfo file info instance
+     * @param file_info_context_system $courseinfo file info instance
      */
-    public function __construct($browser, $context, $course, file_info_context_course $courseinfo) {
+    public function __construct($browser, $context, $course, file_info_context_system $courseinfo) {
         parent::__construct($browser, $context);
         $this->course     = $course;
         $this->courseinfo = $courseinfo;

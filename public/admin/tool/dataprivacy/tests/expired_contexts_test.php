@@ -681,7 +681,7 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * DAYSECS),
                 'enddate' => time() - DAYSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Flag all expired contexts.
         $manager = new \tool_dataprivacy\expired_contexts_manager();
@@ -721,7 +721,7 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * DAYSECS),
                 'enddate' => time() - DAYSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Flag all expired contexts.
         $manager = new \tool_dataprivacy\expired_contexts_manager();
@@ -771,11 +771,11 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * DAYSECS),
                 'enddate' => time() - DAYSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
 
         api::set_context_instance((object) [
                 'contextid' => $forumcontext->id,
@@ -888,7 +888,7 @@ final class expired_contexts_test extends \advanced_testcase {
             ]);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
 
         $student = $this->getDataGenerator()->create_user();
@@ -976,7 +976,7 @@ final class expired_contexts_test extends \advanced_testcase {
             ]);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
 
         $student = $this->getDataGenerator()->create_user();
@@ -1064,7 +1064,7 @@ final class expired_contexts_test extends \advanced_testcase {
             ]);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
 
         $teacher = $this->getDataGenerator()->create_user();
@@ -1160,7 +1160,7 @@ final class expired_contexts_test extends \advanced_testcase {
             ]);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
 
         $teacher = $this->getDataGenerator()->create_user();
@@ -1422,7 +1422,7 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * YEARSECS),
                 'enddate' => time() - YEARSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // Create an existing expired_context.
         $expiredcontext = new expired_context(0, (object) [
@@ -1700,7 +1700,7 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * YEARSECS),
                 'enddate' => time() - YEARSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
 
         // Create an existing expired_context.
@@ -1751,7 +1751,7 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * YEARSECS),
                 'enddate' => time() - YEARSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
 
         // Create an existing expired_context.
@@ -1800,10 +1800,10 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * YEARSECS),
                 'enddate' => time() - YEARSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
 
         // Create an existing expired_context for the course.
         $expiredcoursecontext = new expired_context(0, (object) [
@@ -1858,10 +1858,10 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * YEARSECS),
                 'enddate' => time() - YEARSECS,
             ]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
 
         // Create an existing expired_context for the course.
         $expiredcoursecontext = new expired_context(0, (object) [
@@ -2063,7 +2063,7 @@ final class expired_contexts_test extends \advanced_testcase {
                 'startdate' => time() - (2 * YEARSECS),
                 'enddate' => time() - YEARSECS,
             ]);
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         // Flag all expired contexts.
         $manager = new \tool_dataprivacy\expired_contexts_manager();
@@ -2243,11 +2243,11 @@ final class expired_contexts_test extends \advanced_testcase {
         $purposes = $this->setup_basics('PT1H', 'PT1H', 'P1D');
 
         $frontcourse = get_site();
-        $frontcoursecontext = \context_course::instance($frontcourse->id);
+        $frontcoursecontext = \context_system::instance($frontcourse->id);
 
         $sitenews = $this->getDataGenerator()->create_module('forum', ['course' => $frontcourse->id]);
         $cm = get_coursemodule_from_instance('forum', $sitenews->id);
-        $sitenewscontext = \context_module::instance($cm->id);
+        $sitenewscontext = \context_system::instance($cm->id);
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
 
@@ -2278,7 +2278,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time()]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -2301,7 +2301,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -2334,9 +2334,9 @@ final class expired_contexts_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() + WEEKSECS]);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
 
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $cm = get_coursemodule_from_instance('forum', $forum->id);
-        $forumcontext = \context_module::instance($cm->id);
+        $forumcontext = \context_system::instance($cm->id);
 
         $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
 
@@ -2362,7 +2362,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $role = $DB->get_record('role', ['shortname' => 'manager']);
@@ -2397,7 +2397,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $role = $DB->get_record('role', ['shortname' => 'manager']);
@@ -2446,7 +2446,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $role = $DB->get_record('role', ['shortname' => 'manager']);
@@ -2475,7 +2475,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $role = $DB->get_record('role', ['shortname' => 'student']);
@@ -2504,7 +2504,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $role = $DB->get_record('role', ['shortname' => 'manager']);
@@ -2537,7 +2537,7 @@ final class expired_contexts_test extends \advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user(['lastaccess' => time() - YEARSECS]);
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - WEEKSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $role = $DB->get_record('role', ['shortname' => 'manager']);
@@ -2568,7 +2568,7 @@ final class expired_contexts_test extends \advanced_testcase {
         $purposes = $this->setup_basics('PT1S', 'PT1S', 'PT1S');
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - DAYSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $roles = $DB->get_records_menu('role', [], 'id', 'shortname, id');
@@ -2623,7 +2623,7 @@ final class expired_contexts_test extends \advanced_testcase {
         $purposes = $this->setup_basics('P5Y', 'P5Y', 'P5Y');
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - YEARSECS, 'enddate' => time() - DAYSECS]);
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $systemcontext = \context_system::instance();
 
         $roles = $DB->get_records_menu('role', [], 'id', 'shortname, id');

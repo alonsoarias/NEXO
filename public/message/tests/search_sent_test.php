@@ -169,7 +169,7 @@ final class search_sent_test extends \advanced_testcase {
 
         // Test with a course context (should return null).
         $this->assertNull($searcharea->get_document_recordset(0,
-                \context_course::instance($SITE->id)));
+                \context_system::instance($SITE->id)));
     }
 
     /**

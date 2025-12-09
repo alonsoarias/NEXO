@@ -27,7 +27,7 @@ namespace tool_uploaduser;
 defined('MOODLE_INTERNAL') || die();
 
 use context_system;
-use context_coursecat;
+use context_systemcat;
 use core_course_category;
 
 use tool_uploaduser\local\field_value_validators;
@@ -1149,7 +1149,7 @@ class process {
                     }
                     $categoryrolecache[$categoryidnumber] = uu_allowed_roles_cache($category->id);
                     $categoryobj = core_course_category::get($category->id);
-                    $context = context_coursecat::instance($categoryobj->id);
+                    $context = context_systemcat::instance($categoryobj->id);
                     $categorycache[$categoryidnumber] = $context;
                 }
                 // Check the user's category role.
@@ -1187,7 +1187,7 @@ class process {
                 $this->ccache[$shortname]->groups = null;
             }
             $courseid      = $this->ccache[$shortname]->id;
-            $coursecontext = \context_course::instance($courseid);
+            $coursecontext = \context_system::instance($courseid);
             if (!isset($this->manualcache[$courseid])) {
                 $this->manualcache[$courseid] = false;
                 if ($this->manualenrol) {
@@ -1219,7 +1219,7 @@ class process {
                         continue;
                     }
 
-                    role_assign($roleid, $user->id, \context_course::instance($courseid));
+                    role_assign($roleid, $user->id, \context_system::instance($courseid));
 
                     $a = new \stdClass();
                     $a->course = $shortname;

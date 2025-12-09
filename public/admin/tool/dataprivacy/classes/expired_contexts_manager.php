@@ -787,7 +787,7 @@ class expired_contexts_manager {
     public static function is_context_expired(\context $context): bool {
         $parents = $context->get_parent_contexts(true);
         foreach ($parents as $parent) {
-            if ($parent instanceof \context_course) {
+            if ($parent instanceof \context_system) {
                 // This is a context within a course. Check whether _this context_ is expired as a function of a course.
                 return self::is_course_context_expired($context);
             }
@@ -808,7 +808,7 @@ class expired_contexts_manager {
      * @return  bool
      */
     protected static function is_course_expired(\stdClass $course): bool {
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         return self::is_course_context_expired($context);
     }
@@ -899,7 +899,7 @@ class expired_contexts_manager {
 
         $parents = $context->get_parent_contexts(true);
         foreach ($parents as $parent) {
-            if ($parent instanceof \context_course) {
+            if ($parent instanceof \context_system) {
                 // This is a context within a course. Check whether _this context_ is expired as a function of a course.
                 return self::is_course_context_expired_or_unprotected_for_user($context, $user);
             }

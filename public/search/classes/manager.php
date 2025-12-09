@@ -781,7 +781,7 @@ class manager {
                 continue;
             }
 
-            $coursecontext = \context_course::instance($course->id);
+            $coursecontext = \context_system::instance($course->id);
             $hasgrouprestrictions = false;
 
             if (!empty($areasbylevel[CONTEXT_SYSTEM]) &&

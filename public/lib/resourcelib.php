@@ -67,10 +67,10 @@ function resourcelib_try_file_migration($filepath, $cmid, $courseid, $component,
         return false;
     }
 
-    if (!$context = context_module::instance($cmid)) {
+    if (!$context = context_system::instance($cmid)) {
         return false;
     }
-    if (!$coursecontext = context_course::instance($courseid)) {
+    if (!$coursecontext = context_system::instance($courseid)) {
         return false;
     }
 

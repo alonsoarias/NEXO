@@ -59,7 +59,7 @@ function tool_mfa_after_require_login($courseorid = null, $autologinguest = null
  * @param stdClass $user
  * @param context_user $usercontext
  * @param stdClass|null $course
- * @param context_course|null $coursecontext
+ * @param context_system|null $coursecontext
  *
  * @return mix void or null
  * @throws \moodle_exception

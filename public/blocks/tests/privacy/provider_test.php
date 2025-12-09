@@ -56,8 +56,8 @@ final class provider_test extends provider_testcase {
         $c2 = $dg->create_course();
         $u1 = $dg->create_user();
         $u2 = $dg->create_user();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
         $u1ctx = \context_user::instance($u1->id);
         $u2ctx = \context_user::instance($u2->id);
 
@@ -106,7 +106,7 @@ final class provider_test extends provider_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        $manager = $this->get_block_manager(['region-a'], \context_course::instance($course->id));
+        $manager = $this->get_block_manager(['region-a'], \context_system::instance($course->id));
         $manager->add_block('myprofile', 'region-a', 0, false);
         $manager->load_blocks();
         $blockmyprofile = $manager->get_blocks_for_region('region-a')[0];
@@ -133,8 +133,8 @@ final class provider_test extends provider_testcase {
         $c2 = $dg->create_course();
         $u1 = $dg->create_user();
         $u2 = $dg->create_user();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
         $u1ctx = \context_user::instance($u1->id);
         $u2ctx = \context_user::instance($u2->id);
 
@@ -203,8 +203,8 @@ final class provider_test extends provider_testcase {
         $c2 = $dg->create_course();
         $u1 = $dg->create_user();
         $u2 = $dg->create_user();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
         $u1ctx = \context_user::instance($u1->id);
         $u2ctx = \context_user::instance($u2->id);
 
@@ -310,7 +310,7 @@ final class provider_test extends provider_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        $manager = $this->get_block_manager(['region-a'], \context_course::instance($course->id));
+        $manager = $this->get_block_manager(['region-a'], \context_system::instance($course->id));
         $manager->add_block('myprofile', 'region-a', 0, false);
         $manager->load_blocks();
         $blockmyprofile = $manager->get_blocks_for_region('region-a')[0];
@@ -347,8 +347,8 @@ final class provider_test extends provider_testcase {
         $c2 = $dg->create_course();
         $u1 = $dg->create_user();
         $u2 = $dg->create_user();
-        $c1ctx = \context_course::instance($c1->id);
-        $c2ctx = \context_course::instance($c2->id);
+        $c1ctx = \context_system::instance($c1->id);
+        $c2ctx = \context_system::instance($c2->id);
         $u1ctx = \context_user::instance($u1->id);
         $u2ctx = \context_user::instance($u2->id);
         $yes = transform::yesno(true);

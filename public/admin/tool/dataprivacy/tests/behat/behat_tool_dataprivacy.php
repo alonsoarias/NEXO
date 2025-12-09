@@ -164,7 +164,7 @@ class behat_tool_dataprivacy extends behat_base {
         ];
         $select = 'name = :name OR idnumber = :idnumber';
         $coursecatid = $DB->get_field_select('course_categories', 'id', $select, $params, MUST_EXIST);
-        $context = context_coursecat::instance($coursecatid);
+        $context = context_systemcat::instance($coursecatid);
 
         $this->set_category_and_purpose($context->id, $category, $purpose);
     }
@@ -188,7 +188,7 @@ class behat_tool_dataprivacy extends behat_base {
         ];
         $select = 'shortname = :shortname OR fullname = :fullname OR idnumber = :idnumber';
         $courseid = $DB->get_field_select('course', 'id', $select, $params, MUST_EXIST);
-        $context = context_course::instance($courseid);
+        $context = context_system::instance($courseid);
 
         $this->set_category_and_purpose($context->id, $category, $purpose);
     }
@@ -226,7 +226,7 @@ class behat_tool_dataprivacy extends behat_base {
         if ($cmid === null) {
             throw new coding_exception("Activity module '{$name}' of type '{$type}' not found!");
         }
-        $context = context_module::instance($cmid);
+        $context = context_system::instance($cmid);
 
         $this->set_category_and_purpose($context->id, $category, $purpose);
     }
@@ -253,7 +253,7 @@ class behat_tool_dataprivacy extends behat_base {
         $courseid = $DB->get_field_select('course', 'id', $select, $params, MUST_EXIST);
 
         // Fetch the course context.
-        $coursecontext = context_course::instance($courseid);
+        $coursecontext = context_system::instance($courseid);
 
         // Fetch the block record and context.
         $blockid = $DB->get_field('block_instances', 'id', ['blockname' => $name, 'parentcontextid' => $coursecontext->id]);

@@ -44,7 +44,7 @@ final class submit_selected_courses_form_test extends \core_external\tests\exter
         $context = \context_system::instance();
         $course = $this->getDataGenerator()->create_course([]);
 
-        $coursecontext1 = \context_course::instance($course->id);
+        $coursecontext1 = \context_system::instance($course->id);
 
         $this->getDataGenerator()->enrol_user($s1->id, $course->id, 'student');
 

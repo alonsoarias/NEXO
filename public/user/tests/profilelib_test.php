@@ -108,7 +108,7 @@ final class profilelib_test extends \advanced_testcase {
 
         // Course without sections.
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
         $user = $this->getDataGenerator()->create_user();
         $usercontext = \context_user::instance($user->id);
 

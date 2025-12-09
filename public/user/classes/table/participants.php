@@ -458,7 +458,7 @@ class participants extends \table_sql implements dynamic_table {
         // Get the context.
         $this->courseid = $filterset->get_filter('courseid')->current();
         $this->course = get_course($this->courseid);
-        $this->context = \context_course::instance($this->courseid, MUST_EXIST);
+        $this->context = \context_system::instance($this->courseid, MUST_EXIST);
 
         // Process the filterset.
         parent::set_filterset($filterset);

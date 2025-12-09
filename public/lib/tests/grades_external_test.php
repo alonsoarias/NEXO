@@ -43,7 +43,7 @@ final class grades_external_test extends \core_external\tests\externallib_testca
 
         // Adds a course, a teacher, 2 students, an assignment and grades for the students.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
 
@@ -245,7 +245,7 @@ final class grades_external_test extends \core_external\tests\externallib_testca
 
         // Give the student role 'moodle/grade:hide' and they should now be able to hide the grade item.
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         assign_capability('moodle/grade:hide', CAP_ALLOW, $studentrole->id, $coursecontext->id);
         accesslib_clear_all_caches_for_unit_testing();
 

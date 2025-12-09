@@ -16,7 +16,7 @@
 
 namespace core\moodlenet;
 
-use context_course;
+use context_system;
 use core\http_client;
 use core\oauth2\issuer;
 use GuzzleHttp\Exception\ClientException;
@@ -45,8 +45,8 @@ final class activity_sender_test extends \advanced_testcase {
     private stdClass $course;
     /** @var stdClass Activity object, */
     private stdClass $moduleinstance;
-    /** @var context_course Course context instance. */
-    private context_course $coursecontext;
+    /** @var context_system Course context instance. */
+    private context_system $coursecontext;
     /** @var issuer $issuer Dummy issuer. */
     private issuer $issuer;
     /** @var MockObject $mockoauthclient Mock OAuth client. */
@@ -70,7 +70,7 @@ final class activity_sender_test extends \advanced_testcase {
         // Create course.
         $this->course = $this->generator->create_course();
         $this->moduleinstance = $this->generator->create_module('assign', ['course' => $this->course->id]);
-        $this->coursecontext = context_course::instance($this->course->id);
+        $this->coursecontext = context_system::instance($this->course->id);
         // Create mock issuer.
         $this->issuer = helpers::get_mock_issuer(1);
         // Create mock builder for OAuth2 client.

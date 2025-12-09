@@ -67,7 +67,7 @@ class grade_deleted extends base {
     public static function create_from_grade(\grade_grade $grade) {
         $event = self::create(array(
             'objectid'      => $grade->id,
-            'context'       => \context_course::instance($grade->grade_item->courseid),
+            'context'       => \context_system::instance($grade->grade_item->courseid),
             'relateduserid' => $grade->userid,
             'other'         => array(
                 'itemid'     => $grade->itemid,

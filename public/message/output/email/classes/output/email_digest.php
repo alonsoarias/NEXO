@@ -108,7 +108,7 @@ class email_digest implements \renderable, \templatable {
                 $grouppictureurl = $url->out(false);
             }
 
-            $coursecontext = \context_course::instance($conversation->courseid);
+            $coursecontext = \context_system::instance($conversation->courseid);
 
             $conversationformatted = new \stdClass();
             $conversationformatted->groupname = format_string($conversation->name, true, ['context' => $coursecontext]);

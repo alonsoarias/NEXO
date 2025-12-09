@@ -79,9 +79,9 @@ final class messagelib_test extends \advanced_testcase {
         $quiz = $generator->create_module('quiz', array('course' => $course->id));
         $user = $generator->create_user();
 
-        $coursecontext = \context_course::instance($course->id);
-        $quizcontext = \context_module::instance($quiz->cmid);
-        $frontpagecontext = \context_course::instance(SITEID);
+        $coursecontext = \context_system::instance($course->id);
+        $quizcontext = \context_system::instance($quiz->cmid);
+        $frontpagecontext = \context_system::instance(SITEID);
 
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
 
@@ -102,7 +102,7 @@ final class messagelib_test extends \advanced_testcase {
         // A user is a student in a different course, they should not get confirmation.
         $course2 = $generator->create_course(array('category' => $cat->id));
         $user2 = $generator->create_user();
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext2 = \context_system::instance($course2->id);
         role_assign($studentrole->id, $user2->id, $coursecontext2->id);
         accesslib_clear_all_caches_for_unit_testing();
         $providers = message_get_providers_for_user($user2->id);
@@ -126,13 +126,13 @@ final class messagelib_test extends \advanced_testcase {
 
         // Create a course.
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
 
         // It would probably be better to use a quiz instance as it has capability controlled messages
         // however mod_quiz doesn't have a data generator.
         // Instead we're going to use backup notifications and give and take away the capability at various levels.
         $assign = $this->getDataGenerator()->create_module('assign', array('course'=>$course->id));
-        $modulecontext = \context_module::instance($assign->cmid);
+        $modulecontext = \context_system::instance($assign->cmid);
 
         // Create and enrol a teacher.
         $teacherrole = $DB->get_record('role', array('shortname'=>'editingteacher'), '*', MUST_EXIST);
@@ -160,7 +160,7 @@ final class messagelib_test extends \advanced_testcase {
         // They should now be able to see the backup message.
         assign_capability('moodle/site:config', CAP_ALLOW, $teacherrole->id, $modulecontext->id, true);
         accesslib_clear_all_caches_for_unit_testing();
-        $modulecontext = \context_module::instance($assign->cmid);
+        $modulecontext = \context_system::instance($assign->cmid);
         $this->assertTrue(has_capability('moodle/site:config', $modulecontext));
 
         $providers = message_get_providers_for_user($teacher->id);
@@ -171,7 +171,7 @@ final class messagelib_test extends \advanced_testcase {
         // They should not be able to see the backup message.
         assign_capability('moodle/site:config', CAP_PROHIBIT, $teacherrole->id, $coursecontext->id, true);
         accesslib_clear_all_caches_for_unit_testing();
-        $modulecontext = \context_module::instance($assign->cmid);
+        $modulecontext = \context_system::instance($assign->cmid);
         $this->assertFalse(has_capability('moodle/site:config', $modulecontext));
 
         $providers = message_get_providers_for_user($teacher->id);
@@ -917,7 +917,7 @@ final class messagelib_test extends \advanced_testcase {
             'core_group',
             'groups',
             $group1->id,
-            \context_course::instance($course->id)->id
+            \context_system::instance($course->id)->id
         );
 
         // Generate the message.
@@ -1002,7 +1002,7 @@ final class messagelib_test extends \advanced_testcase {
             'core_group',
             'groups',
             $group1->id,
-            \context_course::instance($course->id)->id
+            \context_system::instance($course->id)->id
         );
 
         // Test basic email redirection.

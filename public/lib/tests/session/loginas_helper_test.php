@@ -16,7 +16,7 @@
 
 namespace core\session;
 
-use core\context\course as context_course;
+use core\context\course as context_system;
 use core\context\system as context_system;
 
 /**
@@ -67,7 +67,7 @@ final class loginas_helper_test extends \advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
 
         $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
         $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'manager');
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'manager');
 
@@ -132,8 +132,8 @@ final class loginas_helper_test extends \advanced_testcase {
             $this->getDataGenerator()->create_course(),
         ];
         $coursecontexts = [
-            context_course::instance($courses[0]->id),
-            context_course::instance($courses[1]->id),
+            context_system::instance($courses[0]->id),
+            context_system::instance($courses[1]->id),
         ];
 
         // User 0 is an admin.
@@ -285,7 +285,7 @@ final class loginas_helper_test extends \advanced_testcase {
         $student2 = $this->getDataGenerator()->create_user();
 
         $course = $this->getDataGenerator()->create_course(['groupmode' => $groupmode]);
-        $coursecontext = context_course::instance($course->id);
+        $coursecontext = context_system::instance($course->id);
 
         // Add or remove accessallgroups permission.
         $managerroleid = $DB->get_field('role', 'id', ['shortname' => 'manager'], MUST_EXIST);

@@ -180,7 +180,7 @@ final class grouplib_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
 
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $student1 = $generator->create_user();
         $student2 = $generator->create_user();
         $plugin = enrol_get_plugin('manual');
@@ -372,7 +372,7 @@ final class grouplib_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
 
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $student1 = $generator->create_user();
         $student2 = $generator->create_user();
         $plugin = enrol_get_plugin('manual');
@@ -407,7 +407,7 @@ final class grouplib_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
 
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $student1 = $generator->create_user();
         $student2 = $generator->create_user();
         $plugin = enrol_get_plugin('manual');
@@ -440,7 +440,7 @@ final class grouplib_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
 
         $course = $generator->create_course();
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $student1 = $generator->create_user();
         $student2 = $generator->create_user();
         $plugin = enrol_get_plugin('manual');
@@ -755,7 +755,7 @@ final class grouplib_test extends \advanced_testcase {
         // Create a course category, course and groups.
         $cat = $generator->create_category(array('parent' => 0));
         $course = $generator->create_course(array('category' => $cat->id));
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $group1 = $generator->create_group(array('courseid' => $course->id, 'name' => 'Group 1'));
         $group2 = $generator->create_group(array('courseid' => $course->id, 'name' => 'Group 2'));
         $group3 = $generator->create_group(array('courseid' => $course->id, 'name' => 'Group 3'));
@@ -1395,7 +1395,7 @@ final class grouplib_test extends \advanced_testcase {
         // Create a course category, course and groups.
         $cat = $generator->create_category(array('parent' => 0));
         $course = $generator->create_course(array('category' => $cat->id));
-        $coursecontext = \context_course::instance($course->id);
+        $coursecontext = \context_system::instance($course->id);
         $group1 = $generator->create_group(array('courseid' => $course->id, 'name' => 'Group 1'));
         $group2 = $generator->create_group(array('courseid' => $course->id, 'name' => 'Group 2'));
         $group3 = $generator->create_group(array('courseid' => $course->id, 'name' => 'Group 3'));

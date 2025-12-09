@@ -2600,7 +2600,7 @@ class api {
 
             foreach ($sharedcourses as $course) {
                 // Note: enrol_get_shared_courses will preload any shared context.
-                if (has_capability('moodle/site:messageanyuser', \context_course::instance($course->id), $senderid)) {
+                if (has_capability('moodle/site:messageanyuser', \context_system::instance($course->id), $senderid)) {
                     $cancontact = true;
                     break;
                 }

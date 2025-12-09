@@ -868,7 +868,7 @@ function format_text_email($text, $format) {
 function format_module_intro($module, $activity, $cmid, $filter=true) {
     global $CFG;
     require_once("$CFG->libdir/filelib.php");
-    $context = context_module::instance($cmid);
+    $context = context_system::instance($cmid);
     $options = array('noclean' => true, 'para' => false, 'filter' => $filter, 'context' => $context, 'overflowdiv' => true);
     $intro = file_rewrite_pluginfile_urls($activity->intro, 'pluginfile.php', $context->id, 'mod_'.$module, 'intro', null);
     return trim(format_text($intro, $activity->introformat, $options, null));
@@ -1851,7 +1851,7 @@ function print_group_picture($group, $courseid, $large = false, $return = false,
         return;
     }
 
-    $context = context_course::instance($courseid);
+    $context = context_system::instance($courseid);
 
     $groupname = format_string($group->name, true, ['context' => $context, 'escape' => false]);
     $pictureimage = html_writer::img($pictureurl, $groupname, ['title' => $groupname]);
@@ -1887,7 +1887,7 @@ function print_group_picture($group, $courseid, $large = false, $return = false,
 function get_group_picture_url($group, $courseid, $large = false, $includetoken = false) {
     global $CFG;
 
-    $context = context_course::instance($courseid);
+    $context = context_system::instance($courseid);
 
     // If there is no picture, do nothing.
     if (!$group->picture) {
@@ -1970,7 +1970,7 @@ function navmenulist($course, $sections, $modinfo, $strsection, $strjumpto, $wid
     $doneheading = false;
 
     $courseformatoptions = course_get_format($course)->get_format_options();
-    $coursecontext = context_course::instance($course->id);
+    $coursecontext = context_system::instance($course->id);
 
     $menu[] = '<ul class="navmenulist"><li class="jumpto section"><span>'.$strjumpto.'</span><ul>';
     foreach ($modinfo->cms as $mod) {

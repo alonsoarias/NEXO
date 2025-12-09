@@ -422,7 +422,7 @@ EOD;
         if ($initsections) {
             $this->init_sections($course);
         }
-        context_course::instance($course->id);
+        context_system::instance($course->id);
 
         return $course;
     }
@@ -571,7 +571,7 @@ EOD;
         // Allow tests to set group pictures.
         if (!empty($record['picturepath'])) {
             require_once($CFG->dirroot . '/lib/gdlib.php');
-            $grouppicture = process_new_icon(\context_course::instance($record['courseid']), 'group', 'icon', $id,
+            $grouppicture = process_new_icon(\context_system::instance($record['courseid']), 'group', 'icon', $id,
                 $record['picturepath']);
 
             $DB->set_field('groups', 'picture', $grouppicture, ['id' => $id]);
@@ -1137,7 +1137,7 @@ EOD;
 
         if ($item->itemtype === 'mod') {
             $cm = get_coursemodule_from_instance($item->itemmodule, $item->iteminstance);
-            $module = new $item->itemmodule(context_module::instance($cm->id), $cm, false);
+            $module = new $item->itemmodule(context_system::instance($cm->id), $cm, false);
             $record['attemptnumber'] = $record['attemptnumber'] ?? 0;
 
             $module->save_grade($userid, (object) $record);
@@ -1256,9 +1256,9 @@ EOD;
         }
 
         if (!empty($data->cmid)) {
-            $data->contextid = context_module::instance($data->cmid)->id;
+            $data->contextid = context_system::instance($data->cmid)->id;
         } else {
-            $data->contextid = context_course::instance($data->courseid)->id;
+            $data->contextid = context_system::instance($data->courseid)->id;
         }
 
         // Set it to enabled if no status was specified.

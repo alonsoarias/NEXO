@@ -45,7 +45,7 @@ final class provider_test extends provider_testcase {
      */
     public function test_export_comments(): void {
         $course = $this->getDataGenerator()->create_course();
-        $context = \context_course::instance($course->id);
+        $context = \context_system::instance($course->id);
 
         $comment = $this->get_comment_object($context, $course);
 
@@ -99,8 +99,8 @@ final class provider_test extends provider_testcase {
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
 
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -167,8 +167,8 @@ final class provider_test extends provider_testcase {
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
 
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -238,9 +238,9 @@ final class provider_test extends provider_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
 
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
-        $coursecontext3 = \context_course::instance($course3->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
+        $coursecontext3 = \context_system::instance($course3->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -321,9 +321,9 @@ final class provider_test extends provider_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
 
-        $coursecontext1 = \context_course::instance($course1->id);
-        $coursecontext2 = \context_course::instance($course2->id);
-        $coursecontext3 = \context_course::instance($course3->id);
+        $coursecontext1 = \context_system::instance($course1->id);
+        $coursecontext2 = \context_system::instance($course2->id);
+        $coursecontext3 = \context_system::instance($course3->id);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

@@ -1146,7 +1146,7 @@ final class file_storage_test extends \advanced_testcase {
         // Create a course with a page resource.
         $course = $this->getDataGenerator()->create_course();
         $page1 = $this->getDataGenerator()->create_module('page', array('course'=>$course->id));
-        $page1context = \context_module::instance($page1->cmid);
+        $page1context = \context_system::instance($page1->cmid);
 
         // Add a file to the page.
         $fs = get_file_storage();
@@ -1168,7 +1168,7 @@ final class file_storage_test extends \advanced_testcase {
 
         // Create a new page.
         $page2 = $this->getDataGenerator()->create_module('page', array('course'=>$course->id));
-        $page2context = \context_module::instance($page2->cmid);
+        $page2context = \context_system::instance($page2->cmid);
 
         // Newly created page area is empty.
         $this->assertTrue($fs->is_area_empty($page2context->id, 'mod_page', 'content'));

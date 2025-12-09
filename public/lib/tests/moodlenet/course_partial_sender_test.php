@@ -16,7 +16,7 @@
 
 namespace core\moodlenet;
 
-use context_course;
+use context_system;
 use core\http_client;
 use core\oauth2\issuer;
 use GuzzleHttp\Exception\ClientException;
@@ -50,8 +50,8 @@ final class course_partial_sender_test extends \advanced_testcase {
     private testing_data_generator $generator;
     /** @var stdClass Course object. */
     private stdClass $course;
-    /** @var context_course Course context instance. */
-    private context_course $coursecontext;
+    /** @var context_system Course context instance. */
+    private context_system $coursecontext;
     /** @var array List of activities. */
     private array $activities;
     /** @var issuer $issuer Dummy issuer. */
@@ -70,7 +70,7 @@ final class course_partial_sender_test extends \advanced_testcase {
         $this->generator = $this->getDataGenerator();
         // Create course.
         $this->course = $this->generator->create_course(['shortname' => 'testcourse']);
-        $this->coursecontext = context_course::instance($this->course->id);
+        $this->coursecontext = context_system::instance($this->course->id);
         // Create activities.
         $this->activities[1] = $this->generator->create_module('page', ['course' => $this->course->id]);
         $this->activities[2] = $this->generator->create_module('page', ['course' => $this->course->id]);
