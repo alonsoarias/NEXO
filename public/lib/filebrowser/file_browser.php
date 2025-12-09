@@ -34,9 +34,7 @@ require_once("$CFG->libdir/filebrowser/virtual_root_file.php");
 // description of available areas in each context level
 require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
 require_once("$CFG->libdir/filebrowser/file_info_context_user.php");
-require_once("$CFG->libdir/filebrowser/file_info_context_systemcat.php");
-require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
-require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
+require_once("$CFG->libdir/filebrowser/file_info_context_coursecat.php");
 
 /**
  * This class provides the main entry point for other code wishing to get information about files.
@@ -60,9 +58,6 @@ require_once("$CFG->libdir/filebrowser/file_info_context_system.php");
 */
 class file_browser {
 
-    /** @var array cached list of enrolled courses.  */
-    protected $enrolledcourses = null;
-
     /**
      * Looks up file_info instance
      *
@@ -84,11 +79,7 @@ class file_browser {
             case CONTEXT_USER:
                 return $this->get_file_info_context_user($context, $component, $filearea, $itemid, $filepath, $filename);
             case CONTEXT_SYSTEMCAT:
-                return $this->get_file_info_context_systemcat($context, $component, $filearea, $itemid, $filepath, $filename);
-            case CONTEXT_SYSTEM:
-                return $this->get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename);
-            case CONTEXT_SYSTEM:
-                return $this->get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename);
+                return $this->get_file_info_context_coursecat($context, $component, $filearea, $itemid, $filepath, $filename);
         }
 
         return null;
@@ -155,83 +146,14 @@ class file_browser {
      * @param string $filename file name
      * @return file_info|null file_info instance or null if not found or access not allowed
      */
-    private function get_file_info_context_systemcat($context, $component, $filearea, $itemid, $filepath, $filename) {
+    private function get_file_info_context_coursecat($context, $component, $filearea, $itemid, $filepath, $filename) {
         global $DB;
 
         if (!$category = $DB->get_record('course_categories', array('id'=>$context->instanceid))) {
             return null;
         }
 
-        $level = new file_info_context_systemcat($this, $context, $category);
+        $level = new file_info_context_coursecat($this, $context, $category);
         return $level->get_file_info($component, $filearea, $itemid, $filepath, $filename);
-    }
-
-    /**
-     * Returns info about the files at Course category context
-     *
-     * @param stdClass $context context object
-     * @param string $component component
-     * @param string $filearea file area
-     * @param int $itemid item ID
-     * @param string $filepath file path
-     * @param string $filename file name
-     * @return file_info|null file_info instance or null if not found or access not allowed
-     */
-    private function get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename) {
-        global $DB, $COURSE;
-
-        if ($context->instanceid == $COURSE->id) {
-            $course = $COURSE;
-        } else if (!$course = $DB->get_record('course', array('id'=>$context->instanceid))) {
-            return null;
-        }
-
-        $level = new file_info_context_system($this, $context, $course);
-        return $level->get_file_info($component, $filearea, $itemid, $filepath, $filename);
-    }
-
-    /**
-     * Returns info about the files at Course category context
-     *
-     * @param context $context context object
-     * @param string $component component
-     * @param string $filearea file area
-     * @param int $itemid item ID
-     * @param string $filepath file path
-     * @param string $filename file name
-     * @return file_info|null file_info instance or null if not found or access not allowed
-     */
-    private function get_file_info_context_system($context, $component, $filearea, $itemid, $filepath, $filename) {
-        if (!($context instanceof context_system)) {
-            return null;
-        }
-        $coursecontext = $context->get_course_context();
-        $modinfo = get_fast_modinfo($coursecontext->instanceid);
-        $cm = $modinfo->get_cm($context->instanceid);
-
-        if (empty($cm->uservisible)) {
-            return null;
-        }
-
-        $level = new file_info_context_system($this, $context, $cm->get_course(), $cm, $cm->modname);
-        return $level->get_file_info($component, $filearea, $itemid, $filepath, $filename);
-    }
-
-    /**
-     * Check if user is enrolled into the course
-     *
-     * This function keeps a cache of enrolled courses because it may be called multiple times for many courses in one request
-     *
-     * @param int $courseid
-     * @return bool
-     */
-    public function is_enrolled($courseid) {
-        if ($this->enrolledcourses === null || PHPUNIT_TEST) {
-            // Since get_file_browser() returns a statically cached object we can't rely on cache
-            // inside the file_browser class in the unittests.
-            // TODO MDL-59964 remove this caching when it's implemented inside enrol_get_my_courses().
-            $this->enrolledcourses = enrol_get_my_courses(['id']);
-        }
-        return array_key_exists($courseid, $this->enrolledcourses);
     }
 }
